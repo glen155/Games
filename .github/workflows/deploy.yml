@@ -1,4 +1,4 @@
-name: Deploy Family Feud to GitHub Pages
+name: Deploy Games to GitHub Pages
 
 on:
   push:
@@ -17,23 +17,44 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: family-feud
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: family-feud/package-lock.json
-      - run: npm ci
-      - run: npm run build
+          cache-dependency-path: |
+            family-feud/package-lock.json
+            1-percent-club/package-lock.json
+
+      - name: Build family-feud
+        working-directory: family-feud
+        run: |
+          npm ci
+          npm run build
         env:
           GITHUB_PAGES: 'true'
+
+      - name: Build 1-percent-club
+        working-directory: 1-percent-club
+        run: |
+          npm ci
+          npm run build
+        env:
+          GITHUB_PAGES: 'true'
+
+      - name: Assemble site
+        run: |
+          mkdir -p site
+          cp -r landing/. site/
+          mkdir -p site/family-feud
+          cp -r family-feud/dist/. site/family-feud/
+          mkdir -p site/1-percent-club
+          cp -r 1-percent-club/dist/. site/1-percent-club/
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: family-feud/dist
+          path: site
 
   deploy:
     needs: build
