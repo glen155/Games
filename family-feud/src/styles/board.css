@@ -1,0 +1,117 @@
+.board-header {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+  border: 3px solid var(--gold);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.board-round-indicator {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 0.7rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.05em;
+}
+
+.board-category-name {
+  margin: 0.25rem 0 0;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  letter-spacing: 0.03em;
+}
+
+.board-grid {
+  width: 100%;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 700px) {
+  .board-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.board-slot {
+  position: relative;
+  height: 4.5rem;
+  perspective: 1000px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.board-slot-inner {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.board-slot.revealed .board-slot-inner {
+  transform: rotateY(180deg);
+}
+
+.board-slot-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  border: 3px solid var(--gold);
+}
+
+.board-slot-face--front {
+  background: var(--board-bg-start);
+  justify-content: flex-start;
+  padding-left: 1rem;
+}
+
+.board-slot-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--navy-text);
+  font-size: 1.1rem;
+}
+
+.board-slot-face--back {
+  background: var(--cream);
+  color: var(--navy-text);
+  transform: rotateY(180deg);
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.board-slot-text {
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.board-slot-points {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--navy-text);
+  font-size: 1.1rem;
+}
