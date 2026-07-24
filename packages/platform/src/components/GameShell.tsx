@@ -138,6 +138,7 @@ function HostContainer<State, Action>({
         playerActions={room.playerActions}
         clearPlayerAction={room.clearPlayerAction}
         isHosted
+        roomId={room.room?.id ?? null}
       />
     </div>
   );

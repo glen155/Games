@@ -28,4 +28,6 @@ export interface GameState {
   awaitingSteal: boolean;
   /** Hosted-mode only: which team each joined player picked for themselves. */
   teamAssignments: Record<string, TeamId>;
+  /** False until the host dismisses the pre-game setup screen (classic vs generated rounds). */
+  gameStarted: boolean;
 }

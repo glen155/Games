@@ -15,7 +15,8 @@ export type GameAction =
   | { type: 'NEXT_TIER' }
   | { type: 'SET_TIMER_CONFIG'; mode: TimerConfig['mode']; durationSeconds: number }
   | { type: 'START_TIMER' }
-  | { type: 'CLEAR_TIMER' };
+  | { type: 'CLEAR_TIMER' }
+  | { type: 'SET_QUESTIONS'; questions: QuestionTier[] };
 
 function nextTimerEndsAt(config: TimerConfig): number | null {
   return config.mode === 'auto' ? Date.now() + config.durationSeconds * 1000 : null;
@@ -164,6 +165,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'CLEAR_TIMER': {
       if (state.phase !== 'playing') return state;
       return { ...state, timerEndsAt: null };
+    }
+
+    case 'SET_QUESTIONS': {
+      if (state.phase !== 'setup' || action.questions.length === 0) return state;
+      return { ...state, questions: action.questions };
     }
 
     default:

@@ -12,6 +12,8 @@ export { isMultiplayerConfigured, getSupabase, ensureSignedIn } from './supabase
 export { generateRoomCode, normalizeRoomCode, isValidRoomCode } from './roomCode';
 export { useHostRoom, usePlayerRoom, type ConnectionPhase } from './useRoom';
 export { useLocalGame } from './useLocalGame';
+export { callEdgeFunction } from './edgeFunctions';
+export { recordGameResult, fetchRecentResults, type GameResult } from './leaderboard';
 
 export { GameShell } from './components/GameShell';
 export { RoomCode } from './components/RoomCode';

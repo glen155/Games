@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import type { HostViewProps } from '@games/platform';
+import { useEffect, useRef } from 'react';
+import { recordGameResult, type HostViewProps } from '@games/platform';
 import type { GameState, TeamId } from './types';
 import { type GameAction, MAX_STRIKES } from './state/gameReducer';
 import { useGameSounds } from './hooks/useGameSounds';
@@ -12,6 +12,7 @@ import { Scoreboard } from './components/Scoreboard';
 import { ControlsPanel } from './components/ControlsPanel';
 import { RoundEndModal } from './components/RoundEndModal';
 import { BuzzBanner } from './components/BuzzBanner';
+import { FeudSetupScreen } from './components/FeudSetupScreen';
 
 /**
  * The host / big-screen view. Owns sound and keyboard shortcuts, drives the
@@ -31,6 +32,7 @@ export function HostView({
   playerActions,
   clearPlayerAction,
   isHosted,
+  roomId,
 }: HostViewProps<GameState, GameAction>) {
   const { playReveal, playStrike, playAward, playBuzz, muted, toggleMute } = useGameSounds();
 
@@ -51,6 +53,27 @@ export function HostView({
       clearPlayerAction(action.id);
     }
   }, [isHosted, playerActions, dispatch, clearPlayerAction]);
+
+  // Record the finished match to the cross-night family leaderboard once all
+  // rounds have been played. Hosted mode only -- solo play has no room to
+  // record against.
+  const prevRoundOverRef = useRef(state.isRoundOver);
+  useEffect(() => {
+    if (isHosted && roomId && state.isRoundOver && !prevRoundOverRef.current) {
+      const [teamA, teamB] = state.teams;
+      const winner = teamA.score === teamB.score ? null : teamA.score > teamB.score ? teamA.name : teamB.name;
+      void recordGameResult('family-feud', roomId, {
+        teams: state.teams.map((t) => ({ name: t.name, score: t.score })),
+        winner,
+        players: players.map((p) => ({
+          userId: p.userId,
+          nickname: p.nickname,
+          team: state.teamAssignments[p.userId] ?? null,
+        })),
+      });
+    }
+    prevRoundOverRef.current = state.isRoundOver;
+  }, [isHosted, roomId, state.isRoundOver, state.teams, state.teamAssignments, players]);
 
   function handleReveal(index: number) {
     if (state.revealed[index]) return;
@@ -87,6 +110,15 @@ export function HostView({
     onPrevRound: () => dispatch({ type: 'PREV_ROUND' }),
     onToggleMute: toggleMute,
   });
+
+  if (!state.gameStarted) {
+    return (
+      <FeudSetupScreen
+        onBeginClassic={() => dispatch({ type: 'BEGIN_GAME' })}
+        onBeginGenerated={(rounds) => dispatch({ type: 'SET_ROUNDS', rounds })}
+      />
+    );
+  }
 
   if (state.isRoundOver) {
     return <RoundEndModal teams={state.teams} onPlayAgain={() => dispatch({ type: 'RESET_GAME' })} />;

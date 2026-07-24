@@ -18,5 +18,6 @@ export function useLocalGame<State, Action>(
     playerActions: [],
     clearPlayerAction: noop,
     isHosted: false,
+    roomId: null,
   };
 }
