@@ -8,6 +8,10 @@ A trivia game based on the TV show — a jackpot chased against a simulated crow
 - An original, 12-tier descending-difficulty question ladder (92% down to 1%), from easy general knowledge to lateral-thinking riddles
 - **Solo mode** — the classic single-player game: one wrong answer and you're eliminated, survive to the final 1% question to win it all
 - **Hosted mode** — host on the big screen, everyone else joins from their phones with a room code and answers each question for bragging rights. The host walks the group through a live "who got it right" reveal each round; one miss takes you out of the running for the leaderboard, but you keep answering every remaining question for fun — no one has to stop playing
+- **Host-configurable countdown timer** (hosted mode) — set it to auto-start the
+  moment each question appears (default: 30s) or start it manually per
+  question, so games don't stall waiting on slow answers. The host can always
+  reveal early regardless of the clock
 - Synthesized sound effects (no audio files, works fully offline once loaded)
 - Full keyboard shortcuts in solo mode, with on-screen button equivalents for mouse/touch
 
@@ -49,7 +53,10 @@ Every shortcut also has an on-screen button, so you can play entirely with a mou
 
 1. From the landing screen, choose **Host a game** and set the jackpot amount.
 2. Share the room code (or QR) — everyone joins from their own phone with a nickname.
-3. Each question, players pick an answer on their phone. The host clicks **Reveal Answers** once ready to see who got it right, then **Next Question** to continue.
+3. Each question, players pick an answer on their phone. By default a 30-second
+   timer starts automatically and auto-reveals when it runs out — switch it to
+   **Manual** in the timer controls to start it yourself instead, or adjust the
+   duration. The host can also click **Reveal Answers** any time to skip ahead.
 4. The simulated crowd always makes it to the end (that's the point of it being simulated) — the game concludes with a leaderboard of real players, ranked by correct answers, with a shout-out to anyone who never missed one.
 
 ## Adding your own questions

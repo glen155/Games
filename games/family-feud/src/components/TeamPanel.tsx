@@ -6,12 +6,14 @@ interface TeamPanelProps {
   teamId: TeamId;
   isActive: boolean;
   pot: number;
+  /** Nicknames of joined players who picked this team, if any (hosted mode only). */
+  roster: string[];
   onSetActive: (team: TeamId) => void;
   onAward: (team: TeamId) => void;
   onRename: (team: TeamId, name: string) => void;
 }
 
-export function TeamPanel({ team, teamId, isActive, pot, onSetActive, onAward, onRename }: TeamPanelProps) {
+export function TeamPanel({ team, teamId, isActive, pot, roster, onSetActive, onAward, onRename }: TeamPanelProps) {
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState(team.name);
 
@@ -53,6 +55,13 @@ export function TeamPanel({ team, teamId, isActive, pot, onSetActive, onAward, o
         </h2>
       )}
       <div className="scoreboard-score">{team.score}</div>
+      {roster.length > 0 && (
+        <ul className="scoreboard-roster" onClick={(e) => e.stopPropagation()}>
+          {roster.map((name) => (
+            <li key={name} className="scoreboard-roster-chip">{name}</li>
+          ))}
+        </ul>
+      )}
       <button
         type="button"
         className="scoreboard-award-button"

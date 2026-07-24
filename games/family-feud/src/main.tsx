@@ -7,6 +7,7 @@ import './styles/board.css'
 import './styles/scoreboard.css'
 import './styles/strike.css'
 import './styles/player.css'
+import './styles/judge.css'
 import { familyFeud } from './game'
 
 createRoot(document.getElementById('root')!).render(

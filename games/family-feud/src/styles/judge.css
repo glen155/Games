@@ -1,0 +1,77 @@
+/* Host-only judging panel — private cheat sheet shown instead of the public
+ * flip-board when hosting a room. */
+
+.judge-panel {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.judge-panel-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.judge-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.judge-panel-row {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.judge-panel-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--cream);
+  text-align: left;
+  font-size: 1rem;
+}
+
+.judge-panel-row--revealed .judge-panel-button {
+  background: var(--gold);
+  color: var(--navy-text);
+}
+
+.judge-panel-number {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.judge-panel-row--revealed .judge-panel-number {
+  background: rgba(11, 30, 107, 0.25);
+}
+
+.judge-panel-text {
+  flex: 1;
+  font-weight: 600;
+}
+
+.judge-panel-points {
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
