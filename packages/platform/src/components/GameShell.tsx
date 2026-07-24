@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import type { GameDefinition } from '../types';
 import { isMultiplayerConfigured } from '../supabase';
 import { normalizeRoomCode } from '../roomCode';
@@ -6,6 +6,7 @@ import { useHostRoom, usePlayerRoom } from '../useRoom';
 import { useLocalGame } from '../useLocalGame';
 import { RoomCode } from './RoomCode';
 import { PlayerList } from './PlayerList';
+import { ErrorBoundary } from './ErrorBoundary';
 
 type Mode = 'landing' | 'host' | 'solo' | 'join-form' | 'player';
 
@@ -32,10 +33,13 @@ export function GameShell<State, Action>({ game }: GameShellProps<State, Action>
   });
   const [joinInfo, setJoinInfo] = useState<{ code: string; nickname: string } | null>(null);
 
-  if (mode === 'solo') return <SoloContainer game={game} />;
-  if (mode === 'host') return <HostContainer game={game} onExit={() => setMode('landing')} />;
-  if (mode === 'join-form') {
-    return (
+  let content: ReactNode;
+  if (mode === 'solo') {
+    content = <SoloContainer game={game} />;
+  } else if (mode === 'host') {
+    content = <HostContainer game={game} onExit={() => setMode('landing')} />;
+  } else if (mode === 'join-form') {
+    content = (
       <JoinForm
         game={game}
         initialCode={joinParam ?? ''}
@@ -46,9 +50,8 @@ export function GameShell<State, Action>({ game }: GameShellProps<State, Action>
         }}
       />
     );
-  }
-  if (mode === 'player' && joinInfo) {
-    return (
+  } else if (mode === 'player' && joinInfo) {
+    content = (
       <PlayerContainer
         game={game}
         code={joinInfo.code}
@@ -56,8 +59,14 @@ export function GameShell<State, Action>({ game }: GameShellProps<State, Action>
         onExit={() => setMode('landing')}
       />
     );
+  } else {
+    content = <Landing game={game} onPick={setMode} />;
   }
-  return <Landing game={game} onPick={setMode} />;
+
+  // A crash anywhere below (e.g. a stale persisted state missing a field a
+  // later schema change added) would otherwise unmount the whole page with
+  // no explanation — catch it here so there's always something to look at.
+  return <ErrorBoundary>{content}</ErrorBoundary>;
 }
 
 function Landing<State, Action>({

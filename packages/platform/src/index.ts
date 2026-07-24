@@ -17,3 +17,4 @@ export { GameShell } from './components/GameShell';
 export { RoomCode } from './components/RoomCode';
 export { PlayerList } from './components/PlayerList';
 export { QRCode } from './components/QRCode';
+export { ErrorBoundary } from './components/ErrorBoundary';
