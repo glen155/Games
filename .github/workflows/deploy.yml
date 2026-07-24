@@ -1,4 +1,4 @@
-name: Deploy Family Feud to GitHub Pages
+name: Deploy games to GitHub Pages
 
 on:
   push:
@@ -17,23 +17,24 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: family-feud
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: family-feud/package-lock.json
       - run: npm ci
-      - run: npm run build
+      - name: Build all games + landing page
+        run: npm run build:pages
         env:
-          GITHUB_PAGES: 'true'
+          # Public Supabase values injected at build time. Configure these as
+          # repository secrets (Settings -> Secrets and variables -> Actions).
+          # If unset, the apps still deploy and run in local single-device mode.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: family-feud/dist
+          path: _site
 
   deploy:
     needs: build

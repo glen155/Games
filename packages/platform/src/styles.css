@@ -1,0 +1,283 @@
+/*
+ * Platform shell styles — the join/host chrome shared by every game. Kept
+ * game-neutral (dark, high-contrast, mobile-first) so each game's own board
+ * styles sit on top without fighting these.
+ */
+
+.shell-landing,
+.shell-join,
+.shell-status {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.shell-landing-title,
+.shell-join-title,
+.shell-status-title {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.shell-landing-tagline {
+  margin: -0.75rem 0 0;
+  opacity: 0.75;
+  font-size: 1.05rem;
+}
+
+.shell-landing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: min(30rem, 100%);
+}
+
+.shell-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.shell-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.shell-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.shell-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.shell-btn--primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: transparent;
+}
+
+.shell-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.shell-btn--ghost {
+  background: transparent;
+}
+
+.shell-btn-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.shell-btn-sub {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* Join form */
+.shell-join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  width: min(24rem, 100%);
+}
+
+.shell-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.shell-input {
+  padding: 0.85rem 1rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font-size: 1.1rem;
+}
+
+.shell-input:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 1px;
+}
+
+.shell-input--code {
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 700;
+}
+
+.shell-join-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.shell-join-buttons .shell-btn {
+  flex: 1;
+}
+
+/* Host chrome */
+.shell-host-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.room-code {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.room-code-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.room-code-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.room-code-value {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+}
+
+.room-code-copy {
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.room-code-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.qr-image,
+.qr-placeholder {
+  background: #fff;
+  border-radius: 0.4rem;
+  padding: 0.25rem;
+}
+
+.qr-placeholder {
+  opacity: 0.2;
+}
+
+.room-code-qr-hint {
+  font-size: 0.7rem;
+  opacity: 0.65;
+}
+
+/* Player list */
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 8rem;
+}
+
+.player-list-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.player-list-count {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0 0.35em;
+  border-radius: 0.6em;
+  background: #2563eb;
+  text-align: center;
+  font-weight: 700;
+}
+
+.player-list-empty {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.player-list-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.player-list-item {
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+}
+
+/* Player device chrome */
+.shell-player-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.shell-player-you {
+  font-weight: 700;
+}
+
+.shell-player-count {
+  opacity: 0.7;
+}
+
+.shell-status-detail {
+  opacity: 0.75;
+  max-width: 28rem;
+}

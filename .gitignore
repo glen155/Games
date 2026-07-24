@@ -1,0 +1,23 @@
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+_site
+*.tsbuildinfo
+
+# Local env / secrets — never commit real Supabase keys
+.env
+.env.local
+*.local
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store

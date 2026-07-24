@@ -1,6 +1,12 @@
 # Family Feud
 
-A single-screen, host-controlled Family Feud board game — no accounts, no backend, just point-and-click (or keyboard) fun on whatever screen you gather around.
+A Family Feud board game built on the [games platform](../../README.md). Play it
+three ways:
+
+- **Host a game** — put it on the big screen and let everyone join from their
+  phones with a room code (or QR) to follow along and buzz in.
+- **Join a game** — enter a host's room code + a nickname.
+- **Play on this device** — one screen, pass it around, works fully offline.
 
 ## Features
 
@@ -8,19 +14,26 @@ A single-screen, host-controlled Family Feud board game — no accounts, no back
 - Flip-reveal answer board with a game-show look
 - Two-team scoreboard with editable names and an "active team" highlight
 - Strikes (up to 3) with a buzzer sound and a big red flash
+- Live player view on phones — the board mirrors the host (revealed answers only,
+  so nothing leaks) with a big **Buzz** button that lights up the host screen
 - Synthesized sound effects (no audio files, works fully offline once loaded)
 - Full keyboard shortcuts for the host, with on-screen button equivalents for mouse/touch
 
 ## Getting started
 
+Run from the **repo root** (this is an npm-workspaces monorepo):
+
 ```bash
-npm install
-npm run dev
+npm install            # once, at the root
+npm run dev:family-feud
 ```
 
-Open the printed local URL — on a laptop connected to a TV works great, or just pass the device around.
+Open the printed local URL — on a laptop connected to a TV works great, or just
+pass the device around. Multiplayer (host/join across devices) turns on when a
+root `.env` with Supabase keys is present; otherwise it runs solo. See the root
+[README](../../README.md) and [supabase/README.md](../../supabase/README.md).
 
-To sanity-check a production build locally:
+To sanity-check a production build locally, from this folder:
 
 ```bash
 npm run build
@@ -65,4 +78,8 @@ Edit `src/data/rounds.ts`. Each category needs exactly 8 answers (descending by 
 
 ## Deployment
 
-Pushing to `main` automatically builds and deploys this app to GitHub Pages via `.github/workflows/deploy.yml`, publishing to `https://glen155.github.io/Games/`. (One-time setup: in the repo's Settings → Pages, set "Source" to "GitHub Actions".)
+Handled at the repo level: pushing to `main` builds every game plus the landing
+page and deploys to GitHub Pages, so this game lands at
+`https://glen155.github.io/Games/family-feud/`. See the root
+[README](../../README.md#building-for-deployment) for the one-time Pages setup
+and the Supabase secrets that enable multiplayer.

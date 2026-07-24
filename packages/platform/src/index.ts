@@ -1,0 +1,19 @@
+export type {
+  GameDefinition,
+  HostViewProps,
+  PlayerViewProps,
+  PlayerAction,
+  PlayerPresence,
+  Role,
+  Room,
+} from './types';
+
+export { isMultiplayerConfigured, getSupabase, ensureSignedIn } from './supabase';
+export { generateRoomCode, normalizeRoomCode, isValidRoomCode } from './roomCode';
+export { useHostRoom, usePlayerRoom, type ConnectionPhase } from './useRoom';
+export { useLocalGame } from './useLocalGame';
+
+export { GameShell } from './components/GameShell';
+export { RoomCode } from './components/RoomCode';
+export { PlayerList } from './components/PlayerList';
+export { QRCode } from './components/QRCode';
