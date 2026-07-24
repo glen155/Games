@@ -114,6 +114,74 @@ button:disabled {
   background: var(--gold-dark);
 }
 
+.setup-generate {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px dashed var(--gold-dark);
+  border-radius: 8px;
+}
+
+.setup-generate-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cream);
+  opacity: 0.85;
+}
+
+.setup-generate-fields {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.setup-generate-input,
+.setup-generate-select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: var(--cream);
+  color: var(--dark-text);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}
+
+.setup-generate-input {
+  min-width: 12rem;
+}
+
+.setup-generate-button {
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gold);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.setup-generate-button:not(:disabled):hover {
+  background: var(--gold);
+  color: var(--dark-text);
+}
+
+.setup-generate-status {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.setup-generate-status--ok {
+  color: var(--correct-green);
+}
+
+.setup-generate-status--error {
+  color: var(--wrong-red);
+}
+
 .controls-panel {
   width: 100%;
   max-width: 900px;

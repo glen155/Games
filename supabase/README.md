@@ -27,19 +27,56 @@ Realtime + anonymous Auth). This folder holds the versioned schema.
 
 ## What's in the schema
 
-| Table        | Purpose                                                        |
-|--------------|----------------------------------------------------------------|
-| `rooms`      | One row per live game session — code, game slug, host, expiry. |
-| `players`    | Who has joined which room (used for read permissions).         |
-| `game_state` | The authoritative game state (jsonb), one row per room.        |
+| Table          | Purpose                                                        |
+|----------------|-----------------------------------------------------------------|
+| `rooms`        | One row per live game session — code, game slug, host, expiry. |
+| `players`      | Who has joined which room (used for read permissions).         |
+| `game_state`   | The authoritative game state (jsonb), one row per room.        |
+| `game_results` | Cross-night history — one row per finished hosted game, shared family-wide (not room-scoped). |
 
-Row Level Security is enabled on all three and is the real security boundary:
+Row Level Security is enabled on all four and is the real security boundary:
 
 - Anyone signed in can look up a room **by code** (you need the code to find it).
 - Only a room's **host** can write its `game_state`.
 - Only the **host or a joined member** can read a room's state / roster.
+- Any signed-in device can **read** `game_results` (it's the shared family
+  leaderboard, not scoped to a single room); only a room's **host** can insert
+  the one result row for that room. Append-only — no update/delete policy.
 
-See the comments in `migrations/0001_init.sql` for the exact policies.
+See the comments in `migrations/0001_init.sql` and `migrations/0002_game_results.sql`
+for the exact policies. Apply new migrations the same way as the initial schema
+(paste into the SQL Editor, or `supabase db push`).
+
+## Deploying the `generate-round` Edge Function
+
+Both games can optionally generate fresh round content on demand (a themed
+Family Feud round, or a themed set of 1% Club trivia questions) instead of
+using the built-in static question bank. This is powered by one Edge
+Function, [`functions/generate-round/index.ts`](./functions/generate-round/index.ts):
+
+- **Family Feud** rounds are LLM-generated via the Anthropic API — a human
+  host always judges correctness in this game, so creative/subjective content
+  generation is a safe fit.
+- **1% Club** questions are sourced from the free, keyless
+  [Open Trivia DB](https://opentdb.com/) instead of an LLM — this game's
+  correctness is objective and asserted by the app with no human check,
+  exactly where an LLM is most likely to confidently hallucinate a wrong
+  "fact". A vetted trivia dataset is the safer choice here.
+
+To deploy it:
+
+```bash
+supabase functions deploy generate-round
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+```
+
+The Anthropic key is only needed for the Family Feud path — 1% Club's Open
+Trivia DB calls need no secret. Leave the function's default "Verify JWT"
+setting **on**, so only signed-in (anonymous-auth) devices can call it.
+
+If the function isn't deployed, or a generation call fails for any reason,
+both games fall back to their built-in static question bank — generation is
+a pure enhancement, never a requirement to play.
 
 ## Housekeeping (optional but recommended)
 

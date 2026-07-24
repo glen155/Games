@@ -17,7 +17,10 @@ export type GameAction =
   // the same in solo and hosted play (host judges either way).
   | { type: 'RESOLVE_STEAL'; success: boolean }
   // Hosted-mode only — a real joined player picking their own team.
-  | { type: 'ASSIGN_TEAM'; userId: string; team: TeamId };
+  | { type: 'ASSIGN_TEAM'; userId: string; team: TeamId }
+  // Pre-game setup — dismisses the classic-vs-generated chooser.
+  | { type: 'BEGIN_GAME' }
+  | { type: 'SET_ROUNDS'; rounds: Category[] };
 
 export function initialState(rounds: Category[]): GameState {
   return {
@@ -34,6 +37,7 @@ export function initialState(rounds: Category[]): GameState {
     isRoundOver: false,
     awaitingSteal: false,
     teamAssignments: {},
+    gameStarted: false,
   };
 }
 
@@ -130,6 +134,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         teamAssignments: { ...state.teamAssignments, [action.userId]: action.team },
       };
+
+    case 'BEGIN_GAME':
+      if (state.gameStarted) return state;
+      return { ...state, gameStarted: true };
+
+    case 'SET_ROUNDS': {
+      if (state.gameStarted || action.rounds.length === 0) return state;
+      return { ...state, rounds: action.rounds, gameStarted: true };
+    }
 
     default:
       return state;

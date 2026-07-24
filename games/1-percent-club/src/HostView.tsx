@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { HostViewProps } from '@games/platform';
+import { recordGameResult, type HostViewProps } from '@games/platform';
 import type { GameState } from './types';
 import { type GameAction } from './state/gameReducer';
 import { useGameSounds } from './hooks/useGameSounds';
@@ -33,6 +33,7 @@ export function HostView({
   playerActions,
   clearPlayerAction,
   isHosted,
+  roomId,
 }: HostViewProps<GameState, GameAction>) {
   const { playCorrect, playWrong, playWin, muted, toggleMute } = useGameSounds();
 
@@ -48,14 +49,35 @@ export function HostView({
     }
   }, [isHosted, playerActions, dispatch, clearPlayerAction]);
 
-  // Hosted mode: celebrate when the simulated crowd reaches the jackpot.
+  // Hosted mode: celebrate when the simulated crowd reaches the jackpot, and
+  // record the bragging-rights leaderboard to the cross-night family history.
   const prevPhaseRef = useRef(state.phase);
   useEffect(() => {
     if (isHosted && state.phase === 'ended' && prevPhaseRef.current !== 'ended') {
       playWin();
+      if (roomId) {
+        void recordGameResult('one-percent-club', roomId, {
+          jackpotAmount: state.jackpotAmount,
+          players: players.map((p) => ({
+            userId: p.userId,
+            nickname: p.nickname,
+            correctCount: state.playerCorrectCounts[p.userId] ?? 0,
+            neverMissed: !state.outOfRunningIds.includes(p.userId),
+          })),
+        });
+      }
     }
     prevPhaseRef.current = state.phase;
-  }, [isHosted, state.phase, playWin]);
+  }, [
+    isHosted,
+    roomId,
+    state.phase,
+    state.jackpotAmount,
+    state.playerCorrectCounts,
+    state.outOfRunningIds,
+    players,
+    playWin,
+  ]);
 
   // Hosted mode: auto-reveal when the countdown reaches zero. Safe even if
   // this fires slightly late or twice — REVEAL_TIER is a no-op once the
@@ -106,7 +128,13 @@ export function HostView({
   });
 
   if (state.phase === 'setup') {
-    return <SetupScreen defaultJackpot={state.jackpotAmount} onStart={handleStart} />;
+    return (
+      <SetupScreen
+        defaultJackpot={state.jackpotAmount}
+        onStart={handleStart}
+        onQuestionsGenerated={(questions) => dispatch({ type: 'SET_QUESTIONS', questions })}
+      />
+    );
   }
 
   if (!isHosted) {

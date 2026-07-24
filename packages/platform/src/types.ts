@@ -39,6 +39,8 @@ export interface HostViewProps<State, Action> {
    * branch on this instead.
    */
   isHosted: boolean;
+  /** The live room's id (for recordGameResult etc). Null in solo mode. */
+  roomId: string | null;
 }
 
 /**

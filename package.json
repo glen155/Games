@@ -10,6 +10,7 @@
   "scripts": {
     "dev:family-feud": "npm run dev --workspace games/family-feud",
     "dev:1-percent-club": "npm run dev --workspace games/1-percent-club",
+    "dev:leaderboard": "npm run dev --workspace games/leaderboard",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build:pages": "node scripts/build-pages.mjs"
