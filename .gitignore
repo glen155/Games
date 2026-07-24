@@ -16,6 +16,9 @@ _site
 .env.local
 *.local
 
+# Supabase CLI local state
+supabase/.temp/
+
 # Editor / OS
 .vscode/*
 !.vscode/extensions.json
