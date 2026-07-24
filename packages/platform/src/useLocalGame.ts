@@ -17,5 +17,6 @@ export function useLocalGame<State, Action>(
     players: [],
     playerActions: [],
     clearPlayerAction: noop,
+    isHosted: false,
   };
 }

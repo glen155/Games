@@ -128,6 +128,7 @@ function HostContainer<State, Action>({
         players={room.players}
         playerActions={room.playerActions}
         clearPlayerAction={room.clearPlayerAction}
+        isHosted
       />
     </div>
   );
@@ -172,6 +173,7 @@ function PlayerContainer<State, Action>({
       <PlayerView
         state={room.state}
         nickname={nickname}
+        userId={room.userId}
         players={room.players}
         sendAction={room.sendAction}
       />

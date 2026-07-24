@@ -31,6 +31,14 @@ export interface HostViewProps<State, Action> {
   /** Latest player-originated actions (buzzes, guesses) the host can react to. */
   playerActions: PlayerAction[];
   clearPlayerAction: (id: string) => void;
+  /**
+   * False in solo/local single-device mode, true when driving a live room.
+   * `players.length === 0` alone can't distinguish these — a hosted room's
+   * lobby is also empty until the first player joins — so games whose solo
+   * and hosted flows genuinely differ (not just "more players") should
+   * branch on this instead.
+   */
+  isHosted: boolean;
 }
 
 /**
@@ -40,6 +48,8 @@ export interface HostViewProps<State, Action> {
 export interface PlayerViewProps<State> {
   state: State | null;
   nickname: string;
+  /** This device's stable id (its row/key in any per-player state the host tracks). */
+  userId: string;
   players: PlayerPresence[];
   sendAction: (type: string, payload?: unknown) => void;
 }
