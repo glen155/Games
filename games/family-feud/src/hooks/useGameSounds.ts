@@ -73,7 +73,16 @@ export function useGameSounds() {
     [playTones],
   );
 
+  const playBuzz = useCallback(
+    () =>
+      playTones([
+        { freq: 440, duration: 0.1, shape: 'square' },
+        { freq: 660, duration: 0.14, shape: 'square', startAt: 0.09 },
+      ]),
+    [playTones],
+  );
+
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
-  return { playReveal, playStrike, playAward, muted, toggleMute };
+  return { playReveal, playStrike, playAward, playBuzz, muted, toggleMute };
 }
