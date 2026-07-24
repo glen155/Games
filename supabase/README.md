@@ -63,12 +63,19 @@ Function, [`functions/generate-round/index.ts`](./functions/generate-round/index
   exactly where an LLM is most likely to confidently hallucinate a wrong
   "fact". A vetted trivia dataset is the safer choice here.
 
-To deploy it:
+To deploy it (needs the [Supabase CLI](https://supabase.com/docs/guides/cli)):
 
 ```bash
+supabase login
+supabase link --project-ref <your-project-ref>   # find it in the dashboard URL
 supabase functions deploy generate-round
 supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
 ```
+
+Until this is deployed, both games' "Generate a round" buttons will fail
+with "Failed to send a request to the Edge Function" — that's expected, and
+falling back to "Play the classic rounds" / the static question bank works
+fine without it.
 
 The Anthropic key is only needed for the Family Feud path — 1% Club's Open
 Trivia DB calls need no secret. Leave the function's default "Verify JWT"

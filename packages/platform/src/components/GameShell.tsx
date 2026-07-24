@@ -94,6 +94,9 @@ function Landing<State, Action>({
           <span className="shell-btn-sub">One screen, pass it around — no internet needed</span>
         </button>
       </div>
+      <a className="shell-landing-allgames" href="../">
+        ← All games
+      </a>
     </div>
   );
 }
@@ -123,12 +126,22 @@ function HostContainer<State, Action>({
     );
   }
 
+  function handleExit() {
+    if (window.confirm('End the game for everyone and return to the menu?')) {
+      room.endRoom();
+      onExit();
+    }
+  }
+
   return (
     <div className="shell-host">
       {room.code && (
         <div className="shell-host-bar">
           <RoomCode code={room.code} />
           <PlayerList players={room.players} />
+          <button type="button" className="shell-exit-btn" onClick={handleExit}>
+            Exit
+          </button>
         </div>
       )}
       <HostView
@@ -173,12 +186,18 @@ function PlayerContainer<State, Action>({
   if (room.phase === 'error') {
     return <StatusScreen title="Couldn't join" detail={room.error} onBack={onExit} />;
   }
+  if (room.phase === 'ended') {
+    return <StatusScreen title="The host ended this game" onBack={onExit} />;
+  }
 
   return (
     <div className="shell-player">
       <div className="shell-player-bar">
         <span className="shell-player-you">You: {nickname}</span>
         <span className="shell-player-count">{room.players.length} in room</span>
+        <button type="button" className="shell-exit-btn" onClick={onExit}>
+          Exit
+        </button>
       </div>
       <PlayerView
         state={room.state}
