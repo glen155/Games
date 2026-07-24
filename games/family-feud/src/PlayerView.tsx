@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PlayerViewProps } from '@games/platform';
 import type { GameState, TeamId } from './types';
+import { StrikeDisplay } from './components/StrikeDisplay';
 
 /**
  * The player / phone view. A read-only live mirror of the board — crucially it
@@ -58,6 +59,8 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
         </span>
         <h1>{category.name}</h1>
       </div>
+
+      <StrikeDisplay strikes={state.strikes} />
 
       <ul className="player-board">
         {category.answers.map((answer, index) => (

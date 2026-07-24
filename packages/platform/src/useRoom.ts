@@ -14,10 +14,12 @@ export type ConnectionPhase =
   | 'connecting'
   | 'connected'
   | 'not-found'
-  | 'error';
+  | 'error'
+  | 'ended';
 
 const STATE_EVENT = 'state';
 const ACTION_EVENT = 'action';
+const ROOM_ENDED_EVENT = 'room-ended';
 const MAX_TRACKED_ACTIONS = 20;
 const CODE_INSERT_RETRIES = 5;
 
@@ -121,6 +123,9 @@ export function useHostRoom<State, Action>(
 
   const endRoom = useCallback(() => {
     if (client && room) {
+      // Tell any connected players before the channel goes away — otherwise
+      // they'd just stop receiving state updates with no explanation.
+      channelRef.current?.send({ type: 'broadcast', event: ROOM_ENDED_EVENT, payload: {} });
       void client.from('rooms').update({ status: 'ended' }).eq('id', room.id);
       sessionStorage.removeItem(sessionKey(game.slug));
     }
@@ -317,6 +322,9 @@ export function usePlayerRoom<State, Action>(
         });
         channel.on('broadcast', { event: STATE_EVENT }, ({ payload }) => {
           setState((payload as { state: State }).state);
+        });
+        channel.on('broadcast', { event: ROOM_ENDED_EVENT }, () => {
+          setPhase('ended');
         });
 
         channel.subscribe(async (status) => {

@@ -39,6 +39,18 @@
   width: min(30rem, 100%);
 }
 
+.shell-landing-allgames {
+  color: inherit;
+  opacity: 0.6;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.shell-landing-allgames:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
 .shell-btn {
   display: flex;
   flex-direction: column;
@@ -275,6 +287,23 @@
 
 .shell-player-count {
   opacity: 0.7;
+}
+
+.shell-exit-btn {
+  padding: 0.35rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.shell-exit-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .shell-status-detail {
