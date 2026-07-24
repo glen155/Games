@@ -85,6 +85,26 @@ button:disabled {
   color: var(--cream);
 }
 
+.controls-button--steal-success {
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+
+.controls-button--steal-success:not(:disabled):hover {
+  background: #2ecc71;
+  color: var(--navy-text);
+}
+
+.controls-button--steal-fail {
+  border-color: var(--strike-red);
+  color: var(--strike-red);
+}
+
+.controls-button--steal-fail:not(:disabled):hover {
+  background: var(--strike-red);
+  color: var(--cream);
+}
+
 .controls-legend {
   color: var(--cream);
   font-size: 0.8rem;

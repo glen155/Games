@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import type { PlayerViewProps } from '@games/platform';
-import type { GameState } from './types';
+import type { GameState, TeamId } from './types';
 
 /**
  * The player / phone view. A read-only live mirror of the board — crucially it
  * only renders answer text once the host reveals it, so unrevealed answers never
- * leak into the player's device — plus a big Buzz button to buzz in.
+ * leak into the player's device — plus a big Buzz button to buzz in and team
+ * picker to self-assign. This is also the "public board" for anyone watching:
+ * a TV/laptop can join the room like any other player to display it.
  */
-export function PlayerView({ state, sendAction }: PlayerViewProps<GameState>) {
+export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameState>) {
   const [buzzed, setBuzzed] = useState(false);
 
   if (!state) {
@@ -30,6 +32,8 @@ export function PlayerView({ state, sendAction }: PlayerViewProps<GameState>) {
   }
 
   const category = state.rounds[state.currentRoundIndex];
+  const myTeam = state.teamAssignments[userId];
+  const stealingTeam: TeamId = state.activeTeam === 0 ? 1 : 0;
 
   function handleBuzz() {
     sendAction('buzz');
@@ -37,8 +41,17 @@ export function PlayerView({ state, sendAction }: PlayerViewProps<GameState>) {
     setTimeout(() => setBuzzed(false), 1200);
   }
 
+  function handleJoinTeam(team: TeamId) {
+    sendAction('join-team', { team });
+  }
+
   return (
     <div className="player-view">
+      {state.awaitingSteal && (
+        <div className="player-steal-banner">
+          {state.teams[stealingTeam].name} is trying to steal the pot!
+        </div>
+      )}
       <div className="player-view-category">
         <span className="player-view-round">
           Round {state.currentRoundIndex + 1} of {state.rounds.length}
@@ -66,10 +79,15 @@ export function PlayerView({ state, sendAction }: PlayerViewProps<GameState>) {
       </ul>
 
       <div className="player-scores">
-        {state.teams.map((team) => (
-          <div key={team.name} className="player-score">
+        {state.teams.map((team, index) => (
+          <div
+            key={team.name}
+            className={`player-score${myTeam === index ? ' player-score--mine' : ''}`}
+            onClick={() => handleJoinTeam(index as TeamId)}
+          >
             <span className="player-score-name">{team.name}</span>
             <span className="player-score-value">{team.score}</span>
+            <span className="player-score-join-hint">{myTeam === index ? 'Your team' : 'Tap to join'}</span>
           </div>
         ))}
       </div>

@@ -102,3 +102,21 @@
   font-size: clamp(1.5rem, 4vw, 2.25rem);
   color: var(--gold);
 }
+
+.scoreboard-roster {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.scoreboard-roster-chip {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--cream);
+}

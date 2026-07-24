@@ -12,6 +12,16 @@ three ways:
 
 - 8 built-in rounds with survey-style answers and point values
 - Flip-reveal answer board with a game-show look
+- **Private host judging panel** — when hosting, the host's own device shows every
+  answer and point value up front (not just after reveal) so you can judge a
+  spoken guess before tapping it. Solo/pass-the-device mode keeps the classic
+  blind flip-board, since that screen is shared with the group; a TV or laptop
+  can also join a hosted room as a plain player to act as an optional public
+  board — nothing extra to set up
+- **Steal mechanic** — three strikes hands the other team one shot to steal the
+  pot, in both solo and hosted play
+- **Team self-assignment** — joined players pick Team 1 or Team 2 for themselves
+  from their phone; the host sees a live roster of who's on which team
 - Two-team scoreboard with editable names and an "active team" highlight
 - Strikes (up to 3) with a buzzer sound and a big red flash
 - Live player view on phones — the board mirrors the host (revealed answers only,
@@ -44,11 +54,19 @@ npm run preview
 
 Split into two teams. For each round, read the category out loud. As players guess answers:
 
-- Click an answer slot (or press `1`–`8`) to reveal it if it's on the board
-- If a guess isn't on the board, press `X` (or click **Strike**) — three strikes and control passes
+- If you're hosting a room, your device shows every answer + point value up
+  front (the **judging panel**) — check a spoken guess against it, then click
+  the matching row to reveal it. In solo/pass-the-device mode the board stays
+  blind (flip-to-reveal) since it's shared with the group.
+- If a guess isn't on the board, press `X` (or click **Strike**) — three
+  strikes hands control to the other team for a single **steal** attempt.
+  Judge their guess the same way, then click **Steal Successful!** or **No
+  Steal** to award the pot.
 - Use `←` / `→` (or click a team panel) to mark which team currently has control
 - Once a team locks in the round's pot, press `A` (or click that team's **Award** button) to add it to their score
 - Press `N` to move to the next round, or `R` to reset the current round without touching scores
+- Joined players can tap either team's score on their phone to join it — the
+  host sees a live roster of who picked which team
 
 | Key | Action |
 |---|---|

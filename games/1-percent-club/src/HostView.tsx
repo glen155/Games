@@ -14,6 +14,7 @@ import { EndScreen } from './components/EndScreen';
 import { PlayerTally } from './components/PlayerTally';
 import { ResultsBreakdown } from './components/ResultsBreakdown';
 import { Leaderboard } from './components/Leaderboard';
+import { TimerControls } from './components/TimerControls';
 
 /**
  * The host / big-screen view. Solo mode (isHosted === false) is the original
@@ -55,6 +56,17 @@ export function HostView({
     }
     prevPhaseRef.current = state.phase;
   }, [isHosted, state.phase, playWin]);
+
+  // Hosted mode: auto-reveal when the countdown reaches zero. Safe even if
+  // this fires slightly late or twice — REVEAL_TIER is a no-op once the
+  // question has already moved past 'playing'. Only the host device ever
+  // dispatches for the room, so there's no race with other devices.
+  useEffect(() => {
+    if (!isHosted || state.phase !== 'playing' || state.timerEndsAt === null) return;
+    const delay = Math.max(0, state.timerEndsAt - Date.now());
+    const timeout = setTimeout(() => dispatch({ type: 'REVEAL_TIER' }), delay);
+    return () => clearTimeout(timeout);
+  }, [isHosted, state.phase, state.timerEndsAt, dispatch]);
 
   function handleStart(jackpotAmount: number) {
     dispatch({ type: 'START_GAME', jackpotAmount });
@@ -176,6 +188,14 @@ export function HostView({
         totalTiers={state.questions.length}
       />
       <QuestionCard percent={tier.percent} prompt={tier.prompt} />
+      <TimerControls
+        config={state.timerConfig}
+        timerEndsAt={state.timerEndsAt}
+        phase={state.phase}
+        onConfigChange={(config) => dispatch({ type: 'SET_TIMER_CONFIG', ...config })}
+        onStart={() => dispatch({ type: 'START_TIMER' })}
+        onClear={() => dispatch({ type: 'CLEAR_TIMER' })}
+      />
       {state.phase === 'playing' && <PlayerTally answered={answeredCount} total={players.length} />}
       {state.phase === 'reveal' && state.lastPlayerResults && (
         <ResultsBreakdown

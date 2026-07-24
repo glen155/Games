@@ -2,6 +2,7 @@ import type { PlayerViewProps } from '@games/platform';
 import type { GameState } from './types';
 import { QuestionCard } from './components/QuestionCard';
 import { OptionsGrid } from './components/OptionsGrid';
+import { useCountdown } from './hooks/useCountdown';
 
 /**
  * The player / phone view for hosted 1% Club. A read-only mirror of the host's
@@ -10,6 +11,8 @@ import { OptionsGrid } from './components/OptionsGrid';
  * leaderboard, but the question keeps coming so you can keep playing for fun.
  */
 export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewProps<GameState>) {
+  const secondsLeft = useCountdown(state?.timerEndsAt ?? null);
+
   if (!state) {
     return (
       <div className="player-view player-view--waiting">
@@ -57,6 +60,11 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
       <QuestionCard percent={tier.percent} prompt={tier.prompt} />
       {state.phase === 'playing' ? (
         <>
+          {secondsLeft !== null && (
+            <span className={`player-countdown${secondsLeft <= 5 ? ' player-countdown--urgent' : ''}`}>
+              {secondsLeft}s
+            </span>
+          )}
           <OptionsGrid
             options={tier.options}
             selectedIndex={myAnswer?.index ?? null}

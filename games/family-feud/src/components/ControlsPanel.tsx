@@ -1,7 +1,9 @@
 interface ControlsPanelProps {
   strikes: number;
   muted: boolean;
+  awaitingSteal: boolean;
   onStrike: () => void;
+  onResolveSteal: (success: boolean) => void;
   onResetRound: () => void;
   onNextRound: () => void;
   onPrevRound: () => void;
@@ -11,7 +13,9 @@ interface ControlsPanelProps {
 export function ControlsPanel({
   strikes,
   muted,
+  awaitingSteal,
   onStrike,
+  onResolveSteal,
   onResetRound,
   onNextRound,
   onPrevRound,
@@ -20,9 +24,20 @@ export function ControlsPanel({
   return (
     <div className="controls-panel">
       <div className="controls-buttons">
-        <button type="button" className="controls-button controls-button--strike" onClick={onStrike} disabled={strikes >= 3}>
-          Strike (X)
-        </button>
+        {awaitingSteal ? (
+          <>
+            <button type="button" className="controls-button controls-button--steal-success" onClick={() => onResolveSteal(true)}>
+              Steal Successful!
+            </button>
+            <button type="button" className="controls-button controls-button--steal-fail" onClick={() => onResolveSteal(false)}>
+              No Steal
+            </button>
+          </>
+        ) : (
+          <button type="button" className="controls-button controls-button--strike" onClick={onStrike} disabled={strikes >= 3}>
+            Strike (X)
+          </button>
+        )}
         <button type="button" className="controls-button" onClick={onPrevRound}>
           ◀ Prev Round (P)
         </button>

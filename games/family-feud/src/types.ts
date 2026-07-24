@@ -24,4 +24,8 @@ export interface GameState {
   teams: [Team, Team];
   pot: number;
   isRoundOver: boolean;
+  /** True once strikes hit MAX_STRIKES — the other team gets one shot to steal the pot. */
+  awaitingSteal: boolean;
+  /** Hosted-mode only: which team each joined player picked for themselves. */
+  teamAssignments: Record<string, TeamId>;
 }

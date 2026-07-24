@@ -1,6 +1,7 @@
-import type { GameState, QuestionTier } from '../types';
+import type { GameState, QuestionTier, TimerConfig } from '../types';
 
 export const STARTING_POOL = 100;
+export const DEFAULT_TIMER_CONFIG: TimerConfig = { mode: 'auto', durationSeconds: 30 };
 
 export type GameAction =
   | { type: 'START_GAME'; jackpotAmount: number }
@@ -11,7 +12,14 @@ export type GameAction =
   // Hosted-mode only — dispatched by HostView, never by solo play.
   | { type: 'PLAYER_ANSWER'; userId: string; nickname: string; index: number }
   | { type: 'REVEAL_TIER' }
-  | { type: 'NEXT_TIER' };
+  | { type: 'NEXT_TIER' }
+  | { type: 'SET_TIMER_CONFIG'; mode: TimerConfig['mode']; durationSeconds: number }
+  | { type: 'START_TIMER' }
+  | { type: 'CLEAR_TIMER' };
+
+function nextTimerEndsAt(config: TimerConfig): number | null {
+  return config.mode === 'auto' ? Date.now() + config.durationSeconds * 1000 : null;
+}
 
 export function initialState(questions: QuestionTier[]): GameState {
   return {
@@ -27,6 +35,8 @@ export function initialState(questions: QuestionTier[]): GameState {
     lastPlayerResults: null,
     playerCorrectCounts: {},
     outOfRunningIds: [],
+    timerConfig: DEFAULT_TIMER_CONFIG,
+    timerEndsAt: null,
   };
 }
 
@@ -47,6 +57,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         lastPlayerResults: null,
         playerCorrectCounts: {},
         outOfRunningIds: [],
+        timerEndsAt: nextTimerEndsAt(state.timerConfig),
       };
     }
 
@@ -114,13 +125,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       // Simulated crowd narrative — unconditional, exactly like solo's math,
       // just no longer gated behind any single actor's correctness.
       const poolRemaining = Math.max(1, Math.round((STARTING_POOL * tier.percent) / 100));
-      return { ...state, phase: 'reveal', poolRemaining, lastPlayerResults, playerCorrectCounts, outOfRunningIds };
+      return {
+        ...state,
+        phase: 'reveal',
+        poolRemaining,
+        lastPlayerResults,
+        playerCorrectCounts,
+        outOfRunningIds,
+        timerEndsAt: null,
+      };
     }
 
     case 'NEXT_TIER': {
       if (state.phase !== 'reveal') return state;
       if (state.currentTierIndex >= state.questions.length - 1) {
-        return { ...state, phase: 'ended' };
+        return { ...state, phase: 'ended', timerEndsAt: null };
       }
       return {
         ...state,
@@ -128,7 +147,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         currentTierIndex: state.currentTierIndex + 1,
         playerAnswers: {},
         lastPlayerResults: null,
+        timerEndsAt: nextTimerEndsAt(state.timerConfig),
       };
+    }
+
+    case 'SET_TIMER_CONFIG': {
+      if (action.durationSeconds <= 0) return state;
+      return { ...state, timerConfig: { mode: action.mode, durationSeconds: action.durationSeconds } };
+    }
+
+    case 'START_TIMER': {
+      if (state.phase !== 'playing') return state;
+      return { ...state, timerEndsAt: Date.now() + state.timerConfig.durationSeconds * 1000 };
+    }
+
+    case 'CLEAR_TIMER': {
+      if (state.phase !== 'playing') return state;
+      return { ...state, timerEndsAt: null };
     }
 
     default:

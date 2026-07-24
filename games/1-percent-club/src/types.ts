@@ -23,6 +23,12 @@ export interface PlayerTierResult {
   correct: boolean;
 }
 
+/** Hosted-mode only: how the per-question countdown behaves. */
+export interface TimerConfig {
+  mode: 'auto' | 'manual';
+  durationSeconds: number;
+}
+
 export interface GameState {
   questions: QuestionTier[];
   phase: GamePhase;
@@ -40,4 +46,11 @@ export interface GameState {
   lastPlayerResults: Record<string, PlayerTierResult> | null; // set on reveal
   playerCorrectCounts: Record<string, number>; // cumulative, across all tiers
   outOfRunningIds: string[]; // first wrong answer = permanent, persists across tiers
+
+  // Hosted-mode only: per-question countdown. timerEndsAt is an absolute
+  // epoch-ms deadline (not a ticking counter) so every device can compute its
+  // own remaining time from one synced value without spamming the room
+  // channel every second.
+  timerConfig: TimerConfig;
+  timerEndsAt: number | null;
 }

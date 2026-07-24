@@ -12,7 +12,12 @@ export type GameAction =
   | { type: 'NEXT_ROUND' }
   | { type: 'PREV_ROUND' }
   | { type: 'SET_TEAM_NAME'; team: TeamId; name: string }
-  | { type: 'RESET_GAME' };
+  | { type: 'RESET_GAME' }
+  // The classic steal-the-pot mechanic — a general rule improvement, works
+  // the same in solo and hosted play (host judges either way).
+  | { type: 'RESOLVE_STEAL'; success: boolean }
+  // Hosted-mode only — a real joined player picking their own team.
+  | { type: 'ASSIGN_TEAM'; userId: string; team: TeamId };
 
 export function initialState(rounds: Category[]): GameState {
   return {
@@ -27,6 +32,8 @@ export function initialState(rounds: Category[]): GameState {
     ],
     pot: 0,
     isRoundOver: false,
+    awaitingSteal: false,
+    teamAssignments: {},
   };
 }
 
@@ -39,7 +46,12 @@ function freshRoundFields(state: GameState, roundIndex: number): GameState {
     strikes: 0,
     pot: 0,
     isRoundOver: roundIndex >= state.rounds.length,
+    awaitingSteal: false,
   };
+}
+
+function otherTeam(team: TeamId): TeamId {
+  return team === 0 ? 1 : 0;
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -63,8 +75,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'STRIKE':
-      return { ...state, strikes: Math.min(MAX_STRIKES, state.strikes + 1) };
+    case 'STRIKE': {
+      if (state.awaitingSteal || state.strikes >= MAX_STRIKES) return state;
+      const strikes = state.strikes + 1;
+      return { ...state, strikes, awaitingSteal: strikes >= MAX_STRIKES };
+    }
 
     case 'AWARD_POINTS': {
       const teams: [typeof state.teams[0], typeof state.teams[1]] = [
@@ -98,6 +113,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'RESET_GAME':
       return initialState(state.rounds);
+
+    case 'RESOLVE_STEAL': {
+      if (!state.awaitingSteal) return state;
+      const winner = action.success ? otherTeam(state.activeTeam) : state.activeTeam;
+      const teams: [typeof state.teams[0], typeof state.teams[1]] = [
+        { ...state.teams[0] },
+        { ...state.teams[1] },
+      ];
+      teams[winner].score += state.pot;
+      return { ...state, teams, pot: 0, awaitingSteal: false };
+    }
+
+    case 'ASSIGN_TEAM':
+      return {
+        ...state,
+        teamAssignments: { ...state.teamAssignments, [action.userId]: action.team },
+      };
 
     default:
       return state;
