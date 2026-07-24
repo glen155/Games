@@ -1,11 +1,14 @@
 import { useState, type FormEvent } from 'react';
 import { callEdgeFunction, isMultiplayerConfigured } from '@games/platform';
 import type { QuestionTier } from '../types';
+import type { ClassicLadder } from '../data/questions';
 
 interface SetupScreenProps {
   defaultJackpot: number;
   onStart: (jackpotAmount: number) => void;
   onQuestionsGenerated: (questions: QuestionTier[]) => void;
+  classicLadders: ClassicLadder[];
+  onSelectLadder: (tiers: QuestionTier[]) => void;
 }
 
 interface GenerateResponse {
@@ -16,12 +19,19 @@ interface GenerateResponse {
 
 type GenerateStatus = 'idle' | 'generating' | 'ready' | 'error';
 
-export function SetupScreen({ defaultJackpot, onStart, onQuestionsGenerated }: SetupScreenProps) {
+export function SetupScreen({
+  defaultJackpot,
+  onStart,
+  onQuestionsGenerated,
+  classicLadders,
+  onSelectLadder,
+}: SetupScreenProps) {
   const [amount, setAmount] = useState(defaultJackpot > 0 ? String(defaultJackpot) : '10000');
   const [topic, setTopic] = useState('');
   const [difficulty, setDifficulty] = useState<'' | 'easy' | 'medium' | 'hard'>('');
   const [status, setStatus] = useState<GenerateStatus>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [selectedLadderIndex, setSelectedLadderIndex] = useState<number | null>(null);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -58,6 +68,34 @@ export function SetupScreen({ defaultJackpot, onStart, onQuestionsGenerated }: S
         — get one wrong and you're eliminated. Survive all the way to the 1% question to win the
         whole jackpot.
       </p>
+
+      <div className="setup-ladder-picker">
+        <p className="setup-ladder-label">Classic ladder</p>
+        <div className="setup-ladder-options">
+          {classicLadders.map((ladder, index) => (
+            <button
+              key={ladder.name}
+              type="button"
+              className={
+                selectedLadderIndex === index
+                  ? 'setup-ladder-button setup-ladder-button--selected'
+                  : 'setup-ladder-button'
+              }
+              onClick={() => {
+                setSelectedLadderIndex(index);
+                onSelectLadder(ladder.tiers);
+              }}
+            >
+              {ladder.name}
+            </button>
+          ))}
+        </div>
+        <p className="setup-ladder-hint">
+          {selectedLadderIndex === null
+            ? "We'll pick one at random if you don't choose."
+            : classicLadders[selectedLadderIndex].description}
+        </p>
+      </div>
 
       {isMultiplayerConfigured && (
         <div className="setup-generate">

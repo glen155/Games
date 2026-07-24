@@ -114,6 +114,58 @@ button:disabled {
   background: var(--gold-dark);
 }
 
+.setup-ladder-picker {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+}
+
+.setup-ladder-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cream);
+  opacity: 0.85;
+}
+
+.setup-ladder-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.setup-ladder-button {
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gold);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.setup-ladder-button:hover {
+  background: var(--gold);
+  color: var(--dark-text);
+}
+
+.setup-ladder-button--selected {
+  background: var(--gold);
+  color: var(--dark-text);
+}
+
+.setup-ladder-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--cream);
+  opacity: 0.85;
+}
+
 .setup-generate {
   width: 100%;
   max-width: 480px;

@@ -5,6 +5,7 @@ import { type GameAction } from './state/gameReducer';
 import { useGameSounds } from './hooks/useGameSounds';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { SetupScreen } from './components/SetupScreen';
+import { classicLadders } from './data/questions';
 import { StatusBar } from './components/StatusBar';
 import { QuestionCard } from './components/QuestionCard';
 import { OptionsGrid } from './components/OptionsGrid';
@@ -133,6 +134,8 @@ export function HostView({
         defaultJackpot={state.jackpotAmount}
         onStart={handleStart}
         onQuestionsGenerated={(questions) => dispatch({ type: 'SET_QUESTIONS', questions })}
+        classicLadders={classicLadders}
+        onSelectLadder={(tiers) => dispatch({ type: 'SET_QUESTIONS', questions: tiers })}
       />
     );
   }
