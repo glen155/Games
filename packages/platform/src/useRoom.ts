@@ -295,14 +295,17 @@ export function usePlayerRoom<State, Action>(
             { onConflict: 'room_id,user_id' },
           );
 
-        // Catch-up: pull whatever state exists right now.
+        // Catch-up: pull whatever state exists right now. Shallow-merge over a
+        // fresh default state in case the room predates a later schema change
+        // (see the matching comment in resumeOrCreateRoom) — an uncaught
+        // access on a missing field would otherwise crash the whole tree.
         const { data: stateRow } = await c
           .from('game_state')
           .select('state')
           .eq('room_id', joinedRoom.id)
           .maybeSingle();
         if (cancelled) return;
-        if (stateRow?.state) setState(stateRow.state as State);
+        if (stateRow?.state) setState({ ...game.createInitialState(), ...(stateRow.state as State) });
 
         channel = c.channel(channelName(code), {
           config: { broadcast: { self: false }, presence: { key: userId } },
@@ -374,7 +377,11 @@ async function resumeOrCreateRoom<State, Action>(
           hostUserId: existing.host_user_id,
           status: existing.status,
         },
-        state: (stateRow?.state as State) ?? fallbackState,
+        // Shallow-merge over a fresh default state so a room persisted by an
+        // older build (missing fields a later schema change added) can't hand
+        // back a partial object — an uncaught access on a missing field
+        // crashes the whole render tree with no error boundary to catch it.
+        state: stateRow?.state ? { ...fallbackState, ...(stateRow.state as State) } : fallbackState,
       };
     }
   }
