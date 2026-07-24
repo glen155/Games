@@ -205,6 +205,7 @@ interface PlayerRoomResult<State> {
   error: string | null;
   room: Room | null;
   state: State | null;
+  userId: string;
   players: PlayerPresence[];
   sendAction: (type: string, payload?: unknown) => void;
 }
@@ -335,7 +336,7 @@ export function usePlayerRoom<State, Action>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client, code, game.slug, nickname]);
 
-  return { phase, error, room, state, players, sendAction };
+  return { phase, error, room, state, userId: userIdRef.current, players, sendAction };
 }
 
 /**

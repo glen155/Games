@@ -39,6 +39,10 @@ export interface HostViewProps<State, Action> {
  */
 export interface PlayerViewProps<State> {
   state: State | null;
+  /** This device's own stable identity — matches the `userId` on `PlayerAction`s
+   * it sends and on its `PlayerPresence` entry. Lets a game look itself up in
+   * per-player state (e.g. `state.players[userId]`). */
+  userId: string;
   nickname: string;
   players: PlayerPresence[];
   sendAction: (type: string, payload?: unknown) => void;

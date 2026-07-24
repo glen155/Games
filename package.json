@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev:family-feud": "npm run dev --workspace games/family-feud",
+    "dev:music-timeline": "npm run dev --workspace games/music-timeline",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build:pages": "node scripts/build-pages.mjs"
