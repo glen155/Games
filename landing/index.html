@@ -2,92 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Family Game Night</title>
-    <style>
-      :root {
-        color-scheme: light dark;
-        --bg: #0b1020;
-        --card: rgba(255, 255, 255, 0.06);
-        --card-border: rgba(255, 255, 255, 0.12);
-        --fg: #f8fafc;
-        --muted: #94a3b8;
-        --accent: #3b82f6;
-      }
-      @media (prefers-color-scheme: light) {
-        :root {
-          --bg: #f1f5f9;
-          --card: #ffffff;
-          --card-border: rgba(15, 23, 42, 0.1);
-          --fg: #0f172a;
-          --muted: #64748b;
-        }
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        background: radial-gradient(circle at 50% -10%, #1e3a8a 0%, var(--bg) 55%);
-        color: var(--fg);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 4rem 1.25rem;
-      }
-      h1 {
-        font-size: clamp(2.25rem, 7vw, 3.75rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin: 0 0 0.5rem;
-        text-align: center;
-      }
-      .subtitle {
-        color: var(--muted);
-        font-size: 1.1rem;
-        margin: 0 0 3rem;
-        text-align: center;
-        max-width: 32rem;
-      }
-      .games {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-        gap: 1.25rem;
-        width: min(56rem, 100%);
-      }
-      .game-card {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 1.75rem;
-        border-radius: 1rem;
-        background: var(--card);
-        border: 1px solid var(--card-border);
-        color: inherit;
-        text-decoration: none;
-        transition: transform 0.1s ease, border-color 0.15s ease;
-      }
-      .game-card:hover {
-        transform: translateY(-3px);
-        border-color: var(--accent);
-      }
-      .game-emoji { font-size: 2.5rem; }
-      .game-name { font-size: 1.4rem; font-weight: 700; }
-      .game-tagline { color: var(--muted); font-size: 0.95rem; }
-      footer { margin-top: 3rem; color: var(--muted); font-size: 0.85rem; text-align: center; }
-    </style>
+    <title>Glen's Games</title>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <h1>Family Game Night</h1>
-    <p class="subtitle">Pick a game. Play together on one screen, or host it and let everyone join from their phones.</p>
-    <div class="games">
-      <a class="game-card" href="./family-feud/">
-        <span class="game-emoji">📋</span>
-        <span class="game-name">Family Feud</span>
-        <span class="game-tagline">Survey says… guess the top answers.</span>
-      </a>
-      <!-- Add more games here as they ship. -->
-    </div>
-    <footer>Built for family &amp; friends. More games coming soon.</footer>
+    <main class="hub">
+      <h1 class="hub-title">Glen's Games</h1>
+      <p class="hub-intro">A small collection of party/web games, built one at a time.</p>
+      <div class="hub-cards">
+        <a class="hub-card" href="./family-feud/">
+          <h2 class="hub-card-title">Family Feud</h2>
+          <p class="hub-card-description">
+            Host the classic board game on one screen and let everyone join from their phones
+            with a room code — or just pass one device around.
+          </p>
+          <span class="hub-card-play">Play &rarr;</span>
+        </a>
+        <a class="hub-card hub-card--green" href="./1-percent-club/">
+          <h2 class="hub-card-title">1% Club</h2>
+          <p class="hub-card-description">
+            A single-player trivia game — you against a simulated crowd of 100, chasing the 1%
+            question.
+          </p>
+          <span class="hub-card-play">Play &rarr;</span>
+        </a>
+      </div>
+    </main>
   </body>
 </html>

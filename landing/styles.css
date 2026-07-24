@@ -1,0 +1,106 @@
+:root {
+  --navy: #0b1e6b;
+  --green: #0a1f14;
+  --gold: #ffd700;
+  --gold-dark: #c9a400;
+  --cream: #f5f2e8;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(180deg, #05060f, #0b1230);
+  color: var(--cream);
+}
+
+.hub {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.hub-title {
+  margin: 0;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.hub-intro {
+  margin: 0;
+  max-width: 480px;
+  opacity: 0.85;
+}
+
+.hub-cards {
+  width: 100%;
+  max-width: 720px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .hub-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hub-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--cream);
+  border: 3px solid var(--gold);
+  border-radius: 12px;
+  padding: 1.75rem 1.25rem;
+  background: rgba(11, 30, 107, 0.35);
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.hub-card--green {
+  background: rgba(10, 31, 20, 0.5);
+}
+
+.hub-card:hover {
+  box-shadow: 0 0 20px 2px var(--gold);
+  transform: translateY(-2px);
+}
+
+.hub-card-title {
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-size: 1.4rem;
+}
+
+.hub-card-description {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
+.hub-card-play {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: var(--gold-dark);
+}
