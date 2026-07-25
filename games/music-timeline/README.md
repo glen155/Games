@@ -63,17 +63,24 @@ npm run preview
 
 ## Adding your own tracks
 
-Edit `src/data/tracks.ts`. The placeholder pool ships with 16 well-known
-songs, but every `spotifyUri`/`spotifyUrl` in it is a **placeholder** —
-`spotify:track:PLACEHOLDER_...` — not a real Spotify track. Before real play:
+Edit `src/data/tracks.ts`. The pool ships with 16 well-known songs, each
+pointing at a real `open.spotify.com` track and a `year` cross-checked
+against Wikipedia's single-release infobox date (see each entry's
+`sourceNote`) — not an album date, remaster date, or chart year, since those
+are frequently a year or more off from the actual single release (two
+entries here were caught and corrected during curation for exactly that
+reason). That said, these links were found via web search, not by loading
+each Spotify page and listening — do a scan-and-listen pass before relying
+on them for real play, and swap in a different regional/remaster edition if
+a link doesn't work for you. When adding new tracks:
 
-1. Replace `spotifyUri`/`spotifyUrl` with the real track's Spotify URI/link.
-2. Verify `year` against an authoritative source (Discogs, MusicBrainz, or
-   the label's original press/release info) — **not** whatever Spotify's
-   `album.release_date` says, since that field is frequently a reissue,
-   remaster, or compilation date. A wrong year here is what breaks a
-   Timeline game's trust fastest: a player who reasoned correctly still
-   loses their card.
+1. Find the real track's Spotify URI/link (`spotify:track:<id>` /
+   `https://open.spotify.com/track/<id>`).
+2. Verify `year` against an authoritative source (Wikipedia's single infobox,
+   Discogs, or MusicBrainz) — **not** whatever Spotify's `album.release_date`
+   says, since that field is frequently a reissue, remaster, or compilation
+   date. A wrong year here is what breaks a Timeline game's trust fastest: a
+   player who reasoned correctly still loses their card.
 3. Record your source in `sourceNote` (never rendered in-game, it's just a
    citation for whoever curates the pool next).
 
