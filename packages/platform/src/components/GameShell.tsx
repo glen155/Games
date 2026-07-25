@@ -171,6 +171,7 @@ function PlayerContainer<State, Action>({
       </div>
       <PlayerView
         state={room.state}
+        userId={room.userId}
         nickname={nickname}
         players={room.players}
         sendAction={room.sendAction}

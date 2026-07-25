@@ -14,7 +14,8 @@ This is an npm-workspaces monorepo:
 packages/platform     Shared multiplayer engine — every game builds on this.
                       Rooms, join-by-code + QR, live sync, presence, the
                       Host / Player / Solo flow (GameShell).
-games/family-feud     The first game, built on the platform.
+games/family-feud     A Family Feud board game built on the platform.
+games/music-timeline  A Hitster-style music-guessing game built on the platform.
 supabase/migrations   Database schema + Row Level Security (the security model).
 landing/              The static landing page listing all games.
 scripts/              build-pages.mjs — builds every game for GitHub Pages.
@@ -40,6 +41,7 @@ expire. Nothing but the public Supabase URL + anon key ever reaches the browser.
 ```bash
 npm install                 # once, at the repo root — installs all workspaces
 npm run dev:family-feud      # start Family Feud in dev mode
+npm run dev:music-timeline   # start Music Timeline in dev mode
 ```
 
 Without Supabase configured, games run in **local single-device mode** (pass the
