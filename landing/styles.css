@@ -84,6 +84,10 @@ body {
   background: rgba(42, 31, 74, 0.5);
 }
 
+.hub-card--amber {
+  background: rgba(64, 45, 4, 0.5);
+}
+
 .hub-card:hover {
   box-shadow: 0 0 20px 2px var(--gold);
   transform: translateY(-2px);

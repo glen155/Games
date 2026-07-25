@@ -14,6 +14,9 @@ Play at **https://glen155.github.io/Games/**.
 - **[1% Club](./games/1-percent-club/)** — a single-player trivia game where you
   answer increasingly hard questions against a simulated crowd of 100, chasing
   the 1% question.
+- **[Music Timeline](./games/music-timeline/)** — a Hitster-style game where you
+  guess when each song is from and build your own chronological timeline first
+  to win. Multiplayer built on the shared platform.
 
 The hub page at https://glen155.github.io/Games/ (served from
 [`landing/`](./landing/)) links to each game under its own subpath.
@@ -28,6 +31,7 @@ packages/platform     Shared multiplayer engine — every game builds on this.
                       Host / Player / Solo flow (GameShell).
 games/family-feud     Family Feud, built on the platform.
 games/1-percent-club  1% Club, a self-contained single-player game.
+games/music-timeline  Music Timeline, built on the platform.
 supabase/migrations   Database schema + Row Level Security (the security model).
 landing/              The static hub page listing all games.
 scripts/              build-pages.mjs — builds every game for GitHub Pages.
@@ -58,6 +62,7 @@ expire. Nothing but the public Supabase URL + anon key ever reaches the browser.
 npm install                 # once, at the repo root — installs all workspaces
 npm run dev:family-feud      # start Family Feud in dev mode
 npm run dev:1-percent-club   # start 1% Club in dev mode
+npm run dev:music-timeline   # start Music Timeline in dev mode
 ```
 
 Without Supabase configured, games run in **local single-device mode** (pass the
