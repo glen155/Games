@@ -63,17 +63,27 @@ npm run preview
 
 ## Adding your own tracks
 
-Edit `src/data/tracks.ts`. The placeholder pool ships with 16 well-known
-songs, but every `spotifyUri`/`spotifyUrl` in it is a **placeholder** —
-`spotify:track:PLACEHOLDER_...` — not a real Spotify track. Before real play:
+Edit `src/data/tracks.ts`. The pool ships with 117 well-known songs spanning
+1954-2023, each pointing at a real `open.spotify.com` track and a `year`
+cross-checked against Wikipedia's single-release infobox date (see each
+entry's `sourceNote`) — not an album date, remaster date, or chart year,
+since those are frequently a year or more off from the actual single release
+(several entries here were caught and corrected during curation for exactly
+that reason). That said, these links were found via web search, not by
+loading each Spotify page and listening — do a scan-and-listen pass before
+relying on them for real play, and swap in a different regional/remaster
+edition if a link doesn't work for you; most songs have several competing
+Spotify entries (remaster / single-edit / live / karaoke versions), and the
+one picked here was a best-effort judgment call, not a verified-unique
+match. When adding new tracks:
 
-1. Replace `spotifyUri`/`spotifyUrl` with the real track's Spotify URI/link.
-2. Verify `year` against an authoritative source (Discogs, MusicBrainz, or
-   the label's original press/release info) — **not** whatever Spotify's
-   `album.release_date` says, since that field is frequently a reissue,
-   remaster, or compilation date. A wrong year here is what breaks a
-   Timeline game's trust fastest: a player who reasoned correctly still
-   loses their card.
+1. Find the real track's Spotify URI/link (`spotify:track:<id>` /
+   `https://open.spotify.com/track/<id>`).
+2. Verify `year` against an authoritative source (Wikipedia's single infobox,
+   Discogs, or MusicBrainz) — **not** whatever Spotify's `album.release_date`
+   says, since that field is frequently a reissue, remaster, or compilation
+   date. A wrong year here is what breaks a Timeline game's trust fastest: a
+   player who reasoned correctly still loses their card.
 3. Record your source in `sourceNote` (never rendered in-game, it's just a
    citation for whoever curates the pool next).
 
@@ -89,9 +99,10 @@ songs, but every `spotifyUri`/`spotifyUrl` in it is a **placeholder** —
 },
 ```
 
-Spread years across decades and include the occasional same-year pair — the
-game handles duplicate years correctly (either adjacent gap counts as
-correct), but it's worth testing.
+Spread years across decades. The pool already has plenty of same-year
+overlaps (six from 1983 alone) — the game handles duplicate years correctly
+(either adjacent gap counts as correct), and this is exercised organically
+in normal play, not just as a manual test case.
 
 ## Deployment
 
