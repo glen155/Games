@@ -1,6 +1,15 @@
 export type MediaType = 'movie' | 'tv';
 
 /**
+ * Hosted-mode only setup choice. 'multiple_choice' is the original,
+ * auto-scored flow. 'open_guess' has players call out their guess out loud
+ * and the host taps who got it right — no player device ever sees options.
+ * Solo play always behaves as 'multiple_choice', since there's no remote
+ * host to judge a spoken guess.
+ */
+export type AnswerStyle = 'multiple_choice' | 'open_guess';
+
+/**
  * One theme-song clue. `cueTitle`/`performedBy`/`correctTitle`/`sourceNote`
  * must never render before that round's reveal — see ClueLoader.tsx, which is
  * the one place this game touches a clue before reveal, and deliberately
@@ -53,6 +62,8 @@ export interface GameState {
   clues: SoundtrackClue[];
   phase: GamePhase;
   currentClueIndex: number;
+  /** Hosted-mode setup choice; stays at its default 'multiple_choice' in solo play. */
+  answerStyle: AnswerStyle;
 
   // Solo-only.
   selectedOptionIndex: number | null;

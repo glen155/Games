@@ -1,4 +1,4 @@
-import type { GameState, PlayerClueResult, SoundtrackClue, TimerConfig } from '../types';
+import type { AnswerStyle, GameState, PlayerClueResult, SoundtrackClue, TimerConfig } from '../types';
 
 export const DEFAULT_TIMER_CONFIG: TimerConfig = { mode: 'auto', durationSeconds: 20 };
 export const DEFAULT_ROUND_COUNT = 10;
@@ -12,12 +12,18 @@ export type GameAction =
   | { type: 'RESTART' }
   // Hosted-mode only — dispatched by HostView, never by solo play.
   | { type: 'PLAYER_ANSWER'; userId: string; nickname: string; index: number }
-  | { type: 'REVEAL_CLUE' } // hosted: answering -> reveal, computes correctness for all
+  | { type: 'REVEAL_CLUE' } // hosted: answering -> reveal, computes correctness for all (multiple_choice only)
   | { type: 'NEXT_CLUE' } // hosted: reveal -> loading_clue | ended
   | { type: 'SET_TIMER_CONFIG'; mode: TimerConfig['mode']; durationSeconds: number }
   | { type: 'START_TIMER' }
   | { type: 'CLEAR_TIMER' }
-  | { type: 'SET_CLUES'; clues: SoundtrackClue[] };
+  | { type: 'SET_CLUES'; clues: SoundtrackClue[] }
+  | { type: 'SET_ANSWER_STYLE'; answerStyle: AnswerStyle } // setup only, hosted UI
+  // Hosted-mode + open_guess only: the host's verdict for one player on the
+  // current clue, dispatched from PlayerJudgePanel. Never computed from
+  // clue data — mirrors Family Feud's REVEAL_ANSWER, where correctness is
+  // entirely the host's call.
+  | { type: 'HOST_MARK_PLAYER'; userId: string; nickname: string; correct: boolean };
 
 function nextTimerEndsAt(config: TimerConfig): number | null {
   return config.mode === 'auto' ? Date.now() + config.durationSeconds * 1000 : null;
@@ -33,6 +39,7 @@ export function initialState(clues: SoundtrackClue[]): GameState {
     clues,
     phase: 'setup',
     currentClueIndex: 0,
+    answerStyle: 'multiple_choice',
     selectedOptionIndex: null,
     lastAnswerCorrect: null,
     soloCorrectCount: 0,
@@ -115,6 +122,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'REVEAL_CLUE': {
       if (state.phase !== 'answering') return state;
+      if (state.answerStyle === 'open_guess') {
+        // No auto-scoring here — the host judges each player individually via
+        // HOST_MARK_PLAYER once the answer is shown. Just open an empty
+        // verdict sheet.
+        return { ...state, phase: 'reveal', lastPlayerResults: {}, timerEndsAt: null };
+      }
       const clue = state.clues[state.currentClueIndex];
       const lastPlayerResults: Record<string, PlayerClueResult> = {};
       const playerCorrectCounts = { ...state.playerCorrectCounts };
@@ -131,6 +144,28 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         lastPlayerResults,
         playerCorrectCounts,
         timerEndsAt: null,
+      };
+    }
+
+    case 'HOST_MARK_PLAYER': {
+      if (state.phase !== 'reveal' || state.answerStyle !== 'open_guess') return state;
+      const previous = state.lastPlayerResults?.[action.userId];
+      const wasCorrect = previous?.correct ?? false;
+      let playerCorrectCounts = state.playerCorrectCounts;
+      if (action.correct !== wasCorrect) {
+        const delta = action.correct ? 1 : -1;
+        playerCorrectCounts = {
+          ...state.playerCorrectCounts,
+          [action.userId]: Math.max(0, (state.playerCorrectCounts[action.userId] ?? 0) + delta),
+        };
+      }
+      return {
+        ...state,
+        lastPlayerResults: {
+          ...state.lastPlayerResults,
+          [action.userId]: { nickname: action.nickname, index: null, correct: action.correct },
+        },
+        playerCorrectCounts,
       };
     }
 
@@ -167,6 +202,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SET_CLUES': {
       if (state.phase !== 'setup' || action.clues.length === 0) return state;
       return { ...state, clues: action.clues };
+    }
+
+    case 'SET_ANSWER_STYLE': {
+      if (state.phase !== 'setup') return state;
+      return { ...state, answerStyle: action.answerStyle };
     }
 
     default:

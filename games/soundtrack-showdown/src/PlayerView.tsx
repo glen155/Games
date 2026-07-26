@@ -51,24 +51,50 @@ export function PlayerView({ state, nickname, userId, sendAction, roomId }: Play
   const clue = state.clues[state.currentClueIndex];
   const myAnswer = state.playerAnswers[userId];
   const myResult = state.lastPlayerResults?.[userId];
+  const openGuess = state.answerStyle === 'open_guess';
 
   return (
     <div className="player-view">
       {state.phase === 'answering' ? (
+        openGuess ? (
+          <>
+            {secondsLeft !== null && (
+              <span className={`player-countdown${secondsLeft <= 5 ? ' player-countdown--urgent' : ''}`}>
+                {secondsLeft}s
+              </span>
+            )}
+            <p className="player-listening-icon" aria-hidden="true">
+              🎤
+            </p>
+            <p>Guess it out loud! The host will mark your answer.</p>
+          </>
+        ) : (
+          <>
+            {secondsLeft !== null && (
+              <span className={`player-countdown${secondsLeft <= 5 ? ' player-countdown--urgent' : ''}`}>
+                {secondsLeft}s
+              </span>
+            )}
+            <OptionsGrid
+              options={clue.options}
+              selectedIndex={myAnswer?.index ?? null}
+              correctIndex={null}
+              phase="answering"
+              onSelect={(index) => sendAction('answer', { index })}
+            />
+            {myAnswer && <p className="player-waiting-note">Answer locked in — waiting for the host to reveal…</p>}
+          </>
+        )
+      ) : openGuess ? (
         <>
-          {secondsLeft !== null && (
-            <span className={`player-countdown${secondsLeft <= 5 ? ' player-countdown--urgent' : ''}`}>
-              {secondsLeft}s
-            </span>
+          <ClueRevealCard clue={clue} roomId={roomId} />
+          {myResult ? (
+            <p className={`player-result${myResult.correct ? ' player-result--correct' : ' player-result--wrong'}`}>
+              {myResult.correct ? 'The host marked you correct!' : 'The host marked you wrong this time.'}
+            </p>
+          ) : (
+            <p className="player-waiting-note">Waiting for the host to judge your guess…</p>
           )}
-          <OptionsGrid
-            options={clue.options}
-            selectedIndex={myAnswer?.index ?? null}
-            correctIndex={null}
-            phase="answering"
-            onSelect={(index) => sendAction('answer', { index })}
-          />
-          {myAnswer && <p className="player-waiting-note">Answer locked in — waiting for the host to reveal…</p>}
         </>
       ) : (
         <>
