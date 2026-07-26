@@ -129,7 +129,7 @@ export function HostView({
   if (state.phase === 'loading_clue') {
     return (
       <div className="app">
-        <ClueLoader state={state} onConfirm={() => dispatch({ type: 'HOST_CONFIRMED_PLAYING' })} />
+        <ClueLoader state={state} roomId={roomId} onConfirm={() => dispatch({ type: 'HOST_CONFIRMED_PLAYING' })} />
       </div>
     );
   }
@@ -150,7 +150,7 @@ export function HostView({
           totalClues={state.clues.length}
           correctCount={state.soloCorrectCount}
         />
-        {state.phase === 'reveal' && <ClueRevealCard clue={clue} />}
+        {state.phase === 'reveal' && <ClueRevealCard clue={clue} roomId={roomId} />}
         <OptionsGrid
           options={clue.options}
           selectedIndex={state.selectedOptionIndex}
@@ -205,7 +205,7 @@ export function HostView({
       {state.phase === 'answering' && <PlayerTally answered={answeredCount} total={players.length} />}
       {state.phase === 'reveal' && (
         <>
-          <ClueRevealCard clue={clue} />
+          <ClueRevealCard clue={clue} roomId={roomId} />
           {state.lastPlayerResults && (
             <ResultsBreakdown results={state.lastPlayerResults} correctAnswerText={clue.options[clue.correctIndex]} />
           )}

@@ -25,6 +25,7 @@ export function HostView({
   players,
   playerActions,
   clearPlayerAction,
+  roomId,
 }: HostViewProps<GameState, MusicTimelineAction>) {
   const { remainingMs } = useShotClock(state, dispatch, players);
 
@@ -86,6 +87,7 @@ export function HostView({
           {state.phase === 'loading_track' && (
             <TrackLoader
               state={state}
+              roomId={roomId}
               onConfirm={() => dispatch({ type: 'HOST_CONFIRMED_PLAYING', at: Date.now() })}
             />
           )}
@@ -117,7 +119,11 @@ export function HostView({
           )}
 
           {state.phase === 'reveal' && (
-            <RevealPanel state={state} onNext={() => dispatch({ type: 'ADVANCE_ROUND', at: Date.now() })} />
+            <RevealPanel
+              state={state}
+              roomId={roomId}
+              onNext={() => dispatch({ type: 'ADVANCE_ROUND', at: Date.now() })}
+            />
           )}
         </div>
         <Scoreboard state={state} />

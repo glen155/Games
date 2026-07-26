@@ -12,7 +12,7 @@ import { SelfTimeline } from './components/SelfTimeline';
  * players. Looks itself up in `state.players[userId]` to find its own,
  * otherwise-hidden timeline.
  */
-export function PlayerView({ state, userId, players, sendAction }: PlayerViewProps<GameState>) {
+export function PlayerView({ state, userId, players, sendAction, roomId }: PlayerViewProps<GameState>) {
   if (!state || state.phase === 'lobby') {
     return <WaitingScreen message="Waiting for the host to start…" />;
   }
@@ -76,6 +76,7 @@ export function PlayerView({ state, userId, players, sendAction }: PlayerViewPro
         <RevealFeedback
           track={findTrack(state, round.trackId)}
           result={round.results?.[userId]}
+          roomId={roomId}
         />
       )}
 

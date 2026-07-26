@@ -10,7 +10,7 @@ import { useCountdown } from './hooks/useCountdown';
  * sees the reveal once the host moves the group forward. Never renders
  * `cueTitle`/`performedBy`/`correctTitle` before `phase === 'reveal'`.
  */
-export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewProps<GameState>) {
+export function PlayerView({ state, nickname, userId, sendAction, roomId }: PlayerViewProps<GameState>) {
   const secondsLeft = useCountdown(state?.timerEndsAt ?? null);
 
   if (!state || state.phase === 'setup') {
@@ -72,7 +72,7 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
         </>
       ) : (
         <>
-          <ClueRevealCard clue={clue} />
+          <ClueRevealCard clue={clue} roomId={roomId} />
           <OptionsGrid
             options={clue.options}
             selectedIndex={myAnswer?.index ?? null}

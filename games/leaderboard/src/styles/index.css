@@ -180,3 +180,79 @@ button {
   margin: 0.25rem 0 0;
   font-size: 0.9rem;
 }
+
+.board-view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.board-section--issues {
+  width: 100%;
+  max-width: 640px;
+  text-align: left;
+  margin-top: 0.5rem;
+}
+
+.board-issue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 32rem;
+  overflow-y: auto;
+}
+
+.board-issue-item {
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid var(--gold);
+}
+
+.board-issue-item--reviewed {
+  opacity: 0.55;
+  border-left-color: var(--muted);
+}
+
+.board-issue-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.board-issue-game {
+  font-weight: bold;
+  color: var(--gold);
+}
+
+.board-issue-item-label {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.board-issue-reason {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.board-issue-review-btn {
+  margin-top: 0.5rem;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--cream);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+}
+
+.board-issue-review-btn:hover {
+  background: rgba(255, 215, 0, 0.15);
+}
