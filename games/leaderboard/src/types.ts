@@ -24,3 +24,14 @@ export interface ClubSummary {
   jackpotAmount: number;
   players: ClubPlayerSummary[];
 }
+
+export interface SoundtrackPlayerSummary {
+  userId: string;
+  nickname: string;
+  correctCount: number;
+}
+
+export interface SoundtrackSummary {
+  totalClues: number;
+  players: SoundtrackPlayerSummary[];
+}
