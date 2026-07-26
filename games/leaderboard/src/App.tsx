@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fetchRecentResults, isMultiplayerConfigured, type GameResult } from '@games/platform';
-import type { ClubSummary, FeudSummary } from './types';
+import type { ClubSummary, FeudSummary, SoundtrackSummary } from './types';
 
 const GAME_NAMES: Record<string, string> = {
   'family-feud': 'Family Feud',
   'one-percent-club': '1% Club',
+  'soundtrack-showdown': 'Soundtrack Showdown',
 };
 
-type Filter = 'all' | 'family-feud' | 'one-percent-club';
+type Filter = 'all' | 'family-feud' | 'one-percent-club' | 'soundtrack-showdown';
 
 interface StandingRow {
   nickname: string;
@@ -36,6 +37,13 @@ function computeStandings(results: GameResult[]): StandingRow[] {
       for (const p of s.players ?? []) {
         bump(p.nickname, p.neverMissed);
       }
+    } else if (r.gameSlug === 'soundtrack-showdown') {
+      const s = r.summary as unknown as SoundtrackSummary;
+      const players = s.players ?? [];
+      const topScore = players.reduce((max, p) => Math.max(max, p.correctCount), 0);
+      for (const p of players) {
+        bump(p.nickname, topScore > 0 && p.correctCount === topScore);
+      }
     }
   }
 
@@ -55,6 +63,14 @@ function summarize(result: GameResult): string {
     const neverMissed = players.filter((p) => p.neverMissed);
     const jackpot = typeof s.jackpotAmount === 'number' ? `£${s.jackpotAmount.toLocaleString()}` : 'the jackpot';
     return `${jackpot} jackpot · ${players.length} played · ${neverMissed.length} never missed a question`;
+  }
+  if (result.gameSlug === 'soundtrack-showdown') {
+    const s = result.summary as unknown as SoundtrackSummary;
+    const players = s.players ?? [];
+    const topScore = players.reduce((max, p) => Math.max(max, p.correctCount), 0);
+    const winners = players.filter((p) => topScore > 0 && p.correctCount === topScore);
+    const winnerNames = winners.map((p) => p.nickname).join(', ') || 'nobody';
+    return `${s.totalClues ?? players.length} clues · ${players.length} played · ${winnerNames} scored ${topScore}`;
   }
   return 'Finished game';
 }
@@ -94,7 +110,7 @@ export function App() {
       <p className="board-subtitle">Every finished hosted game, and who's been winning.</p>
 
       <div className="board-filters">
-        {(['all', 'family-feud', 'one-percent-club'] as Filter[]).map((f) => (
+        {(['all', 'family-feud', 'one-percent-club', 'soundtrack-showdown'] as Filter[]).map((f) => (
           <button
             key={f}
             type="button"

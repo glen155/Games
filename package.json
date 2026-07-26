@@ -12,6 +12,7 @@
     "dev:1-percent-club": "npm run dev --workspace games/1-percent-club",
     "dev:leaderboard": "npm run dev --workspace games/leaderboard",
     "dev:music-timeline": "npm run dev --workspace games/music-timeline",
+    "dev:soundtrack-showdown": "npm run dev --workspace games/soundtrack-showdown",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build:pages": "node scripts/build-pages.mjs"
