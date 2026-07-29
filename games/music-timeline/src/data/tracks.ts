@@ -826,12 +826,13 @@ export const tracks: Track[] = [
   },
   {
     id: 'imagine-dragons-radioactive-2012',
-    spotifyUri: 'spotify:track:1GwGIIXdcW5vUd3WJnOQpm',
-    spotifyUrl: 'https://open.spotify.com/track/1GwGIIXdcW5vUd3WJnOQpm',
+    spotifyUri: 'spotify:track:62yJjFtgkhUrXktIoSjgP2',
+    spotifyUrl: 'https://open.spotify.com/track/62yJjFtgkhUrXktIoSjgP2',
     title: 'Radioactive',
     artist: 'Imagine Dragons',
     year: 2012,
-    sourceNote: 'Released October 29, 2012',
+    sourceNote:
+      'Released October 29, 2012. Spotify ID corrected during re-verification — the original stored ID did not resolve to a confirmable title/artist match.',
   },
   {
     id: 'lorde-royals-2013',
