@@ -294,12 +294,13 @@ export const tracks: Track[] = [
   },
   {
     id: 'the-rolling-stones-i-can-t-get-no-satisfaction-1965',
-    spotifyUri: 'spotify:track:3dbFIUN3ijypSia9UuEgyY',
-    spotifyUrl: 'https://open.spotify.com/track/3dbFIUN3ijypSia9UuEgyY',
+    spotifyUri: 'spotify:track:1hoS9r0A7RjuoOIC85t18C',
+    spotifyUrl: 'https://open.spotify.com/track/1hoS9r0A7RjuoOIC85t18C',
     title: '(I Can\'t Get No) Satisfaction',
     artist: 'The Rolling Stones',
     year: 1965,
-    sourceNote: 'US release June 4, 1965',
+    sourceNote:
+      'US release June 4, 1965. Spotify ID corrected during re-verification — the original stored ID did not resolve to a confirmable title/artist match.',
   },
   {
     id: 'the-animals-the-house-of-the-rising-sun-1964',
