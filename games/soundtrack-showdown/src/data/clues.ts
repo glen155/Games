@@ -38,15 +38,15 @@ export const clues: SoundtrackClue[] = [
   },
   {
     id: 'hedwigs-theme',
-    spotifyUri: 'spotify:track:4t6DWpPOWLHAVuW6JBhAHi',
-    spotifyUrl: 'https://open.spotify.com/track/4t6DWpPOWLHAVuW6JBhAHi',
+    spotifyUri: 'spotify:track:1lqjeZivvsRmO5Vq9oevCb',
+    spotifyUrl: 'https://open.spotify.com/track/1lqjeZivvsRmO5Vq9oevCb',
     cueTitle: "Hedwig's Theme",
     performedBy: 'John Williams',
     mediaType: 'movie',
     correctTitle: "Harry Potter and the Philosopher's Stone",
     options: ['Jurassic Park', "Harry Potter and the Philosopher's Stone", 'The Godfather', 'Jaws'],
     correctIndex: 1,
-    sourceNote: 'Wikipedia: theme released with the 2001 film soundtrack.',
+    sourceNote: 'Corrected during re-verification pass (2026-07-29): original ID could not be confirmed via structured search results across three attempts. Replaced with "Hedwig\'s Theme - song and lyrics by John Williams" (open.spotify.com/track/1lqjeZivvsRmO5Vq9oevCb), the top result recurring across multiple searches with 100M+ streams.',
   },
   {
     id: 'game-of-thrones-main-title',
