@@ -54,6 +54,8 @@ export interface PlayerViewProps<State> {
   userId: string;
   players: PlayerPresence[];
   sendAction: (type: string, payload?: unknown) => void;
+  /** The joined room's id (for reportIssue etc). Null in solo mode. */
+  roomId: string | null;
 }
 
 /** A message sent from a player device up to the host over the room channel. */

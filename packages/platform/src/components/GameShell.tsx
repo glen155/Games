@@ -205,6 +205,7 @@ function PlayerContainer<State, Action>({
         userId={room.userId}
         players={room.players}
         sendAction={room.sendAction}
+        roomId={room.room?.id ?? null}
       />
     </div>
   );

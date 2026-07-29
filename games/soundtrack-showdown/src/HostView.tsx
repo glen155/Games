@@ -17,6 +17,7 @@ import { TimerControls } from './components/TimerControls';
 import { PlayerTally } from './components/PlayerTally';
 import { ResultsBreakdown } from './components/ResultsBreakdown';
 import { Leaderboard } from './components/Leaderboard';
+import { PlayerJudgePanel } from './components/PlayerJudgePanel';
 
 /**
  * The host / big-screen view. Solo mode (isHosted === false): the host alone
@@ -121,6 +122,9 @@ export function HostView({
           setRoundCount(count);
           dispatch({ type: 'SET_CLUES', clues: pickRandomClues(cluePool, count) });
         }}
+        isHosted={isHosted}
+        answerStyle={state.answerStyle}
+        onAnswerStyleChange={(style) => dispatch({ type: 'SET_ANSWER_STYLE', answerStyle: style })}
         onStart={() => dispatch({ type: 'START_GAME' })}
       />
     );
@@ -129,7 +133,7 @@ export function HostView({
   if (state.phase === 'loading_clue') {
     return (
       <div className="app">
-        <ClueLoader state={state} onConfirm={() => dispatch({ type: 'HOST_CONFIRMED_PLAYING' })} />
+        <ClueLoader state={state} roomId={roomId} onConfirm={() => dispatch({ type: 'HOST_CONFIRMED_PLAYING' })} />
       </div>
     );
   }
@@ -150,7 +154,7 @@ export function HostView({
           totalClues={state.clues.length}
           correctCount={state.soloCorrectCount}
         />
-        {state.phase === 'reveal' && <ClueRevealCard clue={clue} />}
+        {state.phase === 'reveal' && <ClueRevealCard clue={clue} roomId={roomId} />}
         <OptionsGrid
           options={clue.options}
           selectedIndex={state.selectedOptionIndex}
@@ -202,12 +206,25 @@ export function HostView({
         onStart={() => dispatch({ type: 'START_TIMER' })}
         onClear={() => dispatch({ type: 'CLEAR_TIMER' })}
       />
-      {state.phase === 'answering' && <PlayerTally answered={answeredCount} total={players.length} />}
+      {state.phase === 'answering' &&
+        (state.answerStyle === 'open_guess' ? (
+          <p className="player-tally">Guess it out loud — reveal when everyone's ready.</p>
+        ) : (
+          <PlayerTally answered={answeredCount} total={players.length} />
+        ))}
       {state.phase === 'reveal' && (
         <>
-          <ClueRevealCard clue={clue} />
-          {state.lastPlayerResults && (
-            <ResultsBreakdown results={state.lastPlayerResults} correctAnswerText={clue.options[clue.correctIndex]} />
+          <ClueRevealCard clue={clue} roomId={roomId} />
+          {state.answerStyle === 'open_guess' ? (
+            <PlayerJudgePanel
+              players={players}
+              verdicts={state.lastPlayerResults ?? {}}
+              onMark={(userId, nickname, correct) => dispatch({ type: 'HOST_MARK_PLAYER', userId, nickname, correct })}
+            />
+          ) : (
+            state.lastPlayerResults && (
+              <ResultsBreakdown results={state.lastPlayerResults} correctAnswerText={clue.options[clue.correctIndex]} />
+            )
           )}
         </>
       )}
@@ -219,7 +236,7 @@ export function HostView({
               className="controls-button controls-button--primary"
               onClick={() => dispatch({ type: 'REVEAL_CLUE' })}
             >
-              Reveal Answers
+              {state.answerStyle === 'open_guess' ? 'Reveal & Judge' : 'Reveal Answers'}
             </button>
           ) : (
             <button

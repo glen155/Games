@@ -1,8 +1,9 @@
-import { QRCode } from '@games/platform';
+import { QRCode, ReportIssueButton } from '@games/platform';
 import type { GameState } from '../types';
 
 interface ClueLoaderProps {
   state: GameState;
+  roomId: string | null;
   onConfirm: () => void;
 }
 
@@ -12,7 +13,7 @@ interface ClueLoaderProps {
  * is what keeps the answer hidden from the host, not just the players. Only
  * `spotifyUrl` is ever touched here.
  */
-export function ClueLoader({ state, onConfirm }: ClueLoaderProps) {
+export function ClueLoader({ state, roomId, onConfirm }: ClueLoaderProps) {
   const clue = state.clues[state.currentClueIndex];
 
   return (
@@ -30,6 +31,13 @@ export function ClueLoader({ state, onConfirm }: ClueLoaderProps) {
       <button type="button" className="controls-button controls-button--primary" onClick={onConfirm}>
         Started Playing ▶
       </button>
+      <ReportIssueButton
+        gameSlug="soundtrack-showdown"
+        itemId={clue.id}
+        itemLabel={null}
+        roomId={roomId}
+        reasons={["This clue won't play", 'Broken Spotify link']}
+      />
     </div>
   );
 }

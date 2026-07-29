@@ -310,3 +310,69 @@
   opacity: 0.75;
   max-width: 28rem;
 }
+
+/* Report-issue button — shared by every game, styled game-neutral like the
+ * rest of this file so each game's own dark theme sits comfortably behind it. */
+.report-issue {
+  position: relative;
+  display: inline-flex;
+}
+
+.report-issue-trigger {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.report-issue-trigger:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.report-issue-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #17181c;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.report-issue-reason {
+  padding: 0.6rem 0.85rem;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.report-issue-reason:last-child {
+  border-bottom: none;
+}
+
+.report-issue-reason:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.report-issue-sent {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  margin: 0;
+}

@@ -33,6 +33,7 @@ Realtime + anonymous Auth). This folder holds the versioned schema.
 | `players`      | Who has joined which room (used for read permissions).         |
 | `game_state`   | The authoritative game state (jsonb), one row per room.        |
 | `game_results` | Cross-night history — one row per finished hosted game, shared family-wide (not room-scoped). |
+| `issue_reports` | Player-flagged problems (bad link, wrong year/answer) — shared review queue, not room-scoped. |
 
 Row Level Security is enabled on all four and is the real security boundary:
 
@@ -42,10 +43,14 @@ Row Level Security is enabled on all four and is the real security boundary:
 - Any signed-in device can **read** `game_results` (it's the shared family
   leaderboard, not scoped to a single room); only a room's **host** can insert
   the one result row for that room. Append-only — no update/delete policy.
+- Any signed-in device can **read, insert, and mark-reviewed** `issue_reports`
+  — unlike `game_results`, insert isn't host-restricted, since any player
+  might spot a problem, not only the host.
 
-See the comments in `migrations/0001_init.sql` and `migrations/0002_game_results.sql`
-for the exact policies. Apply new migrations the same way as the initial schema
-(paste into the SQL Editor, or `supabase db push`).
+See the comments in `migrations/0001_init.sql`, `migrations/0002_game_results.sql`,
+and `migrations/0003_issue_reports.sql` for the exact policies. Apply new
+migrations the same way as the initial schema (paste into the SQL Editor, or
+`supabase db push`).
 
 ## Deploying the `generate-round` Edge Function
 

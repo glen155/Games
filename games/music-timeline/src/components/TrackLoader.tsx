@@ -1,8 +1,9 @@
-import { QRCode } from '@games/platform';
+import { QRCode, ReportIssueButton } from '@games/platform';
 import type { GameState } from '../types';
 
 interface TrackLoaderProps {
   state: GameState;
+  roomId: string | null;
   onConfirm: () => void;
 }
 
@@ -11,7 +12,7 @@ interface TrackLoaderProps {
  * track's title/artist — this is what keeps the year hidden from the host,
  * not just the players.
  */
-export function TrackLoader({ state, onConfirm }: TrackLoaderProps) {
+export function TrackLoader({ state, roomId, onConfirm }: TrackLoaderProps) {
   const round = state.round!;
   const track = state.trackPool.find((t) => t.id === round.trackId)!;
   const roundNumber = state.roundHistory.length + 1;
@@ -29,6 +30,13 @@ export function TrackLoader({ state, onConfirm }: TrackLoaderProps) {
       <button type="button" className="mt-btn mt-btn--primary" onClick={onConfirm}>
         Started Playing ▶
       </button>
+      <ReportIssueButton
+        gameSlug="music-timeline"
+        itemId={track.id}
+        itemLabel={null}
+        roomId={roomId}
+        reasons={["This song won't play", 'Broken Spotify link']}
+      />
     </div>
   );
 }
