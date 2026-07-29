@@ -1,9 +1,9 @@
 import type { SoundtrackClue } from '../types';
 
 /**
- * Curated starter pool (15 well-known movie/TV themes). Spotify links were
- * sourced via web search against real open.spotify.com track pages, not
- * guessed — but this sandbox's network policy blocks direct fetches to
+ * Curated pool of 50 well-known movie/TV themes. Spotify links were sourced
+ * via web search against real open.spotify.com track pages, not guessed —
+ * but this sandbox's network policy blocks direct fetches to
  * open.spotify.com, so none of them were independently re-loaded and
  * eyeballed after picking, and most themes have many competing Spotify
  * entries (different orchestras/arrangements/remasters) where the pick was a
