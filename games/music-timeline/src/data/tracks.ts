@@ -1,7 +1,7 @@
 import type { Track } from '../types';
 
 /**
- * Curated pool for Timeline mode (117 tracks, 1954-2023). `year` is the field
+ * Curated pool for Timeline mode (167 tracks, 1954-2023). `year` is the field
  * the whole game hinges on — it's the verified ORIGINAL SINGLE release year
  * (per Wikipedia's infobox "Released" date for each song, or the most
  * authoritative equivalent surfaced by search for the pre-Wikipedia-era
