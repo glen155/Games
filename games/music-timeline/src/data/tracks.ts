@@ -1016,21 +1016,23 @@ export const tracks: Track[] = [
   },
   {
     id: 'lynyrd-skynyrd-free-bird-1974',
-    spotifyUri: 'spotify:track:0frkhA6fge2eR8rY4aXNDI',
-    spotifyUrl: 'https://open.spotify.com/track/0frkhA6fge2eR8rY4aXNDI',
+    spotifyUri: 'spotify:track:5EWPGh7jbTNO2wakv8LjUI',
+    spotifyUrl: 'https://open.spotify.com/track/5EWPGh7jbTNO2wakv8LjUI',
     title: 'Free Bird',
     artist: 'Lynyrd Skynyrd',
     year: 1974,
-    sourceNote: 'Single released November 1974',
+    sourceNote:
+      'Single released November 1974. Spotify ID corrected during re-verification — the original stored ID did not resolve to a confirmable title/artist match.',
   },
   {
     id: 'the-clash-should-i-stay-or-should-i-go-1982',
-    spotifyUri: 'spotify:track:7IFwq5DJwi1gGuUAXQfwib',
-    spotifyUrl: 'https://open.spotify.com/track/7IFwq5DJwi1gGuUAXQfwib',
+    spotifyUri: 'spotify:track:5V6YE0mBwnqDvh0hoblAMl',
+    spotifyUrl: 'https://open.spotify.com/track/5V6YE0mBwnqDvh0hoblAMl',
     title: 'Should I Stay or Should I Go',
     artist: 'The Clash',
     year: 1982,
-    sourceNote: 'Released September 17, 1982',
+    sourceNote:
+      'Released September 17, 1982. Spotify ID corrected during re-verification — the original stored ID did not resolve to a confirmable title/artist match.',
   },
   {
     id: 'survivor-eye-of-the-tiger-1982',
