@@ -63,7 +63,7 @@ npm run preview
 
 ## Adding your own tracks
 
-Edit `src/data/tracks.ts`. The pool ships with 117 well-known songs spanning
+Edit `src/data/tracks.ts`. The pool ships with 167 well-known songs spanning
 1954-2023, each pointing at a real `open.spotify.com` track and a `year`
 cross-checked against Wikipedia's single-release infobox date (see each
 entry's `sourceNote`) — not an album date, remaster date, or chart year,
