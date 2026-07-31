@@ -1,15 +1,17 @@
 import type { SoundtrackClue } from '../types';
 
 /**
- * Curated pool of 50 well-known movie/TV themes. Spotify links were sourced
- * via web search against real open.spotify.com track pages, not guessed —
- * but this sandbox's network policy blocks direct fetches to
- * open.spotify.com, so none of them were independently re-loaded and
- * eyeballed after picking, and most themes have many competing Spotify
- * entries (different orchestras/arrangements/remasters) where the pick was a
- * best-effort judgment call, not a verified-unique match. Do a scan-and-listen
- * pass before relying on this pool for real play. `cueTitle`/`performedBy`/
- * `correctTitle`/`sourceNote` are reveal-only — see ClueLoader.tsx.
+ * Curated pool of 100 well-known movie/TV themes (the first 50 are a mix of
+ * movie and TV themes; the second 50, added in a later pass, are movies
+ * only). Spotify links were sourced via web search against real
+ * open.spotify.com track pages, not guessed — but this sandbox's network
+ * policy blocks direct fetches to open.spotify.com, so none of them were
+ * independently re-loaded and eyeballed after picking, and most themes have
+ * many competing Spotify entries (different orchestras/arrangements/
+ * remasters) where the pick was a best-effort judgment call, not a
+ * verified-unique match. Do a scan-and-listen pass before relying on this
+ * pool for real play. `cueTitle`/`performedBy`/`correctTitle`/`sourceNote`
+ * are reveal-only — see ClueLoader.tsx.
  */
 export const clues: SoundtrackClue[] = [
   {
