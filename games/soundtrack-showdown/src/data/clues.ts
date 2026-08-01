@@ -1,17 +1,22 @@
 import type { SoundtrackClue } from '../types';
 
 /**
- * Curated pool of 150 well-known movie/TV themes (the first 50 are a mix of
- * movie and TV themes; the remaining 100, added across two later passes, are
- * movies only). Spotify links were sourced via web search against real
- * open.spotify.com track pages, not guessed — but this sandbox's network
- * policy blocks direct fetches to open.spotify.com, so none of them were
- * independently re-loaded and eyeballed after picking, and most themes have
- * many competing Spotify entries (different orchestras/arrangements/
- * remasters) where the pick was a best-effort judgment call, not a
- * verified-unique match. Do a scan-and-listen pass before relying on this
- * pool for real play. `cueTitle`/`performedBy`/`correctTitle`/`sourceNote`
- * are reveal-only — see ClueLoader.tsx.
+ * Curated pool of 200 well-known movie/TV themes (the first 50 are a mix of
+ * movie and TV themes; the next 100, added across two later passes, are
+ * movies only; the final 50, added in a fourth pass, are a mix of movie and
+ * TV themes again — skewed toward TV to rebalance the overall pool). Spotify
+ * links were sourced via web search against real open.spotify.com track
+ * pages, not guessed — but this sandbox's network policy blocks direct
+ * fetches to open.spotify.com, so none of them were independently re-loaded
+ * and eyeballed after picking, and most themes have many competing Spotify
+ * entries (different orchestras/arrangements/remasters/covers) where the
+ * pick was a best-effort judgment call, not a verified-unique match. Some
+ * older or less commercially-available TV themes (e.g. several British
+ * sitcoms) had no official composer master on Spotify, so a clearly-labeled
+ * cover/library recording was used instead — see individual `sourceNote`s.
+ * Do a scan-and-listen pass before relying on this pool for real play.
+ * `cueTitle`/`performedBy`/`correctTitle`/`sourceNote` are reveal-only — see
+ * ClueLoader.tsx.
  */
 export const clues: SoundtrackClue[] = [
   {
@@ -2209,5 +2214,209 @@ export const clues: SoundtrackClue[] = [
     options: ['House of the Dragon', 'Game of Thrones', 'The Mandalorian', 'Westworld'],
     correctIndex: 0,
     sourceNote: '2022 HBO series theme; matched via Spotify search "House of the Dragon main title theme Ramin Djawadi".',
+  },
+  {
+    id: 'dexter-main-title-theme',
+    spotifyUri: 'spotify:track:32A1xdQk9lRSFn5CEY5M2S',
+    spotifyUrl: 'https://open.spotify.com/track/32A1xdQk9lRSFn5CEY5M2S',
+    cueTitle: 'Dexter Main Title',
+    performedBy: 'Rolfe Kent',
+    mediaType: 'tv',
+    correctTitle: 'Dexter',
+    options: ['Dexter', 'True Detective', 'The Wire', 'CSI: Crime Scene Investigation'],
+    correctIndex: 0,
+    sourceNote: '2006 Showtime series opening theme; matched via Spotify search "Dexter Main Title Rolfe Kent".',
+  },
+  {
+    id: 'law-and-order-theme',
+    spotifyUri: 'spotify:track:0IpOLDDlfk0I902oJMIBdK',
+    spotifyUrl: 'https://open.spotify.com/track/0IpOLDDlfk0I902oJMIBdK',
+    cueTitle: 'The Theme of Law & Order',
+    performedBy: 'Mike Post',
+    mediaType: 'tv',
+    correctTitle: 'Law & Order',
+    options: ['Law & Order', 'CSI: Crime Scene Investigation', 'Dexter', 'Magnum P.I.'],
+    correctIndex: 0,
+    sourceNote: '1990 NBC series theme, famous for its two-note "dun-dun" sound effect; matched via Spotify search "Law and Order theme Mike Post".',
+  },
+  {
+    id: 'who-are-you-csi-theme',
+    spotifyUri: 'spotify:track:5zK1CzIGS0sL0Cq9PHSoqq',
+    spotifyUrl: 'https://open.spotify.com/track/5zK1CzIGS0sL0Cq9PHSoqq',
+    cueTitle: 'Who Are You? (Theme from "CSI: Crime Scene Investigation")',
+    performedBy: 'The Who (cover recording)',
+    mediaType: 'tv',
+    correctTitle: 'CSI: Crime Scene Investigation',
+    options: ['CSI: Crime Scene Investigation', 'Law & Order', 'Dexter', 'Miami Vice'],
+    correctIndex: 0,
+    sourceNote: "The Who's 1978 song used as CSI's title theme from 2000; matched via Spotify search \"Who Are You CSI theme\".",
+  },
+  {
+    id: 'my-life-is-going-on-money-heist',
+    spotifyUri: 'spotify:track:4uWwWfLKa5DpieWd4whDND',
+    spotifyUrl: 'https://open.spotify.com/track/4uWwWfLKa5DpieWd4whDND',
+    cueTitle: 'My Life Is Going On',
+    performedBy: 'Cecilia Krull',
+    mediaType: 'tv',
+    correctTitle: 'Money Heist',
+    options: ['Peaky Blinders', 'The Wire', 'Money Heist', 'Breaking Bad'],
+    correctIndex: 2,
+    sourceNote: '2017 Cecilia Krull single, theme of the Netflix series La Casa de Papel / Money Heist; matched via Spotify search "My Life Is Going On Cecilia Krull Money Heist".',
+  },
+  {
+    id: 'spongebob-squarepants-theme-song',
+    spotifyUri: 'spotify:track:3wIAC6ItT1YIbbvXt4SEJ4',
+    spotifyUrl: 'https://open.spotify.com/track/3wIAC6ItT1YIbbvXt4SEJ4',
+    cueTitle: 'SpongeBob SquarePants Theme Song',
+    performedBy: 'Steve Belfer & Patrick Pinney',
+    mediaType: 'tv',
+    correctTitle: 'SpongeBob SquarePants',
+    options: ['SpongeBob SquarePants', 'Rick and Morty', 'Scooby-Doo, Where Are You!', 'The Simpsons'],
+    correctIndex: 0,
+    sourceNote: '1999 Nickelodeon series theme; matched via Spotify search "SpongeBob SquarePants theme song".',
+  },
+  {
+    id: 'rick-and-morty-theme',
+    spotifyUri: 'spotify:track:1Y6Pxm8LFw1zJBc3ZW3Stt',
+    spotifyUrl: 'https://open.spotify.com/track/1Y6Pxm8LFw1zJBc3ZW3Stt',
+    cueTitle: 'Rick and Morty Theme',
+    performedBy: 'Ryan Elder',
+    mediaType: 'tv',
+    correctTitle: 'Rick and Morty',
+    options: ['Rick and Morty', 'SpongeBob SquarePants', 'Avatar: The Last Airbender', 'The Simpsons'],
+    correctIndex: 0,
+    sourceNote: '2013 Adult Swim series theme; matched via Spotify search "Rick and Morty Theme Ryan Elder".',
+  },
+  {
+    id: 'avatar-the-last-airbender-theme',
+    spotifyUri: 'spotify:track:00HXcPvSkVYajctJV2lbUj',
+    spotifyUrl: 'https://open.spotify.com/track/00HXcPvSkVYajctJV2lbUj',
+    cueTitle: 'Avatar: The Last Airbender',
+    performedBy: 'Jeremy Zuckerman',
+    mediaType: 'tv',
+    correctTitle: 'Avatar: The Last Airbender',
+    options: ['Avatar: The Last Airbender', 'Rick and Morty', 'Scooby-Doo, Where Are You!', 'SpongeBob SquarePants'],
+    correctIndex: 0,
+    sourceNote: '2005 Nickelodeon series main theme; matched via Spotify search "Avatar The Last Airbender theme Jeremy Zuckerman".',
+  },
+  {
+    id: 'scooby-doo-where-are-you-theme',
+    spotifyUri: 'spotify:track:6WEVSpu8fy6bIOkQhyJLrF',
+    spotifyUrl: 'https://open.spotify.com/track/6WEVSpu8fy6bIOkQhyJLrF',
+    cueTitle: 'Theme (From "Scooby-Doo, Where Are You?")',
+    performedBy: 'London Music Works',
+    mediaType: 'tv',
+    correctTitle: 'Scooby-Doo, Where Are You!',
+    options: ['SpongeBob SquarePants', 'Rick and Morty', 'Scooby-Doo, Where Are You!', 'Avatar: The Last Airbender'],
+    correctIndex: 2,
+    sourceNote: '1969 Hanna-Barbera series theme; matched via Spotify search "Scooby Doo Where Are You theme song".',
+  },
+  {
+    id: 'battlestar-galactica-main-title',
+    spotifyUri: 'spotify:track:18fqSiSTfBHRDM6QI5mFZd',
+    spotifyUrl: 'https://open.spotify.com/track/18fqSiSTfBHRDM6QI5mFZd',
+    cueTitle: 'Battlestar Galactica Main Title',
+    performedBy: 'Bear McCreary',
+    mediaType: 'tv',
+    correctTitle: 'Battlestar Galactica',
+    options: ['Battlestar Galactica', 'Star Trek: The Next Generation', 'Doctor Who', 'Westworld'],
+    correctIndex: 0,
+    sourceNote: '2004 Sci-Fi Channel series theme; matched via Spotify search "Battlestar Galactica Main Title Bear McCreary".',
+  },
+  {
+    id: 'buffy-the-vampire-slayer-theme',
+    spotifyUri: 'spotify:track:4iIaiW6njGV9xoLchcWryS',
+    spotifyUrl: 'https://open.spotify.com/track/4iIaiW6njGV9xoLchcWryS',
+    cueTitle: 'Buffy the Vampire Slayer Theme',
+    performedBy: 'Nerf Herder',
+    mediaType: 'tv',
+    correctTitle: 'Buffy the Vampire Slayer',
+    options: ['Buffy the Vampire Slayer', 'The X-Files', 'Stranger Things', 'Doctor Who'],
+    correctIndex: 0,
+    sourceNote: '1997 WB series theme; matched via Spotify search "Buffy the Vampire Slayer theme Nerf Herder".',
+  },
+  {
+    id: 'the-twilight-zone-theme',
+    spotifyUri: 'spotify:track:6lOkpYwxD5XE12v2r4QwFm',
+    spotifyUrl: 'https://open.spotify.com/track/6lOkpYwxD5XE12v2r4QwFm',
+    cueTitle: 'Theme - From "The Twilight Zone"',
+    performedBy: 'Marius Constant',
+    mediaType: 'tv',
+    correctTitle: 'The Twilight Zone',
+    options: ['The Twilight Zone', 'Star Trek: The Original Series', 'The X-Files', 'Battlestar Galactica'],
+    correctIndex: 0,
+    sourceNote: "1960 Marius Constant theme, adopted as the series' title music from season 2; matched via Spotify search \"The Twilight Zone theme Marius Constant\".",
+  },
+  {
+    id: 'star-trek-tng-main-title',
+    spotifyUri: 'spotify:track:6C6UppMmnhp4DY4oyG823S',
+    spotifyUrl: 'https://open.spotify.com/track/6C6UppMmnhp4DY4oyG823S',
+    cueTitle: 'Star Trek: The Next Generation Main Title',
+    performedBy: 'Jerry Goldsmith & Ron Jones',
+    mediaType: 'tv',
+    correctTitle: 'Star Trek: The Next Generation',
+    options: ['Star Trek: The Original Series', 'Battlestar Galactica', 'Doctor Who', 'Star Trek: The Next Generation'],
+    correctIndex: 3,
+    sourceNote: '1987 series theme, adapted from Jerry Goldsmith\'s Star Trek: The Motion Picture theme; matched via Spotify search "Star Trek The Next Generation main title theme".',
+  },
+  {
+    id: 'jeopardy-think-music',
+    spotifyUri: 'spotify:track:4gG67P80Ku9jQS5lCHncbW',
+    spotifyUrl: 'https://open.spotify.com/track/4gG67P80Ku9jQS5lCHncbW',
+    cueTitle: 'Theme from "Jeopardy!" (Think Music)',
+    performedBy: 'Merv Griffin',
+    mediaType: 'tv',
+    correctTitle: 'Jeopardy!',
+    options: ['Jeopardy!', 'Survivor', 'Saturday Night Live', 'The Office'],
+    correctIndex: 0,
+    sourceNote: '1984 syndicated revival theme composed by Merv Griffin; matched via Spotify search "Jeopardy Think Music Merv Griffin".',
+  },
+  {
+    id: 'ancient-voices-survivor-theme',
+    spotifyUri: 'spotify:track:54P2hpmM2xdSQ2KU2Gk6VV',
+    spotifyUrl: 'https://open.spotify.com/track/54P2hpmM2xdSQ2KU2Gk6VV',
+    cueTitle: 'Main Title Theme: "Ancient Voices"',
+    performedBy: 'Russ Landau',
+    mediaType: 'tv',
+    correctTitle: 'Survivor',
+    options: ['Survivor', 'Jeopardy!', 'Saturday Night Live', 'The Office'],
+    correctIndex: 0,
+    sourceNote: '2000 CBS series theme, Emmy-nominated Russ Landau composition; matched via Spotify search "Ancient Voices Survivor theme Russ Landau".',
+  },
+  {
+    id: 'saturday-night-live-theme',
+    spotifyUri: 'spotify:track:2efzyQv4fzTSIvTNXThNvf',
+    spotifyUrl: 'https://open.spotify.com/track/2efzyQv4fzTSIvTNXThNvf',
+    cueTitle: 'Saturday Night Live (TV Theme)',
+    performedBy: 'Howard Shore (cover recording)',
+    mediaType: 'tv',
+    correctTitle: 'Saturday Night Live',
+    options: ['Saturday Night Live', 'Jeopardy!', 'Survivor', 'Seinfeld'],
+    correctIndex: 0,
+    sourceNote: '1975 NBC series theme, composed by original SNL bandleader Howard Shore; matched via Spotify search "Saturday Night Live theme song".',
+  },
+  {
+    id: 'er-theme',
+    spotifyUri: 'spotify:track:1ah93qltdUmiVSLJuUXwzz',
+    spotifyUrl: 'https://open.spotify.com/track/1ah93qltdUmiVSLJuUXwzz',
+    cueTitle: 'ER Theme',
+    performedBy: 'James Newton Howard',
+    mediaType: 'tv',
+    correctTitle: 'ER',
+    options: ['House', 'ER', 'Law & Order', 'CSI: Crime Scene Investigation'],
+    correctIndex: 1,
+    sourceNote: '1994 NBC series theme; matched via Spotify search "ER theme James Newton Howard".',
+  },
+  {
+    id: 'teardrop-house-md-theme',
+    spotifyUri: 'spotify:track:5xDBNsgGHAtSqaVCP7uPiA',
+    spotifyUrl: 'https://open.spotify.com/track/5xDBNsgGHAtSqaVCP7uPiA',
+    cueTitle: 'Teardrop (Theme Song)',
+    performedBy: 'Massive Attack',
+    mediaType: 'tv',
+    correctTitle: 'House',
+    options: ['House', 'ER', 'Dexter', 'Breaking Bad'],
+    correctIndex: 0,
+    sourceNote: "1998 Massive Attack song, used as the title theme of House, M.D. from 2004; matched via Spotify search \"Teardrop Massive Attack House theme\".",
   },
 ];
