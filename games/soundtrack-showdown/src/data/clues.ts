@@ -10,11 +10,11 @@ import type { SoundtrackClue } from '../types';
  * fetches to open.spotify.com, so none of them were independently re-loaded
  * and eyeballed after picking, and most themes have many competing Spotify
  * entries (different orchestras/arrangements/remasters/covers) where the
- * pick was a best-effort judgment call, not a verified-unique match. Some
- * older or less commercially-available TV themes (e.g. several British
- * sitcoms) had no official composer master on Spotify, so a clearly-labeled
- * cover/library recording was used instead — see individual `sourceNote`s.
- * Do a scan-and-listen pass before relying on this pool for real play.
+ * pick was a best-effort judgment call, not a verified-unique match. One
+ * entry (Parks and Recreation) notes in its `sourceNote` that the linked
+ * recording may not be the credited composers' own indexed master — flagged
+ * there rather than guessed at silently. Do a scan-and-listen pass before
+ * relying on this pool for real play.
  * `cueTitle`/`performedBy`/`correctTitle`/`sourceNote` are reveal-only — see
  * ClueLoader.tsx.
  */
@@ -2040,19 +2040,19 @@ export const clues: SoundtrackClue[] = [
     spotifyUri: 'spotify:track:2u9Nuysb8f0KyZK7n88WtI',
     spotifyUrl: 'https://open.spotify.com/track/2u9Nuysb8f0KyZK7n88WtI',
     cueTitle: 'Parks and Recreation Theme',
-    performedBy: 'Gaby Moreno & Vincent Jones (cover recording)',
+    performedBy: 'Gaby Moreno & Vincent Jones',
     mediaType: 'tv',
     correctTitle: 'Parks and Recreation',
     options: ['Parks and Recreation', 'The Office', 'Brooklyn Nine-Nine', 'Modern Family'],
     correctIndex: 0,
-    sourceNote: '2009 NBC series theme composed by Gaby Moreno & Vincent Jones; the official master is not indexed on Spotify under the composers, so this is a faithful cover recording; matched via Spotify search "Parks and Recreation Theme song".',
+    sourceNote: '2009 NBC series theme composed by Gaby Moreno & Vincent Jones; matched via Spotify search "Parks and Recreation Theme song" — the linked recording may be a faithful re-recording rather than the composers\' own indexed master, unconfirmed given this sandbox can\'t directly fetch open.spotify.com to check.',
   },
   {
     id: 'brooklyn-nine-nine-main-title',
     spotifyUri: 'spotify:track:1RXM07gwrdXIj4LqNAMoMM',
     spotifyUrl: 'https://open.spotify.com/track/1RXM07gwrdXIj4LqNAMoMM',
     cueTitle: 'Brooklyn Nine Nine (Main Title Theme 99)',
-    performedBy: 'Dan Marocco (cover recording)',
+    performedBy: 'Dan Marocco',
     mediaType: 'tv',
     correctTitle: 'Brooklyn Nine-Nine',
     options: ['Brooklyn Nine-Nine', 'Parks and Recreation', 'The Office', 'Seinfeld'],
@@ -2124,7 +2124,7 @@ export const clues: SoundtrackClue[] = [
     spotifyUri: 'spotify:track:1mVZTBKmokqmhuKSPl9h82',
     spotifyUrl: 'https://open.spotify.com/track/1mVZTBKmokqmhuKSPl9h82',
     cueTitle: 'Who Do You Think You Are Kidding Mr Hitler? (From "Dad\'s Army")',
-    performedBy: 'Bud Flanagan (cover recording)',
+    performedBy: 'Bud Flanagan',
     mediaType: 'tv',
     correctTitle: "Dad's Army",
     options: ["Dad's Army", 'Fawlty Towers', 'Blackadder', 'Only Fools and Horses'],
@@ -2136,7 +2136,7 @@ export const clues: SoundtrackClue[] = [
     spotifyUri: 'spotify:track:6uApHE9WuGqqncLg38TtrX',
     spotifyUrl: 'https://open.spotify.com/track/6uApHE9WuGqqncLg38TtrX',
     cueTitle: 'Only Fools and Horses - The Main Title Theme',
-    performedBy: 'John Sullivan (cover recording)',
+    performedBy: 'John Sullivan',
     mediaType: 'tv',
     correctTitle: 'Only Fools and Horses',
     options: ['Fawlty Towers', 'Blackadder', "Dad's Army", 'Only Fools and Horses'],
@@ -2244,7 +2244,7 @@ export const clues: SoundtrackClue[] = [
     spotifyUri: 'spotify:track:5zK1CzIGS0sL0Cq9PHSoqq',
     spotifyUrl: 'https://open.spotify.com/track/5zK1CzIGS0sL0Cq9PHSoqq',
     cueTitle: 'Who Are You? (Theme from "CSI: Crime Scene Investigation")',
-    performedBy: 'The Who (cover recording)',
+    performedBy: 'The Who',
     mediaType: 'tv',
     correctTitle: 'CSI: Crime Scene Investigation',
     options: ['CSI: Crime Scene Investigation', 'Law & Order', 'Dexter', 'Miami Vice'],
@@ -2388,7 +2388,7 @@ export const clues: SoundtrackClue[] = [
     spotifyUri: 'spotify:track:2efzyQv4fzTSIvTNXThNvf',
     spotifyUrl: 'https://open.spotify.com/track/2efzyQv4fzTSIvTNXThNvf',
     cueTitle: 'Saturday Night Live (TV Theme)',
-    performedBy: 'Howard Shore (cover recording)',
+    performedBy: 'Howard Shore',
     mediaType: 'tv',
     correctTitle: 'Saturday Night Live',
     options: ['Saturday Night Live', 'Jeopardy!', 'Survivor', 'Seinfeld'],
