@@ -1,12 +1,6 @@
 :root {
   --board-bg-start: #0b1e6b;
   --board-bg-end: #142a8c;
-  --gold: #ffd700;
-  --gold-dark: #c9a400;
-  --strike-red: #e0202a;
-  --cream: #f5f2e8;
-  --navy-text: #0b1e6b;
-  color-scheme: dark;
 }
 
 * {
@@ -77,7 +71,7 @@ button:disabled {
   border: none;
   border-radius: 8px;
   background: var(--gold);
-  color: var(--navy-text);
+  color: var(--ink);
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
   text-transform: uppercase;
@@ -118,7 +112,7 @@ button:disabled {
   font-family: 'Segoe UI', sans-serif;
   font-size: 0.9rem;
   background: var(--cream);
-  color: var(--navy-text);
+  color: var(--ink);
   border: none;
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
@@ -136,7 +130,7 @@ button:disabled {
 
 .setup-generate-button:not(:disabled):hover {
   background: var(--gold);
-  color: var(--navy-text);
+  color: var(--ink);
 }
 
 .setup-generate-status {
@@ -146,7 +140,7 @@ button:disabled {
 }
 
 .setup-generate-status--error {
-  color: var(--strike-red);
+  color: var(--status-wrong);
 }
 
 .setup-generated-list {
@@ -188,16 +182,16 @@ button:disabled {
 
 .controls-button:not(:disabled):hover {
   background: var(--gold);
-  color: var(--navy-text);
+  color: var(--ink);
 }
 
 .controls-button--strike {
-  border-color: var(--strike-red);
-  color: var(--strike-red);
+  border-color: var(--status-wrong);
+  color: var(--status-wrong);
 }
 
 .controls-button--strike:not(:disabled):hover {
-  background: var(--strike-red);
+  background: var(--status-wrong);
   color: var(--cream);
 }
 
@@ -208,16 +202,16 @@ button:disabled {
 
 .controls-button--steal-success:not(:disabled):hover {
   background: #2ecc71;
-  color: var(--navy-text);
+  color: var(--ink);
 }
 
 .controls-button--steal-fail {
-  border-color: var(--strike-red);
-  color: var(--strike-red);
+  border-color: var(--status-wrong);
+  color: var(--status-wrong);
 }
 
 .controls-button--steal-fail:not(:disabled):hover {
-  background: var(--strike-red);
+  background: var(--status-wrong);
   color: var(--cream);
 }
 
@@ -259,7 +253,7 @@ button:disabled {
 
 .modal-card {
   background: var(--cream);
-  color: var(--navy-text);
+  color: var(--ink);
   border: 4px solid var(--gold);
   border-radius: 12px;
   padding: 2rem;
@@ -271,7 +265,7 @@ button:disabled {
 .modal-title {
   margin: 0 0 0.5rem;
   text-transform: uppercase;
-  color: var(--navy-text);
+  color: var(--ink);
 }
 
 .modal-winner {

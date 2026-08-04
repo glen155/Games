@@ -1,12 +1,7 @@
 :root {
   --bg-start: #1a1330;
   --bg-end: #2a1f4a;
-  --gold: #ffd700;
-  --gold-dark: #c9a400;
-  --cream: #f5f2e8;
-  --dark-text: #1a1330;
   --muted: rgba(245, 242, 232, 0.7);
-  color-scheme: dark;
 }
 
 * {
@@ -70,17 +65,18 @@ button {
   color: var(--cream);
   padding: 0.4rem 1rem;
   font-size: 0.85rem;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .board-filter--active {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   border-color: var(--gold);
   font-weight: bold;
 }
 
 .board-error {
-  color: #ff8080;
+  color: var(--status-wrong);
 }
 
 .board-empty {
@@ -97,7 +93,7 @@ button {
   margin-top: 0.5rem;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .board-columns {
     grid-template-columns: 1fr;
   }

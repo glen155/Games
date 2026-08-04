@@ -13,8 +13,8 @@
   position: absolute;
   top: 0.5rem;
   right: 1rem;
-  font-size: 0.7rem;
-  color: var(--gold-dark);
+  font-size: 0.8rem;
+  color: var(--gold);
   letter-spacing: 0.05em;
 }
 
@@ -85,13 +85,13 @@
   height: 2rem;
   border-radius: 50%;
   background: var(--gold);
-  color: var(--navy-text);
+  color: var(--ink);
   font-size: 1.1rem;
 }
 
 .board-slot-face--back {
   background: var(--cream);
-  color: var(--navy-text);
+  color: var(--ink);
   transform: rotateY(180deg);
   justify-content: space-between;
   padding: 0 1rem;
@@ -112,6 +112,6 @@
   padding: 0 0.5rem;
   border-radius: 6px;
   background: var(--gold);
-  color: var(--navy-text);
+  color: var(--ink);
   font-size: 1.1rem;
 }

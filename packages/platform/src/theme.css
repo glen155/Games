@@ -1,0 +1,59 @@
+/*
+ * Shared design tokens for the whole platform (every game + the landing
+ * page). Tokens only — no selectors — so a game can pull in the values it
+ * needs without also pulling in packages/platform/src/styles.css's shared
+ * shell chrome (e.g. the leaderboard app, which has no GameShell).
+ *
+ * Each game keeps its own background hue (its own --*-bg-start/--*-bg-end
+ * variables, declared locally); everything below is genuinely shared and
+ * should not be redeclared per game.
+ */
+:root {
+  /* Brand accent — identical across every game + landing. Do not redefine
+     per game; if a game's swatch has drifted from these values, that's the
+     bug this file exists to fix. */
+  --gold: #ffd700;
+  --gold-dark: #c9a400;
+  --cream: #f5f2e8;
+
+  /* Canonical semantic status colors — replaces every game's own
+     --strike-red/--wrong-red/--mt-wrong/--correct-green/--mt-correct. */
+  --status-wrong: #e0202a;
+  --status-correct: #2ecc71;
+
+  /* Dark "ink" text color for text-on-gold / text-on-cream contexts.
+     Replaces --navy-text/--dark-text/--mt-ink, which were each just that
+     game's own background hue repeated as a text color rather than a real
+     shared token. */
+  --ink: #14121f;
+
+  /* Spacing scale (rem). */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  /* Radius scale. */
+  --radius-sm: 0.4rem;
+  --radius-md: 0.6rem;
+  --radius-lg: 0.9rem;
+  --radius-pill: 999px;
+
+  /* Shared responsive breakpoint. CSS custom properties can't be used
+     inside @media conditions, so this is a documented convention, not a
+     live value — every game's single-column collapse point should be
+     700px. */
+  /* --breakpoint-tablet: 700px; */
+
+  /* Transition timing, for smoothing hover/selected/press state changes. */
+  --transition-fast: 120ms ease;
+  --transition-medium: 220ms ease;
+
+  /* Shared keyboard-focus ring. */
+  --focus-ring: 2px solid var(--gold);
+  --focus-ring-offset: 2px;
+
+  color-scheme: dark;
+}

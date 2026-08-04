@@ -1,13 +1,6 @@
 :root {
   --bg-start: #2b0508;
   --bg-end: #450a0f;
-  --gold: #ffd700;
-  --gold-dark: #c9a400;
-  --wrong-red: #ff4d5a;
-  --correct-green: #2ecc71;
-  --cream: #f5f2e8;
-  --dark-text: #2b0508;
-  color-scheme: dark;
 }
 
 * {
@@ -90,7 +83,7 @@ button:disabled {
   gap: 0.75rem;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 700px) {
   .setup-answer-style-options {
     grid-template-columns: 1fr;
   }
@@ -106,6 +99,7 @@ button:disabled {
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.15);
   color: var(--cream);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-medium);
 }
 
 .setup-answer-style-option strong {
@@ -151,7 +145,7 @@ button:disabled {
   font-family: inherit;
   font-size: 1.25rem;
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: none;
   border-radius: 6px;
   padding: 0.5rem;
@@ -168,7 +162,7 @@ button:disabled {
   border: none;
   border-radius: 8px;
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
   text-transform: uppercase;
@@ -205,12 +199,12 @@ button:disabled {
 
 .controls-button:not(:disabled):hover {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .controls-button--primary {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .controls-button--primary:not(:disabled):hover {
@@ -255,7 +249,7 @@ button:disabled {
 
 .modal-card {
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: 4px solid var(--gold);
   border-radius: 12px;
   padding: 2rem;
@@ -267,7 +261,7 @@ button:disabled {
 .modal-title {
   margin: 0 0 0.5rem;
   text-transform: uppercase;
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .modal-winner {

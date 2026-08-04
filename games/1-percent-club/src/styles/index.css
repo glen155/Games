@@ -1,13 +1,6 @@
 :root {
   --bg-start: #0a1f14;
   --bg-end: #123324;
-  --gold: #ffd700;
-  --gold-dark: #c9a400;
-  --wrong-red: #e0202a;
-  --correct-green: #2ecc71;
-  --cream: #f5f2e8;
-  --dark-text: #0a1f14;
-  color-scheme: dark;
 }
 
 * {
@@ -94,7 +87,7 @@ button:disabled {
   font-family: inherit;
   font-size: 1.25rem;
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: none;
   border-radius: 6px;
   padding: 0.5rem;
@@ -104,7 +97,7 @@ button:disabled {
   border: none;
   border-radius: 8px;
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
   text-transform: uppercase;
@@ -151,12 +144,12 @@ button:disabled {
 
 .setup-ladder-button:hover {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .setup-ladder-button--selected {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .setup-ladder-hint {
@@ -197,7 +190,7 @@ button:disabled {
   font-family: inherit;
   font-size: 0.9rem;
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: none;
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
@@ -218,7 +211,7 @@ button:disabled {
 
 .setup-generate-button:not(:disabled):hover {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .setup-generate-status {
@@ -227,11 +220,11 @@ button:disabled {
 }
 
 .setup-generate-status--ok {
-  color: var(--correct-green);
+  color: var(--status-correct);
 }
 
 .setup-generate-status--error {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 .controls-panel {
@@ -261,12 +254,12 @@ button:disabled {
 
 .controls-button:not(:disabled):hover {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .controls-button--primary {
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .controls-button--primary:not(:disabled):hover {
@@ -311,7 +304,7 @@ button:disabled {
 
 .modal-card {
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: 4px solid var(--gold);
   border-radius: 12px;
   padding: 2rem;
@@ -323,7 +316,7 @@ button:disabled {
 .modal-title {
   margin: 0 0 0.5rem;
   text-transform: uppercase;
-  color: var(--dark-text);
+  color: var(--ink);
 }
 
 .modal-winner {

@@ -130,7 +130,7 @@
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   background: rgba(224, 32, 42, 0.25);
-  border: 1px solid var(--strike-red);
+  border: 1px solid var(--status-wrong);
   font-size: 0.85rem;
   font-weight: 600;
 }

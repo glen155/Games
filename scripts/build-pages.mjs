@@ -41,4 +41,10 @@ for (const slug of games) {
 log('Copying landing page');
 cpSync(join(root, 'landing'), outDir, { recursive: true });
 
+// The landing page has no bundler of its own, so it can't consume the
+// shared theme the same way the games do (via a Vite alias) -- copy the
+// shared token file alongside it instead, so it stays in sync with the
+// same packages/platform/src/theme.css every game pulls from.
+cpSync(join(root, 'packages/platform/src/theme.css'), join(outDir, 'theme.css'));
+
 log(`Done. Assembled ${games.length} game(s) into _site/`);

@@ -1,13 +1,6 @@
 :root {
   --mt-bg-start: #161327;
   --mt-bg-end: #241d3f;
-  --mt-amber: #f2b705;
-  --mt-amber-dark: #c99304;
-  --mt-cream: #f7f3e8;
-  --mt-ink: #161327;
-  --mt-correct: #2fbf71;
-  --mt-wrong: #e0525c;
-  color-scheme: dark;
 }
 
 * {
@@ -24,12 +17,13 @@ body,
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: linear-gradient(180deg, var(--mt-bg-start), var(--mt-bg-end));
-  color: var(--mt-cream);
+  color: var(--cream);
 }
 
 button {
   font-family: inherit;
   cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 button:disabled {
@@ -47,27 +41,27 @@ button:disabled {
 }
 
 .mt-btn {
-  border: 2px solid var(--mt-amber);
+  border: 2px solid var(--gold);
   border-radius: 0.6rem;
   background: transparent;
-  color: var(--mt-amber);
+  color: var(--gold);
   padding: 0.6rem 1.1rem;
   font-size: 0.95rem;
   font-weight: 600;
 }
 
 .mt-btn:not(:disabled):hover {
-  background: var(--mt-amber);
-  color: var(--mt-ink);
+  background: var(--gold);
+  color: var(--ink);
 }
 
 .mt-btn--primary {
-  background: var(--mt-amber);
-  color: var(--mt-ink);
+  background: var(--gold);
+  color: var(--ink);
 }
 
 .mt-btn--primary:not(:disabled):hover {
-  background: var(--mt-amber-dark);
+  background: var(--gold-dark);
 }
 
 .mt-input {
@@ -165,7 +159,7 @@ button:disabled {
   align-items: start;
 }
 
-@media (max-width: 44rem) {
+@media (max-width: 700px) {
   .mt-host-main {
     grid-template-columns: 1fr;
   }
@@ -189,7 +183,7 @@ button:disabled {
   padding: 0.6rem 1rem;
   border-radius: 0.6rem;
   background: rgba(242, 183, 5, 0.15);
-  border: 1px solid var(--mt-amber);
+  border: 1px solid var(--gold);
   text-align: center;
   font-weight: 600;
 }
@@ -218,11 +212,11 @@ button:disabled {
   font-size: 2.25rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  color: var(--mt-amber);
+  color: var(--gold);
 }
 
 .mt-shot-clock--locked {
-  color: var(--mt-wrong);
+  color: var(--status-wrong);
   font-size: 1.5rem;
 }
 
@@ -292,22 +286,22 @@ button:disabled {
   border: 2px dashed rgba(255, 255, 255, 0.35);
   border-radius: 0.5rem;
   background: transparent;
-  color: var(--mt-cream);
+  color: var(--cream);
   padding: 0.6rem 0.5rem;
   min-width: 2rem;
   font-size: 1rem;
 }
 
 .mt-gap:not(:disabled):hover {
-  border-color: var(--mt-amber);
-  color: var(--mt-amber);
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .mt-gap--selected {
   border-style: solid;
-  border-color: var(--mt-amber);
+  border-color: var(--gold);
   background: rgba(242, 183, 5, 0.2);
-  color: var(--mt-amber);
+  color: var(--gold);
 }
 
 .mt-gap-year {
@@ -322,7 +316,7 @@ button:disabled {
 .mt-reveal-year {
   font-size: 3rem;
   font-weight: 800;
-  color: var(--mt-amber);
+  color: var(--gold);
   margin: 0;
 }
 
@@ -356,12 +350,12 @@ button:disabled {
 
 .mt-reveal-row--correct {
   background: rgba(47, 191, 113, 0.2);
-  color: var(--mt-correct);
+  color: var(--status-correct);
 }
 
 .mt-reveal-row--wrong {
   background: rgba(224, 82, 92, 0.15);
-  color: var(--mt-wrong);
+  color: var(--status-wrong);
 }
 
 /* Scoreboard */
@@ -416,7 +410,7 @@ button:disabled {
   padding: 0.2rem 0.5rem;
   border-radius: 0.4rem;
   background: rgba(242, 183, 5, 0.18);
-  color: var(--mt-amber);
+  color: var(--gold);
   font-size: 0.8rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -433,9 +427,9 @@ button:disabled {
 }
 
 .mt-win-card {
-  background: var(--mt-cream);
-  color: var(--mt-ink);
-  border: 4px solid var(--mt-amber);
+  background: var(--cream);
+  color: var(--ink);
+  border: 4px solid var(--gold);
   border-radius: 1rem;
   padding: 2rem;
   text-align: center;
@@ -472,7 +466,7 @@ button:disabled {
 
 .mt-win-row .mt-strip-card {
   background: rgba(22, 19, 39, 0.08);
-  color: var(--mt-ink);
+  color: var(--ink);
 }
 
 /* Player view */
@@ -537,7 +531,7 @@ button:disabled {
 .mt-player-reveal-year {
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--mt-amber);
+  color: var(--gold);
   margin: 0;
 }
 
@@ -552,11 +546,11 @@ button:disabled {
 }
 
 .mt-player-reveal--correct .mt-player-reveal-result {
-  color: var(--mt-correct);
+  color: var(--status-correct);
 }
 
 .mt-player-reveal--wrong .mt-player-reveal-result {
-  color: var(--mt-wrong);
+  color: var(--status-wrong);
 }
 
 .mt-self-timeline {

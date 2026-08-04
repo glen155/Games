@@ -38,7 +38,7 @@
   font-family: inherit;
   font-size: 0.9rem;
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: none;
   border-radius: 6px;
   padding: 0.3rem 0.5rem;
@@ -57,10 +57,11 @@
   font-weight: bold;
   font-variant-numeric: tabular-nums;
   color: var(--gold);
+  transition: color var(--transition-medium);
 }
 
 .timer-countdown--urgent {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 /* Player (phone) countdown */
@@ -71,10 +72,11 @@
   font-weight: bold;
   font-variant-numeric: tabular-nums;
   color: var(--gold);
+  transition: color var(--transition-medium);
 }
 
 .player-countdown--urgent {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 .results-breakdown {
@@ -118,11 +120,11 @@
 }
 
 .results-breakdown-item--correct {
-  border-left: 4px solid var(--correct-green);
+  border-left: 4px solid var(--status-correct);
 }
 
 .results-breakdown-item--wrong {
-  border-left: 4px solid var(--wrong-red);
+  border-left: 4px solid var(--status-wrong);
 }
 
 .results-breakdown-name {
@@ -134,11 +136,11 @@
 }
 
 .results-breakdown-item--correct .results-breakdown-mark {
-  color: var(--correct-green);
+  color: var(--status-correct);
 }
 
 .results-breakdown-item--wrong .results-breakdown-mark {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 .leaderboard-list {
@@ -157,7 +159,7 @@
   justify-content: space-between;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  background: rgba(10, 31, 20, 0.08);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .leaderboard-item--champion {
@@ -175,7 +177,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   border-radius: 999px;
   padding: 0.1rem 0.5rem;
 }
@@ -215,7 +217,7 @@
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   background: rgba(224, 32, 42, 0.25);
-  border: 1px solid var(--wrong-red);
+  border: 1px solid var(--status-wrong);
   font-size: 0.85rem;
 }
 
@@ -232,9 +234,9 @@
 }
 
 .player-result--correct {
-  color: var(--correct-green);
+  color: var(--status-correct);
 }
 
 .player-result--wrong {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
