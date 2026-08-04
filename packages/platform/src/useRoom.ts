@@ -23,16 +23,16 @@ const ROOM_ENDED_EVENT = 'room-ended';
 const MAX_TRACKED_ACTIONS = 20;
 const CODE_INSERT_RETRIES = 5;
 
-function channelName(code: string): string {
+export function channelName(code: string): string {
   return `room:${code}`;
 }
 
-function sessionKey(slug: string): string {
+export function sessionKey(slug: string): string {
   return `games-platform:host-room:${slug}`;
 }
 
 /** Reads the live player list out of a channel's presence state. */
-function readPlayers(channel: RealtimeChannel): PlayerPresence[] {
+export function readPlayers(channel: RealtimeChannel): PlayerPresence[] {
   const raw = channel.presenceState() as Record<
     string,
     Array<{ userId?: string; nickname?: string; role?: string; joinedAt?: number }>
@@ -356,7 +356,7 @@ export function usePlayerRoom<State, Action>(
  * Returns the room plus the state to seed from (existing durable state on
  * resume, otherwise the game's initial state).
  */
-async function resumeOrCreateRoom<State, Action>(
+export async function resumeOrCreateRoom<State, Action>(
   c: SupabaseClient,
   game: GameDefinition<State, Action>,
   userId: string,

@@ -15,6 +15,7 @@
     "dev:soundtrack-showdown": "npm run dev --workspace games/soundtrack-showdown",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
     "build:pages": "node scripts/build-pages.mjs"
   },
   "devDependencies": {
