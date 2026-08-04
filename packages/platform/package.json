@@ -22,7 +22,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "jsdom": "^30.0.1",
+    "jsdom": "^27.4.0",
     "vitest": "^4.1.10"
   },
   "peerDependencies": {
