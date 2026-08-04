@@ -38,7 +38,7 @@
   font-family: inherit;
   font-size: 0.9rem;
   background: var(--cream);
-  color: var(--dark-text);
+  color: var(--ink);
   border: none;
   border-radius: 6px;
   padding: 0.3rem 0.5rem;
@@ -60,7 +60,7 @@
 }
 
 .timer-countdown--urgent {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 /* Player (phone) countdown */
@@ -74,7 +74,7 @@
 }
 
 .player-countdown--urgent {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 /* Open Guess mode — host-only judging panel (not shared with Family Feud's
@@ -136,15 +136,15 @@
 }
 
 .judge-panel-mark--correct.judge-panel-mark--active {
-  border-color: var(--correct-green);
+  border-color: var(--status-correct);
   background: rgba(46, 204, 113, 0.2);
-  color: var(--correct-green);
+  color: var(--status-correct);
 }
 
 .judge-panel-mark--wrong.judge-panel-mark--active {
-  border-color: var(--wrong-red);
+  border-color: var(--status-wrong);
   background: rgba(255, 77, 90, 0.2);
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 .results-breakdown {
@@ -188,11 +188,11 @@
 }
 
 .results-breakdown-item--correct {
-  border-left: 4px solid var(--correct-green);
+  border-left: 4px solid var(--status-correct);
 }
 
 .results-breakdown-item--wrong {
-  border-left: 4px solid var(--wrong-red);
+  border-left: 4px solid var(--status-wrong);
 }
 
 .results-breakdown-name {
@@ -204,11 +204,11 @@
 }
 
 .results-breakdown-item--correct .results-breakdown-mark {
-  color: var(--correct-green);
+  color: var(--status-correct);
 }
 
 .results-breakdown-item--wrong .results-breakdown-mark {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }
 
 .leaderboard-list {
@@ -245,7 +245,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   border-radius: 999px;
   padding: 0.1rem 0.5rem;
 }
@@ -297,9 +297,9 @@
 }
 
 .player-result--correct {
-  color: var(--correct-green);
+  color: var(--status-correct);
 }
 
 .player-result--wrong {
-  color: var(--wrong-red);
+  color: var(--status-wrong);
 }

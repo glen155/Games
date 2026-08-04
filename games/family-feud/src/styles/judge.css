@@ -47,7 +47,7 @@
 
 .judge-panel-row--revealed .judge-panel-button {
   background: var(--gold);
-  color: var(--navy-text);
+  color: var(--ink);
 }
 
 .judge-panel-number {

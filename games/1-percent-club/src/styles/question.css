@@ -20,7 +20,7 @@
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   font-size: 1.1rem;
 }
 
@@ -40,7 +40,7 @@
   gap: 0.75rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .options-grid {
     grid-template-columns: 1fr;
   }
@@ -58,6 +58,7 @@
   font-family: 'Segoe UI', sans-serif;
   font-size: 1rem;
   text-align: left;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-medium);
 }
 
 .option-button:not(:disabled):hover {
@@ -70,12 +71,12 @@
 }
 
 .option-button--correct {
-  border-color: var(--correct-green);
+  border-color: var(--status-correct);
   background: rgba(46, 204, 113, 0.2);
 }
 
 .option-button--wrong {
-  border-color: var(--wrong-red);
+  border-color: var(--status-wrong);
   background: rgba(224, 32, 42, 0.2);
 }
 
@@ -87,7 +88,7 @@
   height: 1.75rem;
   border-radius: 50%;
   background: var(--gold);
-  color: var(--dark-text);
+  color: var(--ink);
   font-size: 0.9rem;
   flex-shrink: 0;
 }
@@ -114,10 +115,10 @@
 
 .feedback-banner--correct {
   background: rgba(46, 204, 113, 0.15);
-  border: 2px solid var(--correct-green);
+  border: 2px solid var(--status-correct);
 }
 
 .feedback-banner--wrong {
   background: rgba(224, 32, 42, 0.15);
-  border: 2px solid var(--wrong-red);
+  border: 2px solid var(--status-wrong);
 }

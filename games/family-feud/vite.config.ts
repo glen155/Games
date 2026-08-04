@@ -14,6 +14,7 @@ export default defineConfig({
     alias: {
       // Consume the platform package from source so the React plugin transforms
       // its JSX (aliasing to a real path keeps it out of node_modules handling).
+      '@games/platform/theme.css': `${platformSrc}/theme.css`,
       '@games/platform/styles.css': `${platformSrc}/styles.css`,
       '@games/platform': `${platformSrc}/index.ts`,
     },
