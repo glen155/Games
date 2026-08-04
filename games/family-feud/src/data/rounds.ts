@@ -1,7 +1,8 @@
 import type { Category } from '../types';
 
-// Each category should have exactly 8 answers (descending by points) to
-// keep the board layout consistent. Add your own rounds here.
+// Aim for 8 answers (descending by points) to keep the board layout
+// consistent, but it's not enforced — the board renders however many
+// answers a category actually has. Add your own rounds here.
 export const rounds: Category[] = [
   {
     name: 'Things You Do Right Before Bed',
@@ -196,6 +197,122 @@ export const rounds: Category[] = [
       { text: 'People are just reading slides', points: 7 },
       { text: 'It runs long with no agenda', points: 4 },
       { text: 'Someone asks "can we take this offline?"', points: 2 },
+    ],
+  },
+
+  // The following rounds are sourced from real Family Feud broadcast surveys
+  // (via the ProtoQA dataset, iesl/protoqa-data, which preserves each
+  // question's real answer clusters and survey counts). Answers/points are
+  // authentic and left as-recorded rather than padded to a round number.
+  {
+    name: 'Things That Might Protect You From the Sun at the Beach',
+    answers: [
+      { text: 'Umbrella', points: 38 },
+      { text: 'Sunscreen', points: 36 },
+      { text: 'A sun hat', points: 14 },
+      { text: 'Sunglasses', points: 5 },
+      { text: 'A cover-up', points: 3 },
+      { text: 'Shade', points: 3 },
+    ],
+  },
+  {
+    name: 'Reasons You Might Be Nervous While Driving',
+    answers: [
+      { text: 'Weather conditions', points: 24 },
+      { text: 'Heavy traffic', points: 20 },
+      { text: 'Being a new driver', points: 19 },
+      { text: 'Spotting a police car', points: 17 },
+      { text: 'Tailgating', points: 11 },
+      { text: 'Getting lost', points: 8 },
+    ],
+  },
+  {
+    name: 'Things You Might Hear on a Morning Radio Show (Besides Music)',
+    answers: [
+      { text: 'News', points: 53 },
+      { text: 'Talking', points: 16 },
+      { text: 'Weather', points: 13 },
+      { text: 'Jokes', points: 5 },
+      { text: 'Commercials', points: 4 },
+      { text: 'Traffic', points: 4 },
+      { text: 'Sports', points: 3 },
+    ],
+  },
+  {
+    name: 'Dishes Served at Thanksgiving (Besides Turkey)',
+    answers: [
+      { text: 'Ham', points: 22 },
+      { text: 'Stuffing', points: 21 },
+      { text: 'Sweet potatoes', points: 19 },
+      { text: 'Cranberry sauce', points: 12 },
+      { text: 'Mashed potatoes', points: 11 },
+      { text: 'Pumpkin pie', points: 7 },
+    ],
+  },
+  {
+    name: 'Best-Selling Flowers at a Flower Shop (Besides Roses)',
+    answers: [
+      { text: 'Carnations', points: 33 },
+      { text: 'Lilies', points: 16 },
+      { text: 'Tulips', points: 13 },
+      { text: 'Daisies', points: 10 },
+      { text: 'Orchids', points: 8 },
+      { text: 'Chrysanthemums', points: 8 },
+    ],
+  },
+  {
+    name: 'Ways to Tell One Car Apart From Another of the Same Model and Year',
+    answers: [
+      { text: 'Color', points: 47 },
+      { text: 'License plate', points: 34 },
+      { text: 'Dents', points: 6 },
+      { text: 'Bumper stickers', points: 4 },
+      { text: 'The tires', points: 3 },
+      { text: 'How clean or dirty it is', points: 3 },
+    ],
+  },
+  {
+    name: "Things That Are Hard to Get Used to in Someone Else's Car",
+    answers: [
+      { text: 'The seat', points: 44 },
+      { text: 'The brakes', points: 19 },
+      { text: 'The steering wheel', points: 11 },
+      { text: 'The mirrors', points: 10 },
+      { text: 'The stick shift', points: 8 },
+      { text: 'The stereo', points: 5 },
+    ],
+  },
+  {
+    name: 'Things That Are Difficult to Do While Driving a Stick Shift',
+    answers: [
+      { text: 'Eating or drinking', points: 52 },
+      { text: 'Talking on the phone', points: 22 },
+      { text: 'Smoking', points: 8 },
+      { text: 'Changing gears', points: 5 },
+      { text: 'Stopping', points: 4 },
+      { text: 'Parking', points: 3 },
+      { text: 'Steering', points: 3 },
+    ],
+  },
+  {
+    name: "Gifts a Practical Woman Wouldn't Be Impressed By",
+    answers: [
+      { text: 'Flowers', points: 38 },
+      { text: 'Jewelry', points: 27 },
+      { text: 'Perfume', points: 13 },
+      { text: 'Candy', points: 12 },
+      { text: 'Lingerie', points: 7 },
+    ],
+  },
+  {
+    name: 'Foods Someone With High Cholesterol Might Give Up',
+    answers: [
+      { text: 'Eggs', points: 36 },
+      { text: 'Butter', points: 14 },
+      { text: 'Bacon', points: 14 },
+      { text: 'Fried chicken', points: 12 },
+      { text: 'Pizza', points: 11 },
+      { text: 'French fries', points: 10 },
     ],
   },
 ];
