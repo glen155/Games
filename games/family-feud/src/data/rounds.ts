@@ -426,4 +426,122 @@ export const rounds: Category[] = [
       { text: 'Dishes', points: 5 },
     ],
   },
+
+  // Yet more rounds sourced from real Family Feud broadcast surveys (see
+  // the note above the first sourced block for provenance).
+  {
+    name: "Luxuries of Home You'd Miss Most After a Week of Camping",
+    answers: [
+      { text: 'Bed', points: 35 },
+      { text: 'A shower', points: 25 },
+      { text: 'TV', points: 13 },
+      { text: 'A toilet', points: 11 },
+      { text: 'Electricity', points: 4 },
+      { text: 'Air conditioning', points: 4 },
+      { text: 'A computer', points: 3 },
+    ],
+  },
+  {
+    name: 'Gifts to Get Dad for the Holidays (If All Else Fails)',
+    answers: [
+      { text: 'A tie', points: 48 },
+      { text: 'Tools', points: 13 },
+      { text: 'Socks', points: 12 },
+      { text: 'Money', points: 12 },
+      { text: 'Cologne', points: 4 },
+      { text: 'A shirt', points: 4 },
+      { text: 'A watch', points: 2 },
+    ],
+  },
+  {
+    name: "Subjects You'd Want to Memorize Before Going on Jeopardy!",
+    answers: [
+      { text: 'History', points: 46 },
+      { text: 'Geography', points: 24 },
+      { text: 'Movies', points: 11 },
+      { text: 'Current events', points: 10 },
+      { text: 'The Bible', points: 3 },
+    ],
+  },
+  {
+    name: 'Things a Really Smart Kid Probably Spends Their Summer Doing',
+    answers: [
+      { text: 'Reading', points: 50 },
+      { text: 'Studying', points: 17 },
+      { text: 'Summer school', points: 15 },
+      { text: 'Working', points: 5 },
+      { text: 'Camp', points: 5 },
+      { text: 'Staying on the computer', points: 2 },
+    ],
+  },
+  {
+    name: "Things You Make for Dinner When You're Short on Time",
+    answers: [
+      { text: 'Pizza', points: 30 },
+      { text: 'Spaghetti', points: 20 },
+      { text: 'TV dinners', points: 15 },
+      { text: 'Hot dogs', points: 12 },
+      { text: 'Sandwiches', points: 10 },
+      { text: 'Mac and cheese', points: 6 },
+    ],
+  },
+  {
+    name: 'How Long Your Commute to Work Takes',
+    answers: [
+      { text: '30 minutes', points: 29 },
+      { text: '15 minutes', points: 19 },
+      { text: '20 minutes', points: 17 },
+      { text: '10 minutes', points: 13 },
+      { text: '60 minutes', points: 7 },
+      { text: '5 minutes', points: 6 },
+      { text: '45 minutes', points: 5 },
+    ],
+  },
+  {
+    name: "Shapes You'd Pick to Describe Yourself As",
+    answers: [
+      { text: 'Triangle', points: 33 },
+      { text: 'Circle', points: 22 },
+      { text: 'Square', points: 14 },
+      { text: 'Oval', points: 9 },
+      { text: 'Rectangle', points: 9 },
+      { text: 'Diamond', points: 4 },
+      { text: 'Star', points: 3 },
+    ],
+  },
+  {
+    name: 'Countries Known for Their Beer',
+    answers: [
+      { text: 'Germany', points: 25 },
+      { text: 'Ireland', points: 19 },
+      { text: 'The USA', points: 17 },
+      { text: 'Canada', points: 14 },
+      { text: 'England', points: 9 },
+      { text: 'Mexico', points: 8 },
+      { text: 'Australia', points: 6 },
+    ],
+  },
+  {
+    name: 'Animals Often Described as Beautiful',
+    answers: [
+      { text: 'Cat', points: 30 },
+      { text: 'Deer', points: 20 },
+      { text: 'Horse', points: 19 },
+      { text: 'Bird', points: 13 },
+      { text: 'Lion', points: 9 },
+      { text: 'Swan', points: 3 },
+    ],
+  },
+  {
+    name: "Things You Might See in the Sky That Make You Say 'Ooh'",
+    answers: [
+      { text: 'Fireworks', points: 31 },
+      { text: 'A shooting star', points: 19 },
+      { text: 'A rainbow', points: 15 },
+      { text: 'A hot air balloon', points: 7 },
+      { text: 'An airplane', points: 7 },
+      { text: 'A blimp', points: 6 },
+      { text: 'Dark clouds', points: 6 },
+    ],
+  },
 ];
