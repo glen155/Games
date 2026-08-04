@@ -1,7 +1,8 @@
 import type { Category } from '../types';
 
-// Each category should have exactly 8 answers (descending by points) to
-// keep the board layout consistent. Add your own rounds here.
+// Aim for 8 answers (descending by points) to keep the board layout
+// consistent, but it's not enforced — the board renders however many
+// answers a category actually has. Add your own rounds here.
 export const rounds: Category[] = [
   {
     name: 'Things You Do Right Before Bed',
@@ -196,6 +197,351 @@ export const rounds: Category[] = [
       { text: 'People are just reading slides', points: 7 },
       { text: 'It runs long with no agenda', points: 4 },
       { text: 'Someone asks "can we take this offline?"', points: 2 },
+    ],
+  },
+
+  // The following rounds are sourced from real Family Feud broadcast surveys
+  // (via the ProtoQA dataset, iesl/protoqa-data, which preserves each
+  // question's real answer clusters and survey counts). Answers/points are
+  // authentic and left as-recorded rather than padded to a round number.
+  {
+    name: 'Things That Might Protect You From the Sun at the Beach',
+    answers: [
+      { text: 'Umbrella', points: 38 },
+      { text: 'Sunscreen', points: 36 },
+      { text: 'A sun hat', points: 14 },
+      { text: 'Sunglasses', points: 5 },
+      { text: 'A cover-up', points: 3 },
+      { text: 'Shade', points: 3 },
+    ],
+  },
+  {
+    name: 'Reasons You Might Be Nervous While Driving',
+    answers: [
+      { text: 'Weather conditions', points: 24 },
+      { text: 'Heavy traffic', points: 20 },
+      { text: 'Being a new driver', points: 19 },
+      { text: 'Spotting a police car', points: 17 },
+      { text: 'Tailgating', points: 11 },
+      { text: 'Getting lost', points: 8 },
+    ],
+  },
+  {
+    name: 'Things You Might Hear on a Morning Radio Show (Besides Music)',
+    answers: [
+      { text: 'News', points: 53 },
+      { text: 'Talking', points: 16 },
+      { text: 'Weather', points: 13 },
+      { text: 'Jokes', points: 5 },
+      { text: 'Commercials', points: 4 },
+      { text: 'Traffic', points: 4 },
+      { text: 'Sports', points: 3 },
+    ],
+  },
+  {
+    name: 'Dishes Served at Thanksgiving (Besides Turkey)',
+    answers: [
+      { text: 'Ham', points: 22 },
+      { text: 'Stuffing', points: 21 },
+      { text: 'Sweet potatoes', points: 19 },
+      { text: 'Cranberry sauce', points: 12 },
+      { text: 'Mashed potatoes', points: 11 },
+      { text: 'Pumpkin pie', points: 7 },
+    ],
+  },
+  {
+    name: 'Best-Selling Flowers at a Flower Shop (Besides Roses)',
+    answers: [
+      { text: 'Carnations', points: 33 },
+      { text: 'Lilies', points: 16 },
+      { text: 'Tulips', points: 13 },
+      { text: 'Daisies', points: 10 },
+      { text: 'Orchids', points: 8 },
+      { text: 'Chrysanthemums', points: 8 },
+    ],
+  },
+  {
+    name: 'Ways to Tell One Car Apart From Another of the Same Model and Year',
+    answers: [
+      { text: 'Color', points: 47 },
+      { text: 'License plate', points: 34 },
+      { text: 'Dents', points: 6 },
+      { text: 'Bumper stickers', points: 4 },
+      { text: 'The tires', points: 3 },
+      { text: 'How clean or dirty it is', points: 3 },
+    ],
+  },
+  {
+    name: "Things That Are Hard to Get Used to in Someone Else's Car",
+    answers: [
+      { text: 'The seat', points: 44 },
+      { text: 'The brakes', points: 19 },
+      { text: 'The steering wheel', points: 11 },
+      { text: 'The mirrors', points: 10 },
+      { text: 'The stick shift', points: 8 },
+      { text: 'The stereo', points: 5 },
+    ],
+  },
+  {
+    name: 'Things That Are Difficult to Do While Driving a Stick Shift',
+    answers: [
+      { text: 'Eating or drinking', points: 52 },
+      { text: 'Talking on the phone', points: 22 },
+      { text: 'Smoking', points: 8 },
+      { text: 'Changing gears', points: 5 },
+      { text: 'Stopping', points: 4 },
+      { text: 'Parking', points: 3 },
+      { text: 'Steering', points: 3 },
+    ],
+  },
+  {
+    name: "Gifts a Practical Woman Wouldn't Be Impressed By",
+    answers: [
+      { text: 'Flowers', points: 38 },
+      { text: 'Jewelry', points: 27 },
+      { text: 'Perfume', points: 13 },
+      { text: 'Candy', points: 12 },
+      { text: 'Lingerie', points: 7 },
+    ],
+  },
+  {
+    name: 'Foods Someone With High Cholesterol Might Give Up',
+    answers: [
+      { text: 'Eggs', points: 36 },
+      { text: 'Butter', points: 14 },
+      { text: 'Bacon', points: 14 },
+      { text: 'Fried chicken', points: 12 },
+      { text: 'Pizza', points: 11 },
+      { text: 'French fries', points: 10 },
+    ],
+  },
+
+  // More rounds sourced from real Family Feud broadcast surveys (see the
+  // note above the first sourced block for provenance).
+  {
+    name: 'Things Men Look For When Choosing a Mate',
+    answers: [
+      { text: 'Good looks', points: 29 },
+      { text: 'Personality', points: 18 },
+      { text: 'Financial security', points: 9 },
+      { text: 'Compatibility', points: 9 },
+      { text: 'A sense of humor', points: 7 },
+      { text: 'Honesty', points: 7 },
+    ],
+  },
+  {
+    name: 'Things People Sleep On (Besides a Mattress)',
+    answers: [
+      { text: 'Couch', points: 26 },
+      { text: 'Floor', points: 24 },
+      { text: 'Futon', points: 21 },
+      { text: 'Pillow', points: 8 },
+      { text: 'Blanket', points: 5 },
+      { text: 'Sleeping bag', points: 3 },
+    ],
+  },
+  {
+    name: 'Purple Fruits or Vegetables',
+    answers: [
+      { text: 'Eggplant', points: 39 },
+      { text: 'Plum', points: 25 },
+      { text: 'Grape', points: 22 },
+      { text: 'Cabbage', points: 3 },
+      { text: 'Beets', points: 3 },
+    ],
+  },
+  {
+    name: 'Body Parts That Never Stop Growing',
+    answers: [
+      { text: 'Hair', points: 52 },
+      { text: 'Nails', points: 25 },
+      { text: 'Brain or mind', points: 6 },
+      { text: 'Feet', points: 6 },
+      { text: 'Bottom', points: 4 },
+      { text: 'Stomach', points: 2 },
+    ],
+  },
+  {
+    name: 'Words or Phrases With "Belly" in Them',
+    answers: [
+      { text: 'Belly button', points: 43 },
+      { text: 'Jelly belly', points: 19 },
+      { text: 'Belly dance', points: 18 },
+      { text: 'Bellyache', points: 9 },
+      { text: 'Belly flop', points: 6 },
+      { text: 'Round belly', points: 5 },
+    ],
+  },
+  {
+    name: "Toppings You'd Expect on a 'Works' Pizza",
+    answers: [
+      { text: 'Pepperoni', points: 33 },
+      { text: 'Onions', points: 27 },
+      { text: 'Mushrooms', points: 14 },
+      { text: 'Sausage', points: 10 },
+      { text: 'Olives', points: 6 },
+      { text: 'Anchovies', points: 3 },
+      { text: 'Peppers', points: 3 },
+    ],
+  },
+  {
+    name: "Things You'd Find in a Man's Purse (If He Had One)",
+    answers: [
+      { text: 'Wallet or money', points: 34 },
+      { text: 'Cell phone', points: 20 },
+      { text: 'Cigarettes', points: 17 },
+      { text: 'Keys', points: 15 },
+      { text: 'Tools', points: 12 },
+    ],
+  },
+  {
+    name: 'Things a Man Might Compliment a Woman on When Trying to Pick Her Up',
+    answers: [
+      { text: 'Eyes', points: 51 },
+      { text: 'Hair', points: 29 },
+      { text: 'Smile', points: 8 },
+      { text: 'Clothes', points: 8 },
+      { text: 'Body', points: 3 },
+    ],
+  },
+  {
+    name: 'Things People Do at the Table That Are Bad Manners',
+    answers: [
+      { text: 'Burping', points: 41 },
+      { text: 'Elbows on the table', points: 32 },
+      { text: 'Talking with a full mouth', points: 18 },
+      { text: 'Eating with your hands', points: 3 },
+      { text: 'Chewing with your mouth open', points: 3 },
+    ],
+  },
+  {
+    name: 'Housewarming Gifts',
+    answers: [
+      { text: 'A plant', points: 27 },
+      { text: 'A vase with flowers', points: 19 },
+      { text: 'A fruit basket', points: 15 },
+      { text: 'Linens', points: 13 },
+      { text: 'A bottle of wine', points: 11 },
+      { text: 'A toaster', points: 10 },
+      { text: 'Dishes', points: 5 },
+    ],
+  },
+
+  // Yet more rounds sourced from real Family Feud broadcast surveys (see
+  // the note above the first sourced block for provenance).
+  {
+    name: "Luxuries of Home You'd Miss Most After a Week of Camping",
+    answers: [
+      { text: 'Bed', points: 35 },
+      { text: 'A shower', points: 25 },
+      { text: 'TV', points: 13 },
+      { text: 'A toilet', points: 11 },
+      { text: 'Electricity', points: 4 },
+      { text: 'Air conditioning', points: 4 },
+      { text: 'A computer', points: 3 },
+    ],
+  },
+  {
+    name: 'Gifts to Get Dad for the Holidays (If All Else Fails)',
+    answers: [
+      { text: 'A tie', points: 48 },
+      { text: 'Tools', points: 13 },
+      { text: 'Socks', points: 12 },
+      { text: 'Money', points: 12 },
+      { text: 'Cologne', points: 4 },
+      { text: 'A shirt', points: 4 },
+      { text: 'A watch', points: 2 },
+    ],
+  },
+  {
+    name: "Subjects You'd Want to Memorize Before Going on Jeopardy!",
+    answers: [
+      { text: 'History', points: 46 },
+      { text: 'Geography', points: 24 },
+      { text: 'Movies', points: 11 },
+      { text: 'Current events', points: 10 },
+      { text: 'The Bible', points: 3 },
+    ],
+  },
+  {
+    name: 'Things a Really Smart Kid Probably Spends Their Summer Doing',
+    answers: [
+      { text: 'Reading', points: 50 },
+      { text: 'Studying', points: 17 },
+      { text: 'Summer school', points: 15 },
+      { text: 'Working', points: 5 },
+      { text: 'Camp', points: 5 },
+      { text: 'Staying on the computer', points: 2 },
+    ],
+  },
+  {
+    name: "Things You Make for Dinner When You're Short on Time",
+    answers: [
+      { text: 'Pizza', points: 30 },
+      { text: 'Spaghetti', points: 20 },
+      { text: 'TV dinners', points: 15 },
+      { text: 'Hot dogs', points: 12 },
+      { text: 'Sandwiches', points: 10 },
+      { text: 'Mac and cheese', points: 6 },
+    ],
+  },
+  {
+    name: 'How Long Your Commute to Work Takes',
+    answers: [
+      { text: '30 minutes', points: 29 },
+      { text: '15 minutes', points: 19 },
+      { text: '20 minutes', points: 17 },
+      { text: '10 minutes', points: 13 },
+      { text: '60 minutes', points: 7 },
+      { text: '5 minutes', points: 6 },
+      { text: '45 minutes', points: 5 },
+    ],
+  },
+  {
+    name: "Shapes You'd Pick to Describe Yourself As",
+    answers: [
+      { text: 'Triangle', points: 33 },
+      { text: 'Circle', points: 22 },
+      { text: 'Square', points: 14 },
+      { text: 'Oval', points: 9 },
+      { text: 'Rectangle', points: 9 },
+      { text: 'Diamond', points: 4 },
+      { text: 'Star', points: 3 },
+    ],
+  },
+  {
+    name: 'Countries Known for Their Beer',
+    answers: [
+      { text: 'Germany', points: 25 },
+      { text: 'Ireland', points: 19 },
+      { text: 'The USA', points: 17 },
+      { text: 'Canada', points: 14 },
+      { text: 'England', points: 9 },
+      { text: 'Mexico', points: 8 },
+      { text: 'Australia', points: 6 },
+    ],
+  },
+  {
+    name: 'Animals Often Described as Beautiful',
+    answers: [
+      { text: 'Cat', points: 30 },
+      { text: 'Deer', points: 20 },
+      { text: 'Horse', points: 19 },
+      { text: 'Bird', points: 13 },
+      { text: 'Lion', points: 9 },
+      { text: 'Swan', points: 3 },
+    ],
+  },
+  {
+    name: "Things You Might See in the Sky That Make You Say 'Ooh'",
+    answers: [
+      { text: 'Fireworks', points: 31 },
+      { text: 'A shooting star', points: 19 },
+      { text: 'A rainbow', points: 15 },
+      { text: 'A hot air balloon', points: 7 },
+      { text: 'An airplane', points: 7 },
+      { text: 'A blimp', points: 6 },
+      { text: 'Dark clouds', points: 6 },
     ],
   },
 ];
