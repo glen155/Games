@@ -315,4 +315,115 @@ export const rounds: Category[] = [
       { text: 'French fries', points: 10 },
     ],
   },
+
+  // More rounds sourced from real Family Feud broadcast surveys (see the
+  // note above the first sourced block for provenance).
+  {
+    name: 'Things Men Look For When Choosing a Mate',
+    answers: [
+      { text: 'Good looks', points: 29 },
+      { text: 'Personality', points: 18 },
+      { text: 'Financial security', points: 9 },
+      { text: 'Compatibility', points: 9 },
+      { text: 'A sense of humor', points: 7 },
+      { text: 'Honesty', points: 7 },
+    ],
+  },
+  {
+    name: 'Things People Sleep On (Besides a Mattress)',
+    answers: [
+      { text: 'Couch', points: 26 },
+      { text: 'Floor', points: 24 },
+      { text: 'Futon', points: 21 },
+      { text: 'Pillow', points: 8 },
+      { text: 'Blanket', points: 5 },
+      { text: 'Sleeping bag', points: 3 },
+    ],
+  },
+  {
+    name: 'Purple Fruits or Vegetables',
+    answers: [
+      { text: 'Eggplant', points: 39 },
+      { text: 'Plum', points: 25 },
+      { text: 'Grape', points: 22 },
+      { text: 'Cabbage', points: 3 },
+      { text: 'Beets', points: 3 },
+    ],
+  },
+  {
+    name: 'Body Parts That Never Stop Growing',
+    answers: [
+      { text: 'Hair', points: 52 },
+      { text: 'Nails', points: 25 },
+      { text: 'Brain or mind', points: 6 },
+      { text: 'Feet', points: 6 },
+      { text: 'Bottom', points: 4 },
+      { text: 'Stomach', points: 2 },
+    ],
+  },
+  {
+    name: 'Words or Phrases With "Belly" in Them',
+    answers: [
+      { text: 'Belly button', points: 43 },
+      { text: 'Jelly belly', points: 19 },
+      { text: 'Belly dance', points: 18 },
+      { text: 'Bellyache', points: 9 },
+      { text: 'Belly flop', points: 6 },
+      { text: 'Round belly', points: 5 },
+    ],
+  },
+  {
+    name: "Toppings You'd Expect on a 'Works' Pizza",
+    answers: [
+      { text: 'Pepperoni', points: 33 },
+      { text: 'Onions', points: 27 },
+      { text: 'Mushrooms', points: 14 },
+      { text: 'Sausage', points: 10 },
+      { text: 'Olives', points: 6 },
+      { text: 'Anchovies', points: 3 },
+      { text: 'Peppers', points: 3 },
+    ],
+  },
+  {
+    name: "Things You'd Find in a Man's Purse (If He Had One)",
+    answers: [
+      { text: 'Wallet or money', points: 34 },
+      { text: 'Cell phone', points: 20 },
+      { text: 'Cigarettes', points: 17 },
+      { text: 'Keys', points: 15 },
+      { text: 'Tools', points: 12 },
+    ],
+  },
+  {
+    name: 'Things a Man Might Compliment a Woman on When Trying to Pick Her Up',
+    answers: [
+      { text: 'Eyes', points: 51 },
+      { text: 'Hair', points: 29 },
+      { text: 'Smile', points: 8 },
+      { text: 'Clothes', points: 8 },
+      { text: 'Body', points: 3 },
+    ],
+  },
+  {
+    name: 'Things People Do at the Table That Are Bad Manners',
+    answers: [
+      { text: 'Burping', points: 41 },
+      { text: 'Elbows on the table', points: 32 },
+      { text: 'Talking with a full mouth', points: 18 },
+      { text: 'Eating with your hands', points: 3 },
+      { text: 'Chewing with your mouth open', points: 3 },
+    ],
+  },
+  {
+    name: 'Housewarming Gifts',
+    answers: [
+      { text: 'A plant', points: 27 },
+      { text: 'A vase with flowers', points: 19 },
+      { text: 'A fruit basket', points: 15 },
+      { text: 'Linens', points: 13 },
+      { text: 'A bottle of wine', points: 11 },
+      { text: 'A toaster', points: 10 },
+      { text: 'Dishes', points: 5 },
+    ],
+  },
 ];
