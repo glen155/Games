@@ -1,7 +1,14 @@
+import type { ReactNode } from 'react';
+
 export interface QuestionTier {
   percent: number; // % of the original 100 who answered correctly, descending
   prompt: string;
-  options: [string, string, string, string];
+  /** Optional inline diagram shown alongside the prompt (e.g. a clock face, a shape sequence). */
+  promptVisual?: ReactNode;
+  options: [string, string, string, string]; // always the accessible text label, even when a visual is shown
+  /** Optional inline visual per option, parallel to `options` — when present, the option renders
+   * this instead of its plain text, but `options[i]` is still used for aria-label/reveal text. */
+  optionVisuals?: [ReactNode, ReactNode, ReactNode, ReactNode];
   correctIndex: 0 | 1 | 2 | 3;
 }
 

@@ -60,7 +60,7 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
       {outOfRunning && (
         <div className="player-out-banner">You're out of the running — keep playing for fun!</div>
       )}
-      <QuestionCard percent={tier.percent} prompt={tier.prompt} />
+      <QuestionCard percent={tier.percent} prompt={tier.prompt} promptVisual={tier.promptVisual} />
       {state.phase === 'playing' ? (
         <>
           {secondsLeft !== null && (
@@ -70,6 +70,7 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
           )}
           <OptionsGrid
             options={tier.options}
+            optionVisuals={tier.optionVisuals}
             selectedIndex={myAnswer?.index ?? null}
             correctIndex={null}
             phase="playing"
@@ -89,6 +90,7 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
         <>
           <OptionsGrid
             options={tier.options}
+            optionVisuals={tier.optionVisuals}
             selectedIndex={myAnswer?.index ?? null}
             correctIndex={tier.correctIndex}
             phase="reveal"

@@ -1,4 +1,6 @@
 import type { QuestionTier } from '../types';
+import { ClockFace } from '../components/visuals/ClockFace';
+import { ShapeIcon } from '../components/visuals/ShapeIcon';
 
 // Each ladder is a complete 15-question game, ordered by descending "percent"
 // (the % of the original 100 pretend contestants who answered correctly) —
@@ -6,6 +8,11 @@ import type { QuestionTier } from '../types';
 // 40, 35, 30, 25, 20, 15, 10, 5, 1. Exactly 4 options per tier, correctIndex
 // must point at the right one, and each ladder must stay sorted from highest
 // percent to lowest.
+//
+// A few tiers use hand-built inline SVG visuals (`promptVisual`/`optionVisuals`,
+// via the `ClockFace`/`ShapeIcon` components) for clock-code and shape/pattern
+// puzzles, mirroring the visual rounds real episodes use — `options` still
+// carries the plain-text accessible label for every tier, visual or not.
 //
 // Content is themed after the Australian version of the show (Seven
 // Network) — Australian geography, culture, slang, and spelling where
@@ -41,8 +48,9 @@ const ladderA: QuestionTier[] = [
   },
   {
     percent: 60,
-    prompt: 'We ___ heading to the beach this arvo. Which word correctly completes the sentence?',
-    options: ['was', 'is', 'are', 'be'],
+    prompt: 'The clock below is set to when the final round starts. What number does the minute hand point to?',
+    promptVisual: <ClockFace hour={7} minute={35} label="A clock showing 7:35" />,
+    options: ['5', '6', '7', '8'],
     correctIndex: 2,
   },
   {
@@ -86,9 +94,15 @@ const ladderA: QuestionTier[] = [
   },
   {
     percent: 20,
-    prompt: "Rearrange the letters of 'ELVIS' to name something you might find in a church.",
-    options: ['LIVES', 'VEILS', 'LEVIS', 'SLIVE'],
-    correctIndex: 1,
+    prompt: 'Three of these four shapes are identical. Which one is the odd one out?',
+    options: ['Shape A', 'Shape B', 'Shape C', 'Shape D'],
+    optionVisuals: [
+      <ShapeIcon shape="pentagon" label="Shape A: pentagon" />,
+      <ShapeIcon shape="pentagon" label="Shape B: pentagon" />,
+      <ShapeIcon shape="star" label="Shape C: star" />,
+      <ShapeIcon shape="pentagon" label="Shape D: pentagon" />,
+    ],
+    correctIndex: 2,
   },
   {
     percent: 15,
@@ -155,9 +169,24 @@ const ladderB: QuestionTier[] = [
   },
   {
     percent: 40,
-    prompt: 'How many minutes are there in exactly two and a half hours?',
-    options: ['120', '150', '140', '160'],
-    correctIndex: 1,
+    prompt: 'What comes next in this shape sequence?',
+    promptVisual: (
+      <>
+        <ShapeIcon shape="circle" />
+        <ShapeIcon shape="square" />
+        <ShapeIcon shape="triangle" />
+        <ShapeIcon shape="circle" />
+        <ShapeIcon shape="square" />
+      </>
+    ),
+    options: ['Circle', 'Square', 'Triangle', 'Star'],
+    optionVisuals: [
+      <ShapeIcon shape="circle" label="Circle" />,
+      <ShapeIcon shape="square" label="Square" />,
+      <ShapeIcon shape="triangle" label="Triangle" />,
+      <ShapeIcon shape="star" label="Star" />,
+    ],
+    correctIndex: 2,
   },
   {
     // A real 1% Club Australia question (Season 3): the classic riddle where
@@ -187,9 +216,10 @@ const ladderB: QuestionTier[] = [
   },
   {
     percent: 15,
-    prompt: 'What has to be broken before you can use it?',
-    options: ['A promise', 'An egg', 'A record', 'A seal'],
-    correctIndex: 1,
+    prompt: 'The clock below shows what time the host walks out. What number is the hour hand closest to?',
+    promptVisual: <ClockFace hour={10} minute={50} label="A clock showing 10:50" />,
+    options: ['9', '10', '11', '12'],
+    correctIndex: 2,
   },
   {
     percent: 10,
@@ -238,9 +268,15 @@ const ladderC: QuestionTier[] = [
   },
   {
     percent: 50,
-    prompt: 'What do you call a shape with three sides?',
-    options: ['Square', 'Pentagon', 'Hexagon', 'Triangle'],
-    correctIndex: 3,
+    prompt: 'Three of these four shapes are identical. Which one is the odd one out?',
+    options: ['Shape A', 'Shape B', 'Shape C', 'Shape D'],
+    optionVisuals: [
+      <ShapeIcon shape="square" label="Shape A: square" />,
+      <ShapeIcon shape="circle" label="Shape B: circle" />,
+      <ShapeIcon shape="square" label="Shape C: square" />,
+      <ShapeIcon shape="square" label="Shape D: square" />,
+    ],
+    correctIndex: 1,
   },
   {
     percent: 45,
@@ -268,9 +304,24 @@ const ladderC: QuestionTier[] = [
   },
   {
     percent: 25,
-    prompt: 'What can you catch but not throw?',
-    options: ['A ball', 'A fish', 'A cold', 'A frisbee'],
-    correctIndex: 2,
+    prompt: 'What comes next in this shape sequence?',
+    promptVisual: (
+      <>
+        <ShapeIcon shape="star" />
+        <ShapeIcon shape="star" />
+        <ShapeIcon shape="circle" />
+        <ShapeIcon shape="star" />
+        <ShapeIcon shape="star" />
+      </>
+    ),
+    options: ['Star', 'Circle', 'Square', 'Triangle'],
+    optionVisuals: [
+      <ShapeIcon shape="star" label="Star" />,
+      <ShapeIcon shape="circle" label="Circle" />,
+      <ShapeIcon shape="square" label="Square" />,
+      <ShapeIcon shape="triangle" label="Triangle" />,
+    ],
+    correctIndex: 1,
   },
   {
     percent: 20,

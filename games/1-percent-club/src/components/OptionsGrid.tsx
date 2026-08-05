@@ -1,14 +1,24 @@
+import type { ReactNode } from 'react';
+
 const LETTERS = ['A', 'B', 'C', 'D'];
 
 interface OptionsGridProps {
   options: [string, string, string, string];
+  optionVisuals?: [ReactNode, ReactNode, ReactNode, ReactNode];
   selectedIndex: number | null;
   correctIndex: number | null;
   phase: 'playing' | 'reveal';
   onSelect: (index: number) => void;
 }
 
-export function OptionsGrid({ options, selectedIndex, correctIndex, phase, onSelect }: OptionsGridProps) {
+export function OptionsGrid({
+  options,
+  optionVisuals,
+  selectedIndex,
+  correctIndex,
+  phase,
+  onSelect,
+}: OptionsGridProps) {
   return (
     <div className="options-grid">
       {options.map((option, index) => {
@@ -23,6 +33,7 @@ export function OptionsGrid({ options, selectedIndex, correctIndex, phase, onSel
         ]
           .filter(Boolean)
           .join(' ');
+        const visual = optionVisuals?.[index];
 
         return (
           <button
@@ -34,7 +45,7 @@ export function OptionsGrid({ options, selectedIndex, correctIndex, phase, onSel
             aria-label={`Option ${LETTERS[index]}: ${option}`}
           >
             <span className="option-letter">{LETTERS[index]}</span>
-            <span className="option-text">{option}</span>
+            {visual ? <span className="option-visual">{visual}</span> : <span className="option-text">{option}</span>}
             <span className="option-hint">({index + 1})</span>
           </button>
         );

@@ -167,9 +167,10 @@ export function HostView({
           currentTierIndex={state.currentTierIndex}
           totalTiers={state.questions.length}
         />
-        <QuestionCard percent={tier.percent} prompt={tier.prompt} />
+        <QuestionCard percent={tier.percent} prompt={tier.prompt} promptVisual={tier.promptVisual} />
         <OptionsGrid
           options={tier.options}
+          optionVisuals={tier.optionVisuals}
           selectedIndex={state.selectedOptionIndex}
           correctIndex={state.phase === 'reveal' ? tier.correctIndex : null}
           phase={state.phase}
@@ -223,7 +224,7 @@ export function HostView({
         currentTierIndex={state.currentTierIndex}
         totalTiers={state.questions.length}
       />
-      <QuestionCard percent={tier.percent} prompt={tier.prompt} />
+      <QuestionCard percent={tier.percent} prompt={tier.prompt} promptVisual={tier.promptVisual} />
       <TimerControls
         config={state.timerConfig}
         timerEndsAt={state.timerEndsAt}
