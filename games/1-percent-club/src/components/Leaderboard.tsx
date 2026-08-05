@@ -32,7 +32,7 @@ export function Leaderboard({
       <div className="modal-card">
         <h2 className="modal-title">The crowd made it! 🎉</h2>
         <p className="modal-winner">
-          The simulated crowd claims the £{jackpotAmount.toLocaleString()} jackpot — here's how
+          The simulated crowd claims the ${jackpotAmount.toLocaleString()} jackpot — here's how
           everyone playing along did:
         </p>
         {ranked.length > 0 && (

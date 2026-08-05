@@ -15,8 +15,8 @@ export function EndScreen({ phase, jackpotAmount, eliminatedAtTierIndex, totalTi
         <h2 className="modal-title">{won ? 'You beat the 1% Club!' : 'Eliminated!'}</h2>
         <p className="modal-winner">
           {won
-            ? `You take home the full jackpot: £${jackpotAmount.toLocaleString()}.`
-            : `Eliminated at question ${(eliminatedAtTierIndex ?? 0) + 1} of ${totalTiers} — the £${jackpotAmount.toLocaleString()} jackpot rolls over.`}
+            ? `You take home the full jackpot: $${jackpotAmount.toLocaleString()}.`
+            : `Eliminated at question ${(eliminatedAtTierIndex ?? 0) + 1} of ${totalTiers} — the $${jackpotAmount.toLocaleString()} jackpot rolls over.`}
         </p>
         <button type="button" className="modal-play-again" onClick={onPlayAgain}>
           Play Again

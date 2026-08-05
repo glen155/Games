@@ -7,6 +7,15 @@ import type { QuestionTier } from '../types';
 // must point at the right one, and each ladder must stay sorted from highest
 // percent to lowest.
 //
+// Content is themed after the Australian version of the show (Seven
+// Network) — Australian geography, culture, slang, and spelling where
+// natural, mixed with the logic/wordplay riddles that are the format's real
+// backbone in every version. A few tiers are adapted from real Australian
+// episode questions (noted inline) where they translate cleanly to this
+// game's 4-option multiple-choice format; several real AU questions rely on
+// on-screen graphics (clock codes, dartboard diagrams) that don't translate
+// and were skipped.
+//
 // `classicLadders` holds every local (offline) ladder. game.ts picks one at
 // random by default for a fresh local game, and SetupScreen lets the host
 // pick one explicitly instead. Add a new ladder here to grow the pool.
@@ -14,27 +23,27 @@ import type { QuestionTier } from '../types';
 const ladderA: QuestionTier[] = [
   {
     percent: 90,
-    prompt: 'Which of these is a primary color?',
-    options: ['Green', 'Purple', 'Red', 'Orange'],
-    correctIndex: 2,
+    prompt: 'Which of these is an Australian native animal?',
+    options: ['Koala', 'Panda', 'Raccoon', 'Hedgehog'],
+    correctIndex: 0,
   },
   {
     percent: 80,
-    prompt: 'What is 7 × 8?',
-    options: ['54', '56', '58', '64'],
+    prompt: 'What is 6 × 9?',
+    options: ['45', '54', '56', '64'],
     correctIndex: 1,
   },
   {
     percent: 70,
-    prompt: 'Which planet is known as the Red Planet?',
-    options: ['Venus', 'Mars', 'Jupiter', 'Saturn'],
+    prompt: 'What do Australians usually call a flip-flop sandal?',
+    options: ['Jandals', 'Thongs', 'Slides', 'Clogs'],
     correctIndex: 1,
   },
   {
     percent: 60,
-    prompt: "Yesterday, I ___ across the lake. Which word correctly completes the sentence?",
-    options: ['Swam', 'Swum', 'Sweamed', 'Swimmed'],
-    correctIndex: 0,
+    prompt: 'We ___ heading to the beach this arvo. Which word correctly completes the sentence?',
+    options: ['was', 'is', 'are', 'be'],
+    correctIndex: 2,
   },
   {
     percent: 50,
@@ -50,9 +59,9 @@ const ladderA: QuestionTier[] = [
   },
   {
     percent: 40,
-    prompt: 'How many sides does a hexagon have, plus the number of sides a triangle has?',
-    options: ['8', '9', '10', '7'],
-    correctIndex: 1,
+    prompt: 'How many Australian states are there, plus the mainland territories (the NT and the ACT)?',
+    options: ['6', '7', '8', '9'],
+    correctIndex: 2,
   },
   {
     percent: 35,
@@ -61,16 +70,19 @@ const ladderA: QuestionTier[] = [
     correctIndex: 0,
   },
   {
+    // Adapted from a real 1% Club Australia question (Season 3): the
+    // Matildas score every 6 minutes starting at minute 6, across two
+    // 45-minute halves — 7 goals per half, 14 total.
     percent: 30,
-    prompt: 'What comes next in this sequence: 2, 6, 12, 20, 30, ?',
-    options: ['40', '42', '36', '44'],
-    correctIndex: 1,
+    prompt: 'In a Matildas match, their star striker scores a goal 6 minutes into each half, then every 6 minutes after that. Across two 45-minute halves, how many goals does she score?',
+    options: ['12', '13', '14', '16'],
+    correctIndex: 2,
   },
   {
     percent: 25,
-    prompt: "A man looks at a portrait and says: \"Brothers and sisters I have none, but that man's father is my father's son.\" Who is in the portrait?",
-    options: ['His son', 'His father', 'Himself', 'His nephew'],
-    correctIndex: 0,
+    prompt: 'What comes next in this sequence: 2, 6, 12, 20, 30, ?',
+    options: ['40', '42', '36', '44'],
+    correctIndex: 1,
   },
   {
     percent: 20,
@@ -107,25 +119,25 @@ const ladderA: QuestionTier[] = [
 const ladderB: QuestionTier[] = [
   {
     percent: 90,
-    prompt: 'Which of these is technically a fruit?',
-    options: ['Carrot', 'Potato', 'Tomato', 'Broccoli'],
-    correctIndex: 2,
+    prompt: 'Which of these is a native Australian bird?',
+    options: ['Penguin', 'Kookaburra', 'Peacock', 'Ostrich'],
+    correctIndex: 1,
   },
   {
     percent: 80,
-    prompt: 'What is 9 × 6?',
-    options: ['45', '54', '63', '56'],
+    prompt: 'What is 8 × 7?',
+    options: ['54', '56', '63', '64'],
     correctIndex: 1,
   },
   {
     percent: 70,
-    prompt: 'Which is the largest ocean on Earth?',
-    options: ['Atlantic', 'Indian', 'Arctic', 'Pacific'],
-    correctIndex: 3,
+    prompt: "What is Australia's largest state by land area?",
+    options: ['New South Wales', 'Queensland', 'Western Australia', 'Victoria'],
+    correctIndex: 2,
   },
   {
     percent: 60,
-    prompt: 'By the time we arrived, the movie ___ already started. Which word correctly completes the sentence?',
+    prompt: 'By the time we got there, the shop ___ already closed. Which word correctly completes the sentence?',
     options: ['has', 'have', 'had', 'having'],
     correctIndex: 2,
   },
@@ -148,16 +160,18 @@ const ladderB: QuestionTier[] = [
     correctIndex: 1,
   },
   {
+    // A real 1% Club Australia question (Season 3): the classic riddle where
+    // the sixth child shares the mother's — and the riddler's — own name.
     percent: 35,
-    prompt: 'I have branches, but no fruit, trunk, or leaves. What am I?',
-    options: ['A river', 'A bank', 'A tree', 'A road'],
-    correctIndex: 1,
+    prompt: "Mary's mother has six children: April, May, June, July, August, and who?",
+    options: ['September', 'Rose', 'Autumn', 'Mary'],
+    correctIndex: 3,
   },
   {
     percent: 30,
-    prompt: 'The more you take, the more you leave behind. What am I?',
-    options: ['Time', 'Memories', 'Footsteps', 'Money'],
-    correctIndex: 2,
+    prompt: 'I have branches, but no fruit, trunk, or leaves. What am I?',
+    options: ['A river', 'A bank', 'A tree', 'A road'],
+    correctIndex: 1,
   },
   {
     percent: 25,
@@ -200,8 +214,8 @@ const ladderB: QuestionTier[] = [
 const ladderC: QuestionTier[] = [
   {
     percent: 90,
-    prompt: 'How many days are there in a week?',
-    options: ['5', '6', '7', '8'],
+    prompt: 'What is the capital city of Australia?',
+    options: ['Sydney', 'Melbourne', 'Canberra', 'Perth'],
     correctIndex: 2,
   },
   {
@@ -212,13 +226,13 @@ const ladderC: QuestionTier[] = [
   },
   {
     percent: 70,
-    prompt: 'Which planet do we live on?',
-    options: ['Mars', 'Venus', 'Earth', 'Jupiter'],
-    correctIndex: 2,
+    prompt: "What is the large red rock formation in the Northern Territory, one of Australia's most iconic landmarks?",
+    options: ['Uluru', 'Kakadu', 'The Kimberley', 'The Blue Mountains'],
+    correctIndex: 0,
   },
   {
     percent: 60,
-    prompt: 'There ___ three books on the table. Which word correctly completes the sentence?',
+    prompt: 'There ___ three kangaroos in the paddock. Which word correctly completes the sentence?',
     options: ['is', 'was', 'are', 'be'],
     correctIndex: 2,
   },
@@ -236,9 +250,9 @@ const ladderC: QuestionTier[] = [
   },
   {
     percent: 40,
-    prompt: 'What gets wetter the more it dries?',
-    options: ['A sponge', 'A cloud', 'A towel', 'A river'],
-    correctIndex: 2,
+    prompt: 'Which sport is the Melbourne Cup associated with?',
+    options: ['Horse racing', 'Cricket', 'Rugby league', 'Sailing'],
+    correctIndex: 0,
   },
   {
     percent: 35,
@@ -299,17 +313,17 @@ export interface ClassicLadder {
 export const classicLadders: ClassicLadder[] = [
   {
     name: 'Word & Number Mix',
-    description: 'Wordplay, math, and a couple of classic riddles at the top.',
+    description: 'Aussie wordplay, maths, and a couple of classic riddles at the top.',
     tiers: ladderA,
   },
   {
     name: 'Riddles & Reasoning',
-    description: 'General knowledge that gives way to logic riddles.',
+    description: 'Australian general knowledge that gives way to logic riddles.',
     tiers: ladderB,
   },
   {
     name: 'Quick Trivia',
-    description: 'Easy trivia early, brain teasers for the last few rungs.',
+    description: 'Easy Aussie trivia early, brain teasers for the last few rungs.',
     tiers: ladderC,
   },
 ];

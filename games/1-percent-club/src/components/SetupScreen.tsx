@@ -140,7 +140,7 @@ export function SetupScreen({
 
       <form className="setup-form" onSubmit={handleSubmit}>
         <label className="setup-label" htmlFor="jackpot-input">
-          Jackpot amount (£)
+          Jackpot amount ($)
         </label>
         <input
           id="jackpot-input"

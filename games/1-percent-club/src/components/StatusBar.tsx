@@ -14,7 +14,7 @@ export function StatusBar({ poolRemaining, jackpotAmount, currentTierIndex, tota
       </div>
       <div className="status-item">
         <span className="status-label">Jackpot</span>
-        <span className="status-value">£{jackpotAmount.toLocaleString()}</span>
+        <span className="status-value">${jackpotAmount.toLocaleString()}</span>
       </div>
       <div className="status-item">
         <span className="status-label">Question</span>
