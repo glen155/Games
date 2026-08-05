@@ -16,15 +16,16 @@ export function ResultsBreakdown({ results, correctAnswerText }: ResultsBreakdow
         <p className="results-breakdown-empty">No one answered this one.</p>
       ) : (
         <ul className="results-breakdown-list">
-          {entries.map(([userId, result]) => (
-            <li
-              key={userId}
-              className={`results-breakdown-item${result.correct ? ' results-breakdown-item--correct' : ' results-breakdown-item--wrong'}`}
-            >
-              <span className="results-breakdown-name">{result.nickname}</span>
-              <span className="results-breakdown-mark">{result.correct ? '✓' : '✗'}</span>
-            </li>
-          ))}
+          {entries.map(([userId, result]) => {
+            const modifier = result.passed ? 'passed' : result.correct ? 'correct' : 'wrong';
+            const mark = result.passed ? '—' : result.correct ? '✓' : '✗';
+            return (
+              <li key={userId} className={`results-breakdown-item results-breakdown-item--${modifier}`}>
+                <span className="results-breakdown-name">{result.nickname}</span>
+                <span className="results-breakdown-mark">{mark}</span>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

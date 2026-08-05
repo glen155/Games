@@ -19,8 +19,11 @@ export interface PlayerAnswer {
 /** One real player's outcome for the tier that was just revealed. */
 export interface PlayerTierResult {
   nickname: string;
-  index: number; // what they picked
+  index: number; // what they picked (-1 if they passed instead of answering)
   correct: boolean;
+  /** True if they used their one-per-game Pass instead of answering — never
+   * counted as a miss and never scored, unlike a genuine wrong answer. */
+  passed: boolean;
 }
 
 /** Hosted-mode only: how the per-question countdown behaves. */
@@ -43,9 +46,17 @@ export interface GameState {
   // simulated crowd above still drives the jackpot narrative, untouched by
   // these). Always present but empty/null in solo mode.
   playerAnswers: Record<string, PlayerAnswer>; // userId -> this tier's live pick
+  /** Hosted-mode only: who chose to Pass this tier instead of answering — like
+   * `playerAnswers`, cleared every NEXT_TIER. Mutually exclusive per player
+   * with `playerAnswers` for the same tier. */
+  playerPasses: Record<string, { nickname: string }>;
   lastPlayerResults: Record<string, PlayerTierResult> | null; // set on reveal
   playerCorrectCounts: Record<string, number>; // cumulative, across all tiers
   outOfRunningIds: string[]; // first wrong answer = permanent, persists across tiers
+  /** Hosted-mode only: userIds who have used their one-per-game Pass. Unlike
+   * `playerPasses`, this never clears between tiers — it's a cumulative,
+   * whole-game record enforcing "one Pass per player per game." */
+  passUsedIds: string[];
 
   // Hosted-mode only: per-question countdown. timerEndsAt is an absolute
   // epoch-ms deadline (not a ticking counter) so every device can compute its

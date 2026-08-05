@@ -7,12 +7,36 @@ const questions: QuestionTier[] = [
   { prompt: 'Q2', options: ['a', 'b', 'c', 'd'], correctIndex: 1, percent: 0.4 },
 ]
 
+// A longer ladder (7 tiers, indices 0-6) for exercising Pass eligibility,
+// which only opens up from tier index MIN_PASS_TIER_INDEX (4) onward and
+// closes again on the final tier (index 6 here).
+const passLadder: QuestionTier[] = Array.from({ length: 7 }, (_, i) => ({
+  prompt: `Q${i}`,
+  options: ['a', 'b', 'c', 'd'] as [string, string, string, string],
+  correctIndex: 0 as const,
+  percent: 90 - i * 10,
+}))
+
 function fresh(): GameState {
   return initialState(questions)
 }
 
 function playing(jackpotAmount = 500): GameState {
   return gameReducer(fresh(), { type: 'START_GAME', jackpotAmount })
+}
+
+function playingPassLadder(): GameState {
+  return gameReducer(initialState(passLadder), { type: 'START_GAME', jackpotAmount: 500 })
+}
+
+/** Advances an empty-lobby game forward with no player answers/passes, tier by tier. */
+function advanceToTier(state: GameState, targetIndex: number): GameState {
+  let next = state
+  while (next.currentTierIndex < targetIndex) {
+    next = gameReducer(next, { type: 'REVEAL_TIER' })
+    next = gameReducer(next, { type: 'NEXT_TIER' })
+  }
+  return next
 }
 
 describe('START_GAME', () => {
@@ -169,6 +193,78 @@ describe('hosted mode: PLAYER_ANSWER / REVEAL_TIER / NEXT_TIER', () => {
     expect(state.currentTierIndex).toBe(1)
     expect(state.playerAnswers).toEqual({})
     expect(state.lastPlayerResults).toBeNull()
+  })
+})
+
+describe('PLAYER_PASS (hosted mode)', () => {
+  it('rejects a pass before the eligible tier range (tiers 0-3)', () => {
+    const state = playingPassLadder()
+    const after = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    expect(after).toBe(state)
+  })
+
+  it('accepts a pass from tier index 4 (the 50% tier) onward', () => {
+    const state = advanceToTier(playingPassLadder(), 4)
+    const after = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    expect(after.playerPasses.u1).toEqual({ nickname: 'Alice' })
+    expect(after.passUsedIds).toEqual(['u1'])
+  })
+
+  it('rejects a pass on the final tier', () => {
+    const state = advanceToTier(playingPassLadder(), 6) // last tier, index 6
+    const after = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    expect(after).toBe(state)
+  })
+
+  it('enforces one pass per player per game', () => {
+    let state = advanceToTier(playingPassLadder(), 4)
+    state = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    state = gameReducer(state, { type: 'REVEAL_TIER' })
+    state = gameReducer(state, { type: 'NEXT_TIER' }) // -> tier 5, still eligible
+    const after = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    expect(after).toBe(state)
+  })
+
+  it('is mutually exclusive with PLAYER_ANSWER for the same tier', () => {
+    let state = advanceToTier(playingPassLadder(), 4)
+    state = gameReducer(state, { type: 'PLAYER_ANSWER', userId: 'u1', nickname: 'Alice', index: 0 })
+    state = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    expect(state.playerAnswers.u1).toBeUndefined()
+    expect(state.playerPasses.u1).toEqual({ nickname: 'Alice' })
+
+    // Answering back cancels the pass but does NOT refund the used-pass slot.
+    state = gameReducer(state, { type: 'PLAYER_ANSWER', userId: 'u1', nickname: 'Alice', index: 0 })
+    expect(state.playerPasses.u1).toBeUndefined()
+    expect(state.playerAnswers.u1).toEqual({ nickname: 'Alice', index: 0 })
+    expect(state.passUsedIds).toEqual(['u1'])
+  })
+
+  it('REVEAL_TIER marks a passed player as passed, not correct or wrong, without eliminating them', () => {
+    let state = advanceToTier(playingPassLadder(), 4)
+    state = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    state = gameReducer(state, { type: 'PLAYER_ANSWER', userId: 'u2', nickname: 'Bob', index: 1 }) // wrong
+    state = gameReducer(state, { type: 'REVEAL_TIER' })
+
+    expect(state.lastPlayerResults?.u1).toEqual({ nickname: 'Alice', index: -1, correct: false, passed: true })
+    expect(state.outOfRunningIds).toEqual(['u2'])
+    expect(state.playerCorrectCounts.u1).toBeUndefined()
+  })
+
+  it('clears playerPasses on NEXT_TIER but keeps passUsedIds', () => {
+    let state = advanceToTier(playingPassLadder(), 4)
+    state = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    state = gameReducer(state, { type: 'REVEAL_TIER' })
+    state = gameReducer(state, { type: 'NEXT_TIER' })
+    expect(state.playerPasses).toEqual({})
+    expect(state.passUsedIds).toEqual(['u1'])
+  })
+
+  it('resets passUsedIds on RESTART', () => {
+    let state = advanceToTier(playingPassLadder(), 4)
+    state = gameReducer(state, { type: 'PLAYER_PASS', userId: 'u1', nickname: 'Alice' })
+    state = gameReducer(state, { type: 'RESTART' })
+    expect(state.passUsedIds).toEqual([])
+    expect(state.playerPasses).toEqual({})
   })
 })
 

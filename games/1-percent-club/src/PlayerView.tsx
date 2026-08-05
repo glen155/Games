@@ -1,5 +1,6 @@
 import type { PlayerViewProps } from '@games/platform';
 import type { GameState } from './types';
+import { isPassEligible } from './state/gameReducer';
 import { QuestionCard } from './components/QuestionCard';
 import { OptionsGrid } from './components/OptionsGrid';
 import { useCountdown } from './hooks/useCountdown';
@@ -50,7 +51,9 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
 
   const tier = state.questions[state.currentTierIndex];
   const myAnswer = state.playerAnswers[userId];
+  const myPass = state.playerPasses[userId];
   const myResult = state.lastPlayerResults?.[userId];
+  const canPass = !myAnswer && !myPass && !state.passUsedIds.includes(userId) && isPassEligible(state);
 
   return (
     <div className="player-view">
@@ -72,9 +75,15 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
             phase="playing"
             onSelect={(index) => sendAction('answer', { index })}
           />
+          {canPass && (
+            <button type="button" className="player-pass-button" onClick={() => sendAction('pass', {})}>
+              Pass (use your one-time skip)
+            </button>
+          )}
           {myAnswer && (
             <p className="player-waiting-note">Answer locked in — waiting for the host to reveal…</p>
           )}
+          {myPass && <p className="player-waiting-note">Pass used — sitting this one out.</p>}
         </>
       ) : (
         <>
@@ -85,7 +94,9 @@ export function PlayerView({ state, nickname, userId, sendAction }: PlayerViewPr
             phase="reveal"
             onSelect={() => {}}
           />
-          {myResult ? (
+          {myResult?.passed ? (
+            <p className="player-result player-result--passed">You passed — your streak is safe.</p>
+          ) : myResult ? (
             <p className={`player-result${myResult.correct ? ' player-result--correct' : ' player-result--wrong'}`}>
               {myResult.correct ? 'You got it right!' : `Wrong — it was "${tier.options[tier.correctIndex]}".`}
             </p>

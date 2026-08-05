@@ -38,15 +38,19 @@ export function HostView({
 }: HostViewProps<GameState, GameAction>) {
   const { playCorrect, playWrong, playWin, muted, toggleMute } = useGameSounds();
 
-  // Hosted mode: absorb each player's submitted answer into game state.
+  // Hosted mode: absorb each player's submitted answer (or Pass) into game state.
   useEffect(() => {
     if (!isHosted) return;
     for (const action of playerActions) {
-      if (action.type !== 'answer') continue;
-      const payload = action.payload as { index?: number } | undefined;
-      if (typeof payload?.index !== 'number') continue;
-      dispatch({ type: 'PLAYER_ANSWER', userId: action.userId, nickname: action.nickname, index: payload.index });
-      clearPlayerAction(action.id);
+      if (action.type === 'answer') {
+        const payload = action.payload as { index?: number } | undefined;
+        if (typeof payload?.index !== 'number') continue;
+        dispatch({ type: 'PLAYER_ANSWER', userId: action.userId, nickname: action.nickname, index: payload.index });
+        clearPlayerAction(action.id);
+      } else if (action.type === 'pass') {
+        dispatch({ type: 'PLAYER_PASS', userId: action.userId, nickname: action.nickname });
+        clearPlayerAction(action.id);
+      }
     }
   }, [isHosted, playerActions, dispatch, clearPlayerAction]);
 
@@ -202,6 +206,7 @@ export function HostView({
         players={players}
         playerCorrectCounts={state.playerCorrectCounts}
         outOfRunningIds={state.outOfRunningIds}
+        passUsedIds={state.passUsedIds}
         onPlayAgain={handleRestart}
       />
     );

@@ -2,6 +2,14 @@ import type { GameState, QuestionTier, TimerConfig } from '../types';
 
 export const STARTING_POOL = 100;
 export const DEFAULT_TIMER_CONFIG: TimerConfig = { mode: 'auto', durationSeconds: 30 };
+// Matches the real show: the Pass becomes available "prior to the fifth
+// question" (i.e. usable from the 50% tier onward, index 4) and can never be
+// used on the final tier.
+export const MIN_PASS_TIER_INDEX = 4;
+
+export function isPassEligible(state: GameState): boolean {
+  return state.currentTierIndex >= MIN_PASS_TIER_INDEX && state.currentTierIndex < state.questions.length - 1;
+}
 
 export type GameAction =
   | { type: 'START_GAME'; jackpotAmount: number }
@@ -11,6 +19,9 @@ export type GameAction =
   | { type: 'RESTART' }
   // Hosted-mode only — dispatched by HostView, never by solo play.
   | { type: 'PLAYER_ANSWER'; userId: string; nickname: string; index: number }
+  // Hosted-mode only — a player skipping this tier with their one-per-game
+  // Pass (from the 50% tier onward, never on the final 1% tier).
+  | { type: 'PLAYER_PASS'; userId: string; nickname: string }
   | { type: 'REVEAL_TIER' }
   | { type: 'NEXT_TIER' }
   | { type: 'SET_TIMER_CONFIG'; mode: TimerConfig['mode']; durationSeconds: number }
@@ -33,9 +44,11 @@ export function initialState(questions: QuestionTier[]): GameState {
     lastAnswerCorrect: null,
     eliminatedAtTierIndex: null,
     playerAnswers: {},
+    playerPasses: {},
     lastPlayerResults: null,
     playerCorrectCounts: {},
     outOfRunningIds: [],
+    passUsedIds: [],
     timerConfig: DEFAULT_TIMER_CONFIG,
     timerEndsAt: null,
   };
@@ -55,9 +68,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         lastAnswerCorrect: null,
         eliminatedAtTierIndex: null,
         playerAnswers: {},
+        playerPasses: {},
         lastPlayerResults: null,
         playerCorrectCounts: {},
         outOfRunningIds: [],
+        passUsedIds: [],
         timerEndsAt: nextTimerEndsAt(state.timerConfig),
       };
     }
@@ -99,12 +114,43 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'PLAYER_ANSWER': {
       if (state.phase !== 'playing') return state;
+      // Answering supersedes a pending Pass for this tier — the two are
+      // mutually exclusive per player, per tier.
+      let playerPasses = state.playerPasses;
+      if (action.userId in playerPasses) {
+        playerPasses = { ...playerPasses };
+        delete playerPasses[action.userId];
+      }
       return {
         ...state,
         playerAnswers: {
           ...state.playerAnswers,
           [action.userId]: { nickname: action.nickname, index: action.index },
         },
+        playerPasses,
+      };
+    }
+
+    case 'PLAYER_PASS': {
+      if (state.phase !== 'playing' || !isPassEligible(state) || state.passUsedIds.includes(action.userId)) {
+        return state;
+      }
+      // Passing supersedes a pending answer for this tier, and consumes the
+      // player's one-per-game Pass immediately (not just on reveal), so a
+      // second PLAYER_PASS this game is rejected even before the tier ends.
+      let playerAnswers = state.playerAnswers;
+      if (action.userId in playerAnswers) {
+        playerAnswers = { ...playerAnswers };
+        delete playerAnswers[action.userId];
+      }
+      return {
+        ...state,
+        playerAnswers,
+        playerPasses: {
+          ...state.playerPasses,
+          [action.userId]: { nickname: action.nickname },
+        },
+        passUsedIds: [...state.passUsedIds, action.userId],
       };
     }
 
@@ -116,12 +162,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const outOfRunningIds = [...state.outOfRunningIds];
       for (const [userId, answer] of Object.entries(state.playerAnswers)) {
         const correct = answer.index === tier.correctIndex;
-        lastPlayerResults[userId] = { nickname: answer.nickname, index: answer.index, correct };
+        lastPlayerResults[userId] = { nickname: answer.nickname, index: answer.index, correct, passed: false };
         if (correct) {
           playerCorrectCounts[userId] = (playerCorrectCounts[userId] ?? 0) + 1;
         } else if (!outOfRunningIds.includes(userId)) {
           outOfRunningIds.push(userId);
         }
+      }
+      // Passing is risk-free — it protects a player's stake for this tier
+      // without scoring a correct/wrong or affecting outOfRunningIds at all.
+      for (const [userId, pass] of Object.entries(state.playerPasses)) {
+        lastPlayerResults[userId] = { nickname: pass.nickname, index: -1, correct: false, passed: true };
       }
       // Simulated crowd narrative — unconditional, exactly like solo's math,
       // just no longer gated behind any single actor's correctness.
@@ -147,6 +198,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         phase: 'playing',
         currentTierIndex: state.currentTierIndex + 1,
         playerAnswers: {},
+        playerPasses: {},
         lastPlayerResults: null,
         timerEndsAt: nextTimerEndsAt(state.timerConfig),
       };

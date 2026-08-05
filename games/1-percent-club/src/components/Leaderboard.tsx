@@ -5,6 +5,7 @@ interface LeaderboardProps {
   players: PlayerPresence[];
   playerCorrectCounts: Record<string, number>;
   outOfRunningIds: string[];
+  passUsedIds: string[];
   onPlayAgain: () => void;
 }
 
@@ -18,6 +19,7 @@ export function Leaderboard({
   players,
   playerCorrectCounts,
   outOfRunningIds,
+  passUsedIds,
   onPlayAgain,
 }: LeaderboardProps) {
   const ranked = [...players].sort(
@@ -42,6 +44,9 @@ export function Leaderboard({
                   <span className="leaderboard-name">
                     {p.nickname}
                     {stillIn && <span className="leaderboard-badge">Never missed!</span>}
+                    {passUsedIds.includes(p.userId) && (
+                      <span className="leaderboard-badge leaderboard-badge--pass">Used their Pass</span>
+                    )}
                   </span>
                   <span className="leaderboard-score">{playerCorrectCounts[p.userId] ?? 0} correct</span>
                 </li>

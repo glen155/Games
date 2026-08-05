@@ -127,6 +127,11 @@
   border-left: 4px solid var(--status-wrong);
 }
 
+.results-breakdown-item--passed {
+  border-left: 4px solid var(--gold-dark);
+  opacity: 0.85;
+}
+
 .results-breakdown-name {
   color: var(--cream);
 }
@@ -141,6 +146,10 @@
 
 .results-breakdown-item--wrong .results-breakdown-mark {
   color: var(--status-wrong);
+}
+
+.results-breakdown-item--passed .results-breakdown-mark {
+  color: var(--gold-dark);
 }
 
 .leaderboard-list {
@@ -180,6 +189,12 @@
   color: var(--ink);
   border-radius: 999px;
   padding: 0.1rem 0.5rem;
+}
+
+.leaderboard-badge--pass {
+  background: transparent;
+  border: 1px solid var(--gold-dark);
+  color: var(--cream);
 }
 
 .leaderboard-champions {
@@ -239,4 +254,23 @@
 
 .player-result--wrong {
   color: var(--status-wrong);
+}
+
+.player-result--passed {
+  color: var(--gold-dark);
+}
+
+.player-pass-button {
+  border: 2px solid var(--gold-dark);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gold-dark);
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.player-pass-button:hover {
+  background: var(--gold-dark);
+  color: var(--ink);
 }
