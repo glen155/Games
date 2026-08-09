@@ -10,6 +10,7 @@ import {
   getStoredPlayerRoom,
   setStoredNickname,
 } from '../identity';
+import { nicknameWithIcon } from '../nicknameIcon';
 import { RoomCode } from './RoomCode';
 import { PlayerList } from './PlayerList';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -250,7 +251,7 @@ function PlayerContainer<State, Action>({
           </form>
         ) : (
           <span className="shell-player-you">
-            You: {nickname}
+            You: {nicknameWithIcon(nickname)}
             <button
               type="button"
               className="shell-player-rename-btn"

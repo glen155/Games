@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { nicknameWithIcon } from '@games/platform';
 import type { GameState } from '../types';
 import type { WeakestLinkAction } from '../state/gameReducer';
 
@@ -37,7 +38,7 @@ export function LobbyPanel({ state, dispatch }: LobbyPanelProps) {
         <ul className="wl-lobby-list">
           {state.playerOrder.map((id) => (
             <li key={id} className="wl-lobby-item">
-              {state.players[id].nickname}
+              {nicknameWithIcon(state.players[id].nickname)}
               {id.startsWith('local-') && <span className="wl-lobby-tag">this screen</span>}
             </li>
           ))}

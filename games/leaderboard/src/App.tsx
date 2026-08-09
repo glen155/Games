@@ -3,6 +3,7 @@ import {
   fetchIssueReports,
   fetchRecentResults,
   isMultiplayerConfigured,
+  nicknameWithIcon,
   setIssueReportReviewed,
   type GameResult,
   type IssueReport,
@@ -191,7 +192,7 @@ export function App() {
                     <tbody>
                       {standings.map((row) => (
                         <tr key={row.nickname}>
-                          <td>{row.nickname}</td>
+                          <td>{nicknameWithIcon(row.nickname)}</td>
                           <td>{row.won}</td>
                           <td>{row.played}</td>
                         </tr>

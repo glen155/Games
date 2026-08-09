@@ -1,3 +1,4 @@
+import { nicknameWithIcon } from '@games/platform';
 import type { PlayerTierResult } from '../types';
 
 interface ResultsBreakdownProps {
@@ -21,7 +22,7 @@ export function ResultsBreakdown({ results, correctAnswerText }: ResultsBreakdow
               key={userId}
               className={`results-breakdown-item${result.correct ? ' results-breakdown-item--correct' : ' results-breakdown-item--wrong'}`}
             >
-              <span className="results-breakdown-name">{result.nickname}</span>
+              <span className="results-breakdown-name">{nicknameWithIcon(result.nickname)}</span>
               <span className="results-breakdown-mark">{result.correct ? '✓' : '✗'}</span>
             </li>
           ))}
