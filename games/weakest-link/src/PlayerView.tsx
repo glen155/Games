@@ -95,7 +95,7 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
     return (
       <Waiting
         message="You're the weakest link — goodbye."
-        sub="Watching the rest of the game."
+        sub="Go sit on the couch — you can still watch the rest of the game."
         muted={muted}
         onToggleMute={toggleMute}
       />
@@ -134,7 +134,7 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
       return (
         <Waiting
           message={iWasEliminated ? "You're out." : `${voteOff.nickname} is out.`}
-          sub="Waiting for the next round…"
+          sub={iWasEliminated ? 'Go sit on the couch.' : 'Waiting for the next round…'}
           muted={muted}
           onToggleMute={toggleMute}
         />
