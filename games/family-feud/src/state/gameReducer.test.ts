@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { MAX_STRIKES, gameReducer, initialState } from './gameReducer'
+import { MAX_STRIKES, captainOfTeam, gameReducer, initialState } from './gameReducer'
 import type { Category, GameState } from '../types'
+import type { PlayerPresence } from '@games/platform'
 
 const rounds: Category[] = [
   {
@@ -196,6 +197,40 @@ describe('ASSIGN_TEAM', () => {
     state = gameReducer(state, { type: 'ASSIGN_TEAM', userId: 'alice', team: 0 })
     state = gameReducer(state, { type: 'ASSIGN_TEAM', userId: 'bob', team: 1 })
     expect(state.teamAssignments).toEqual({ alice: 0, bob: 1 })
+  })
+})
+
+describe('captainOfTeam', () => {
+  function presence(userId: string, joinedAt: number): PlayerPresence {
+    return { userId, nickname: userId, joinedAt }
+  }
+
+  it('returns the earliest joiner still assigned to the team', () => {
+    const players = [presence('alice', 1), presence('bob', 2), presence('carol', 3)]
+    const teamAssignments = { alice: 0 as const, bob: 0 as const, carol: 1 as const }
+    expect(captainOfTeam(0, players, teamAssignments)).toBe('alice')
+    expect(captainOfTeam(1, players, teamAssignments)).toBe('carol')
+  })
+
+  it('returns null for a team nobody has joined', () => {
+    const players = [presence('alice', 1)]
+    expect(captainOfTeam(1, players, { alice: 0 })).toBeNull()
+  })
+
+  it('shifts to the next earliest joiner when the captain switches teams', () => {
+    const players = [presence('alice', 1), presence('bob', 2)]
+    // Alice switches to team 1 — bob, having joined team 0 second, is now
+    // the only (and therefore earliest) member left on team 0.
+    const teamAssignments = { alice: 1 as const, bob: 0 as const }
+    expect(captainOfTeam(0, players, teamAssignments)).toBe('bob')
+    expect(captainOfTeam(1, players, teamAssignments)).toBe('alice')
+  })
+
+  it('shifts to the next earliest joiner when the captain disconnects', () => {
+    // Alice joined first but is no longer present (dropped from `players`).
+    const players = [presence('bob', 2), presence('carol', 3)]
+    const teamAssignments = { alice: 0 as const, bob: 0 as const, carol: 0 as const }
+    expect(captainOfTeam(0, players, teamAssignments)).toBe('bob')
   })
 })
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { BuzzOrderPanel, recordGameResult, type HostViewProps } from '@games/platform';
 import type { GameState, TeamId } from './types';
-import { type GameAction, MAX_STRIKES } from './state/gameReducer';
+import { type GameAction, MAX_STRIKES, captainOfTeam } from './state/gameReducer';
 import { useGameSounds } from './hooks/useGameSounds';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { CategoryHeader } from './components/CategoryHeader';
@@ -47,17 +47,29 @@ export function HostView({
     if (latestBuzz?.type === 'buzz') playBuzz();
   }, [latestBuzz, playBuzz]);
 
-  // Absorb team picks coming in from player devices.
+  // Absorb team picks and captain-only team renames coming in from player
+  // devices.
   useEffect(() => {
     if (!isHosted) return;
     for (const action of playerActions) {
-      if (action.type !== 'join-team') continue;
-      const payload = action.payload as { team?: TeamId } | undefined;
-      if (payload?.team !== 0 && payload?.team !== 1) continue;
-      dispatch({ type: 'ASSIGN_TEAM', userId: action.userId, team: payload.team });
-      clearPlayerAction(action.id);
+      if (action.type === 'join-team') {
+        const payload = action.payload as { team?: TeamId } | undefined;
+        if (payload?.team === 0 || payload?.team === 1) {
+          dispatch({ type: 'ASSIGN_TEAM', userId: action.userId, team: payload.team });
+        }
+        clearPlayerAction(action.id);
+      } else if (action.type === 'rename-team') {
+        const team = state.teamAssignments[action.userId];
+        const isCaptain = team !== undefined && captainOfTeam(team, players, state.teamAssignments) === action.userId;
+        const payload = action.payload as { name?: string } | undefined;
+        const trimmed = payload?.name?.trim();
+        if (isCaptain && team !== undefined && trimmed) {
+          dispatch({ type: 'SET_TEAM_NAME', team, name: trimmed.slice(0, 24) });
+        }
+        clearPlayerAction(action.id);
+      }
     }
-  }, [isHosted, playerActions, dispatch, clearPlayerAction]);
+  }, [isHosted, playerActions, players, state.teamAssignments, dispatch, clearPlayerAction]);
 
   // Record the finished match to the cross-night family leaderboard once all
   // rounds have been played. Hosted mode only -- solo play has no room to
@@ -180,6 +192,7 @@ export function HostView({
         onSetActive={(team) => dispatch({ type: 'SET_ACTIVE_TEAM', team })}
         onAward={handleAward}
         onRename={(team, name) => dispatch({ type: 'SET_TEAM_NAME', team, name })}
+        onReassign={(userId, team) => dispatch({ type: 'ASSIGN_TEAM', userId, team })}
       />
       <ControlsPanel
         strikes={state.strikes}
