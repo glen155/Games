@@ -1,0 +1,210 @@
+:root {
+  --wof-bg-start: #1a0d3d;
+  --wof-bg-end: #3a1a6b;
+  --wof-panel: rgba(0, 0, 0, 0.25);
+  --wof-panel-border: rgba(255, 215, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(180deg, var(--wof-bg-start), var(--wof-bg-end));
+  color: var(--cream);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.wof-app {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-4) var(--space-6);
+}
+
+.wof-btn {
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--gold);
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.wof-btn:not(:disabled):hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.wof-btn--primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--ink);
+}
+
+.wof-btn--primary:not(:disabled):hover {
+  filter: brightness(1.08);
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+}
+
+.wof-btn--ghost {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--cream);
+}
+
+.wof-btn--ghost:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--cream);
+}
+
+.wof-mute {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.35rem 0.6rem;
+  font-size: 1rem;
+}
+
+.wof-round-label {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+/* Setup screen */
+.wof-setup {
+  min-height: 100vh;
+  width: min(36rem, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+}
+
+.wof-setup-title {
+  margin: 0;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.75rem, 6vw, 3rem);
+}
+
+.wof-setup-rules {
+  margin: 0;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+.wof-setup-teams {
+  width: 100%;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.wof-setup-team {
+  flex: 1;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--wof-panel-border);
+  background: var(--wof-panel);
+  padding: var(--space-3);
+}
+
+.wof-setup-team h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.wof-setup-roster {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.wof-setup-empty {
+  opacity: 0.55;
+  font-style: italic;
+}
+
+.wof-setup-waiting {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.wof-setup-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.65;
+  line-height: 1.4;
+}
+
+.wof-setup-add {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.wof-setup-add-input {
+  flex: 1;
+  min-width: 10rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.3);
+  color: inherit;
+  font-size: 1rem;
+}
+
+.wof-setup-add-team {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.wof-setup-team-pick--selected {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.wof-setup-start {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1.05rem;
+}

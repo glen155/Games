@@ -1,0 +1,62 @@
+.wof-letters {
+  width: 100%;
+  max-width: 26rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+}
+
+.wof-letter {
+  aspect-ratio: 1;
+  border: 2px solid var(--gold-dark);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--cream);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.wof-letter:not(:disabled):hover {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+.wof-letter--vowel {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.wof-letter--guessed {
+  opacity: 0.3;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.wof-solve-toggle {
+  width: 100%;
+}
+
+.wof-solve-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wof-solve-input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.3);
+  color: inherit;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.wof-solve-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.wof-solve-actions .wof-btn {
+  flex: 1;
+}
