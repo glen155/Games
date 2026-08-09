@@ -1,11 +1,13 @@
-/** One trivia question. The answer is only ever shown on the host's own
- * device (a judge-panel cheat sheet, same trust model as Family Feud's
- * AnswerJudgePanel) — free-text answers can't be auto-graded, so the host
- * judges a spoken answer against it. */
+/** One multiple-choice trivia question — self-graded, same shape as 1% Club's
+ * QuestionTier. The correct index lives in shared state like everything
+ * else; nothing renders it to anyone but the current turn's own device until
+ * after they've answered (same "don't render it" trust model as Family
+ * Feud's unrevealed answers). */
 export interface Question {
   id: string;
   prompt: string;
-  answer: string;
+  options: [string, string, string, string];
+  correctIndex: 0 | 1 | 2 | 3;
 }
 
 export interface WeakestLinkPlayer {
@@ -68,7 +70,23 @@ export interface GameState {
   /** Total banked money across the whole game so far. */
   bank: number;
 
+  /** Absolute epoch-ms deadline for the whole current money round, or null
+   * outside a money round. Every device computes its own countdown locally
+   * from this synced value — same pattern as Music Timeline's shot clock. */
+  roundEndsAt: number | null;
+  /** Absolute epoch-ms deadline for the current turn's question (money or
+   * final round), or null when nobody's currently on the clock. */
+  questionEndsAt: number | null;
+
   votes: Record<string, string>; // voterId -> targetId
+  /** Shuffled voter order for the one-at-a-time reveal — captured once when
+   * the reveal begins so it stays stable across repeated REVEAL_NEXT_VOTE
+   * calls. */
+  voteRevealOrder: string[];
+  /** How many entries of `voteRevealOrder` have been revealed so far. Once
+   * this reaches `voteRevealOrder.length`, `lastVoteOff` is computed and set. */
+  voteRevealIndex: number;
+  /** Only populated once every vote has been revealed one-by-one. */
   lastVoteOff: VoteOffResult | null;
 
   finalists: [string, string] | null;

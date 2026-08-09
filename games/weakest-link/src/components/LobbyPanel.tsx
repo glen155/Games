@@ -72,7 +72,7 @@ export function LobbyPanel({ state, dispatch }: LobbyPanelProps) {
         type="button"
         className="wl-btn wl-btn--primary wl-lobby-start"
         disabled={count < 2}
-        onClick={() => dispatch({ type: 'START_GAME' })}
+        onClick={() => dispatch({ type: 'START_GAME', at: Date.now() })}
       >
         {count < 2 ? 'Need at least 2 players' : 'Start Game'}
       </button>
