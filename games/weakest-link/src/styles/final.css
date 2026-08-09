@@ -1,0 +1,40 @@
+.wl-final {
+  width: 100%;
+  max-width: 36rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.wl-final-scores {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.wl-final-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.wl-final-score--current {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px 1px rgba(255, 215, 0, 0.45);
+}
+
+.wl-final-score-name {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.wl-final-score-value {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--gold);
+}

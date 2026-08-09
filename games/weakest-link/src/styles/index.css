@@ -1,0 +1,187 @@
+:root {
+  --wl-bg-start: #1a0509;
+  --wl-bg-end: #3d0d12;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(180deg, var(--wl-bg-start), var(--wl-bg-end));
+  color: var(--cream);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.wl-app {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-4) var(--space-6);
+}
+
+.wl-btn {
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--gold);
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.wl-btn:not(:disabled):hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.wl-btn--primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--ink);
+}
+
+.wl-btn--primary:not(:disabled):hover {
+  filter: brightness(1.08);
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+}
+
+.wl-input {
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.3);
+  color: inherit;
+  font-size: 1rem;
+}
+
+.wl-mute {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.35rem 0.6rem;
+  font-size: 1rem;
+}
+
+.wl-round-label {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+/* Lobby */
+.wl-lobby {
+  min-height: 100vh;
+  width: min(32rem, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+}
+
+.wl-lobby-title {
+  margin: 0;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.75rem, 6vw, 3rem);
+}
+
+.wl-lobby-sub {
+  margin: 0;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+.wl-lobby-roster {
+  width: 100%;
+}
+
+.wl-lobby-roster h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.wl-lobby-empty {
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.wl-lobby-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.wl-lobby-item {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.wl-lobby-tag {
+  font-size: 0.7rem;
+  opacity: 0.65;
+}
+
+.wl-lobby-add {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.wl-lobby-add .wl-input {
+  flex: 1;
+}
+
+.wl-lobby-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  line-height: 1.4;
+}
+
+.wl-lobby-start {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1.05rem;
+}

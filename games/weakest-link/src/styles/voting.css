@@ -1,0 +1,139 @@
+/* Voting phase */
+.wl-voting {
+  width: 100%;
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.wl-voting-title {
+  margin: 0;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.wl-voting-sub {
+  margin: 0;
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+.wl-voting-status {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.wl-voting-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wl-voting-status-row.voted {
+  background: rgba(46, 204, 113, 0.15);
+}
+
+.wl-voting-status-icon {
+  opacity: 0.8;
+}
+
+.wl-voting-local {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.wl-voting-local-name {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+}
+
+.wl-voting-local-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.wl-voting-target--selected {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.wl-voting-reveal {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1.05rem;
+}
+
+/* Vote reveal */
+.wl-vote-reveal {
+  width: 100%;
+  max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.wl-vote-reveal-title {
+  margin: 0;
+  color: var(--gold);
+}
+
+.wl-vote-reveal-tally {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.wl-vote-reveal-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wl-vote-reveal-row--out {
+  background: rgba(224, 32, 42, 0.25);
+  border: 1px solid var(--status-wrong);
+}
+
+.wl-vote-reveal-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.wl-vote-reveal-note {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.wl-vote-reveal-out {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--status-wrong);
+}
