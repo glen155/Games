@@ -91,10 +91,12 @@ function createFakeClient(fromResults: Record<string, FakeQueryResult[]> = {}) {
   return { client, channels }
 }
 
-const SESSION_KEY = 'games-platform:host-room:counter-test'
+const HOST_ROOM_KEY = 'games-platform:host-room:counter-test'
+const PLAYER_ROOM_KEY = 'games-platform:player-room:counter-test'
+const NICKNAME_KEY = 'games-platform:nickname'
 
 beforeEach(() => {
-  sessionStorage.clear()
+  localStorage.clear()
   vi.clearAllMocks()
 })
 
@@ -121,7 +123,7 @@ describe('useHostRoom - hosted mode', () => {
     await waitFor(() => expect(result.current.phase).toBe('connected'))
 
     expect(result.current.code).toBe('ABCDEF')
-    expect(sessionStorage.getItem(SESSION_KEY)).toBe('ABCDEF')
+    expect(localStorage.getItem(HOST_ROOM_KEY)).toBe('ABCDEF')
 
     const channel = channels[0]
     act(() => result.current.dispatch({ type: 'INC' }))
@@ -131,8 +133,8 @@ describe('useHostRoom - hosted mode', () => {
     )
   })
 
-  it('resumes an existing room from sessionStorage, merging its persisted state', async () => {
-    sessionStorage.setItem(SESSION_KEY, 'RESUME1')
+  it('resumes an existing room from localStorage, merging its persisted state', async () => {
+    localStorage.setItem(HOST_ROOM_KEY, 'RESUME1')
     mockedEnsureSignedIn.mockResolvedValue('user-1')
     const { client } = createFakeClient({
       rooms: [{ data: { id: 'room-9', code: 'RESUME1', game_slug: 'counter-test', host_user_id: 'user-1', status: 'lobby' }, error: null }],
@@ -237,7 +239,7 @@ describe('useHostRoom - hosted mode', () => {
     act(() => result.current.endRoom())
 
     expect(channel.send).toHaveBeenCalledWith(expect.objectContaining({ event: 'room-ended' }))
-    expect(sessionStorage.getItem(SESSION_KEY)).toBeNull()
+    expect(localStorage.getItem(HOST_ROOM_KEY)).toBeNull()
   })
 })
 
@@ -258,6 +260,18 @@ describe('usePlayerRoom', () => {
     await waitFor(() => expect(result.current.phase).toBe('not-found'))
   })
 
+  it('excludes ended rooms from the lookup, same as an unmatched code', async () => {
+    mockedEnsureSignedIn.mockResolvedValue('user-2')
+    const { client } = createFakeClient({ rooms: [{ data: null, error: null }] })
+    mockedGetSupabase.mockReturnValue(client as never)
+
+    const { result } = renderHook(() => usePlayerRoom(game, 'ABCDEF', 'Alice'))
+    await waitFor(() => expect(result.current.phase).toBe('not-found'))
+
+    const roomsChain = client.from.mock.results[0]!.value as { neq: (...args: unknown[]) => unknown }
+    expect(roomsChain.neq).toHaveBeenCalledWith('status', 'ended')
+  })
+
   it('joins successfully, merging partial stored state over the game default', async () => {
     mockedEnsureSignedIn.mockResolvedValue('user-2')
     const { client } = createFakeClient({
@@ -271,6 +285,46 @@ describe('usePlayerRoom', () => {
     await waitFor(() => expect(result.current.phase).toBe('connected'))
     expect(result.current.state).toEqual({ count: 0 })
     expect(result.current.room?.code).toBe('ABCDEF')
+  })
+
+  it('remembers the room and nickname on a successful join', async () => {
+    mockedEnsureSignedIn.mockResolvedValue('user-2')
+    const { client } = createFakeClient({
+      rooms: [{ data: { id: 'room-1', code: 'ABCDEF', game_slug: 'counter-test', host_user_id: 'user-1', status: 'lobby' }, error: null }],
+      players: [{ data: null, error: null }],
+      game_state: [{ data: null, error: null }],
+    })
+    mockedGetSupabase.mockReturnValue(client as never)
+
+    const { result } = renderHook(() => usePlayerRoom(game, 'abcdef', 'Alice'))
+    await waitFor(() => expect(result.current.phase).toBe('connected'))
+
+    expect(localStorage.getItem(PLAYER_ROOM_KEY)).toBe('ABCDEF')
+    expect(localStorage.getItem(NICKNAME_KEY)).toBe('Alice')
+  })
+
+  it('forgets a remembered room once it resolves to not-found', async () => {
+    localStorage.setItem(PLAYER_ROOM_KEY, 'ABCDEF')
+    mockedEnsureSignedIn.mockResolvedValue('user-2')
+    const { client } = createFakeClient({ rooms: [{ data: null, error: null }] })
+    mockedGetSupabase.mockReturnValue(client as never)
+
+    const { result } = renderHook(() => usePlayerRoom(game, 'ABCDEF', 'Alice'))
+    await waitFor(() => expect(result.current.phase).toBe('not-found'))
+
+    expect(localStorage.getItem(PLAYER_ROOM_KEY)).toBeNull()
+  })
+
+  it('leaves an unrelated remembered room alone when a different code is not found', async () => {
+    localStorage.setItem(PLAYER_ROOM_KEY, 'OTHER1')
+    mockedEnsureSignedIn.mockResolvedValue('user-2')
+    const { client } = createFakeClient({ rooms: [{ data: null, error: null }] })
+    mockedGetSupabase.mockReturnValue(client as never)
+
+    const { result } = renderHook(() => usePlayerRoom(game, 'ABCDEF', 'Alice'))
+    await waitFor(() => expect(result.current.phase).toBe('not-found'))
+
+    expect(localStorage.getItem(PLAYER_ROOM_KEY)).toBe('OTHER1')
   })
 
   it('applies a state broadcast directly, replacing local state', async () => {
@@ -303,6 +357,24 @@ describe('usePlayerRoom', () => {
 
     act(() => channels[0]._emitBroadcast('room-ended', {}))
     expect(result.current.phase).toBe('ended')
+  })
+
+  it('forgets the remembered room once the host ends it', async () => {
+    mockedEnsureSignedIn.mockResolvedValue('user-2')
+    const { client, channels } = createFakeClient({
+      rooms: [{ data: { id: 'room-1', code: 'ABCDEF', game_slug: 'counter-test', host_user_id: 'user-1', status: 'lobby' }, error: null }],
+      players: [{ data: null, error: null }],
+      game_state: [{ data: null, error: null }],
+    })
+    mockedGetSupabase.mockReturnValue(client as never)
+
+    const { result } = renderHook(() => usePlayerRoom(game, 'abcdef', 'Alice'))
+    await waitFor(() => expect(result.current.phase).toBe('connected'))
+    expect(localStorage.getItem(PLAYER_ROOM_KEY)).toBe('ABCDEF')
+
+    act(() => channels[0]._emitBroadcast('room-ended', {}))
+    expect(result.current.phase).toBe('ended')
+    expect(localStorage.getItem(PLAYER_ROOM_KEY)).toBeNull()
   })
 
   it('sendAction broadcasts a PlayerAction with the expected shape', async () => {

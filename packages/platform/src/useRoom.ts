@@ -2,6 +2,12 @@ import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { ensureSignedIn, getSupabase } from './supabase';
 import { generateRoomCode, normalizeRoomCode } from './roomCode';
+import {
+  clearStoredPlayerRoom,
+  getStoredPlayerRoom,
+  setStoredNickname,
+  setStoredPlayerRoom,
+} from './identity';
 import type {
   GameDefinition,
   PlayerAction,
@@ -27,7 +33,7 @@ export function channelName(code: string): string {
   return `room:${code}`;
 }
 
-export function sessionKey(slug: string): string {
+export function hostRoomStorageKey(slug: string): string {
   return `games-platform:host-room:${slug}`;
 }
 
@@ -67,7 +73,8 @@ interface HostRoomResult<State, Action> {
  * Hosts a room for a game. Owns the authoritative state; every dispatch is
  * applied locally, persisted to Postgres (durable / late-join catch-up), and
  * broadcast to all joined devices. Resumes an existing room across host
- * refreshes via sessionStorage so players are not orphaned.
+ * refreshes (and full browser restarts — the pointer lives in localStorage)
+ * so players are not orphaned.
  */
 export function useHostRoom<State, Action>(
   game: GameDefinition<State, Action>,
@@ -127,7 +134,7 @@ export function useHostRoom<State, Action>(
       // they'd just stop receiving state updates with no explanation.
       channelRef.current?.send({ type: 'broadcast', event: ROOM_ENDED_EVENT, payload: {} });
       void client.from('rooms').update({ status: 'ended' }).eq('id', room.id);
-      sessionStorage.removeItem(sessionKey(game.slug));
+      localStorage.removeItem(hostRoomStorageKey(game.slug));
     }
   }, [client, room, game.slug]);
 
@@ -148,7 +155,7 @@ export function useHostRoom<State, Action>(
         forceRender();
         setRoom(resumed.room);
         setCode(resumed.room.code);
-        sessionStorage.setItem(sessionKey(game.slug), resumed.room.code);
+        localStorage.setItem(hostRoomStorageKey(game.slug), resumed.room.code);
 
         channel = c.channel(channelName(resumed.room.code), {
           config: { broadcast: { self: false }, presence: { key: userId } },
@@ -276,10 +283,16 @@ export function usePlayerRoom<State, Action>(
           .select('id, code, game_slug, host_user_id, status')
           .eq('code', code)
           .eq('game_slug', game.slug)
+          .neq('status', 'ended')
           .maybeSingle();
         if (cancelled) return;
         if (roomErr) throw new Error(roomErr.message);
         if (!roomRow) {
+          // A remembered room that's gone shouldn't be retried forever — but
+          // only clear it if it's still the room we just failed to find (an
+          // unrelated bad `?join=` link shouldn't wipe out another tab's
+          // live room for this same game).
+          if (getStoredPlayerRoom(game.slug) === code) clearStoredPlayerRoom(game.slug);
           setPhase('not-found');
           return;
         }
@@ -291,6 +304,10 @@ export function usePlayerRoom<State, Action>(
           status: roomRow.status,
         };
         setRoom(joinedRoom);
+        // Remembered so a reload (or reopening the game later) can rejoin
+        // this room and this name automatically — see identity.ts.
+        setStoredPlayerRoom(game.slug, code);
+        setStoredNickname(nickname);
 
         // Record membership (RLS uses this to grant state reads) — best effort.
         await c
@@ -324,6 +341,7 @@ export function usePlayerRoom<State, Action>(
           setState((payload as { state: State }).state);
         });
         channel.on('broadcast', { event: ROOM_ENDED_EVENT }, () => {
+          if (getStoredPlayerRoom(game.slug) === code) clearStoredPlayerRoom(game.slug);
           setPhase('ended');
         });
 
@@ -362,7 +380,7 @@ export async function resumeOrCreateRoom<State, Action>(
   userId: string,
   fallbackState: State,
 ): Promise<{ room: Room; state: State }> {
-  const savedCode = sessionStorage.getItem(sessionKey(game.slug));
+  const savedCode = localStorage.getItem(hostRoomStorageKey(game.slug));
   if (savedCode) {
     const { data: existing } = await c
       .from('rooms')

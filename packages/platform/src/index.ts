@@ -11,6 +11,13 @@ export type {
 export { isMultiplayerConfigured, getSupabase, ensureSignedIn } from './supabase';
 export { generateRoomCode, normalizeRoomCode, isValidRoomCode } from './roomCode';
 export { useHostRoom, usePlayerRoom, type ConnectionPhase } from './useRoom';
+export {
+  getStoredNickname,
+  setStoredNickname,
+  getStoredPlayerRoom,
+  setStoredPlayerRoom,
+  clearStoredPlayerRoom,
+} from './identity';
 export { useLocalGame } from './useLocalGame';
 export { callEdgeFunction } from './edgeFunctions';
 export { recordGameResult, fetchRecentResults, type GameResult } from './leaderboard';

@@ -1,0 +1,55 @@
+.wof-modal-overlay,
+.wof-gameover-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: var(--space-4);
+  z-index: 10;
+}
+
+.wof-modal-card,
+.wof-gameover-card {
+  width: min(28rem, 100%);
+  background: linear-gradient(160deg, var(--wof-bg-end), var(--wof-bg-start));
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.wof-modal-title,
+.wof-gameover-title {
+  margin: 0;
+  color: var(--gold);
+  font-size: clamp(1.4rem, 5vw, 2rem);
+}
+
+.wof-modal-solution {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.wof-modal-scores,
+.wof-gameover-scores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.wof-modal-score-row,
+.wof-gameover-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+}
