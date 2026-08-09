@@ -9,6 +9,7 @@ import {
   gameReducer,
   initialState,
   roundStandings,
+  shuffle,
 } from './gameReducer'
 import type { GameState } from '../types'
 import type { WeakestLinkAction } from './gameReducer'
@@ -480,10 +481,45 @@ describe('SUBMIT_FINAL_ANSWER / FINAL_QUESTION_TIME_EXPIRED', () => {
   })
 })
 
+describe('shuffle', () => {
+  it('returns a permutation with the same elements', () => {
+    const items = Array.from({ length: 20 }, (_, i) => i)
+    const shuffled = shuffle(items)
+    expect(shuffled).toHaveLength(items.length)
+    expect([...shuffled].sort((a, b) => a - b)).toEqual(items)
+  })
+
+  it('does not mutate the input array', () => {
+    const items = [1, 2, 3, 4, 5]
+    const original = [...items]
+    shuffle(items)
+    expect(items).toEqual(original)
+  })
+
+  it('does not always produce the same order across calls', () => {
+    const items = Array.from({ length: 20 }, (_, i) => i)
+    const orders = new Set(Array.from({ length: 20 }, () => shuffle(items).join('|')))
+    expect(orders.size).toBeGreaterThan(1)
+  })
+})
+
 describe('RESET_GAME', () => {
-  it('returns to a fresh lobby state with the same question pool', () => {
+  it('returns to a fresh lobby state with the same question pool, reshuffled', () => {
     const state = toVoting()
     const after = gameReducer(state, { type: 'RESET_GAME' })
-    expect(after).toEqual(initialState(questions))
+    // Same set of questions, not necessarily the same order — everything
+    // else matches a fresh initial state.
+    expect(after.questions.map((q) => q.id).sort()).toEqual(questions.map((q) => q.id).sort())
+    expect(after).toEqual({ ...initialState(questions), questions: after.questions })
+  })
+
+  it('reshuffles rather than repeating the exact same order every time', () => {
+    const state = toVoting()
+    const orders = new Set(
+      Array.from({ length: 20 }, () =>
+        gameReducer(state, { type: 'RESET_GAME' }).questions.map((q) => q.id).join('|'),
+      ),
+    )
+    expect(orders.size).toBeGreaterThan(1)
   })
 })

@@ -23,6 +23,19 @@ export const ROUND_TIME_MS = 120_000;
  * wrong answer with nothing selected — same tension as answering wrong. */
 export const QUESTION_TIME_MS = 15_000;
 
+/** Proper Fisher-Yates shuffle — unlike `.sort(() => Math.random() - 0.5)`
+ * (a common but statistically biased shortcut), every permutation is
+ * equally likely. Used both for the initial question order (game.ts) and to
+ * reshuffle on RESET_GAME, so replaying doesn't repeat the same order. */
+export function shuffle<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 export type WeakestLinkAction =
   | { type: 'PLAYER_JOINED'; userId: string; nickname: string }
   | { type: 'START_GAME'; at: number }
@@ -416,7 +429,9 @@ export function gameReducer(state: GameState, action: WeakestLinkAction): GameSt
     }
 
     case 'RESET_GAME':
-      return initialState(state.questions);
+      // Reshuffle rather than reuse the same order — otherwise playing
+      // again in one sitting would replay the exact same question sequence.
+      return initialState(shuffle(state.questions));
 
     default:
       return state;
