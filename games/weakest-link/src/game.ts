@@ -1,13 +1,9 @@
 import type { GameDefinition } from '@games/platform';
 import { questions } from './data/questions';
-import { gameReducer, initialState, type WeakestLinkAction } from './state/gameReducer';
+import { gameReducer, initialState, shuffle, type WeakestLinkAction } from './state/gameReducer';
 import type { GameState } from './types';
 import { HostView } from './HostView';
 import { PlayerView } from './PlayerView';
-
-function shuffledQuestions() {
-  return [...questions].sort(() => Math.random() - 0.5);
-}
 
 /**
  * The Weakest Link as a platform game: players answer trivia in rotating
@@ -19,7 +15,7 @@ export const weakestLink: GameDefinition<GameState, WeakestLinkAction> = {
   slug: 'weakest-link',
   displayName: 'The Weakest Link',
   tagline: 'Answer in turn, build the chain, bank it — then vote off the weakest link.',
-  createInitialState: () => initialState(shuffledQuestions()),
+  createInitialState: () => initialState(shuffle(questions)),
   reducer: gameReducer,
   HostView,
   PlayerView,

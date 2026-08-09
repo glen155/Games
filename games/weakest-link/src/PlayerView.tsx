@@ -5,6 +5,7 @@ import { currentTurnUserId } from './state/gameReducer';
 import { useCountdown } from './hooks/useCountdown';
 import { QuestionOptions } from './components/QuestionOptions';
 import { StrongestLinkCallout } from './components/StrongestLinkCallout';
+import { FlipVoteCard } from './components/FlipVoteCard';
 
 function Waiting({ message, sub }: { message: string; sub?: string }) {
   return (
@@ -89,15 +90,36 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
 
   if (state.phase === 'vote-reveal') {
     const voteOff = state.lastVoteOff;
-    if (!voteOff) {
+    if (voteOff) {
+      const iWasEliminated = voteOff.eliminatedId === userId;
+      return (
+        <Waiting
+          message={iWasEliminated ? "You're out." : `${voteOff.nickname} is out.`}
+          sub="Waiting for the next round…"
+        />
+      );
+    }
+
+    const myTargetId = state.votes[userId];
+    if (!myTargetId) {
+      // Shouldn't normally happen (you can't reach vote-reveal without
+      // having voted), but stay well-defined rather than crash.
       return <Waiting message="Revealing the votes…" sub="Hang tight." />;
     }
-    const iWasEliminated = voteOff.eliminatedId === userId;
+
     return (
-      <Waiting
-        message={iWasEliminated ? "You're out." : `${voteOff.nickname} is out.`}
-        sub="Waiting for the next round…"
-      />
+      <div className="wl-player-view">
+        <h1 className="wl-player-title">Flip your card!</h1>
+        <FlipVoteCard
+          targetNickname={state.players[myTargetId].nickname}
+          revealed={state.revealedVoterIds.includes(userId)}
+          interactive
+          onReveal={() => sendAction('reveal-vote')}
+        />
+        <p className="wl-player-hint">
+          {state.revealedVoterIds.length} of {state.turnOrder.length} revealed
+        </p>
+      </div>
     );
   }
 

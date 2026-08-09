@@ -23,6 +23,19 @@ export const ROUND_TIME_MS = 120_000;
  * wrong answer with nothing selected — same tension as answering wrong. */
 export const QUESTION_TIME_MS = 15_000;
 
+/** Proper Fisher-Yates shuffle — unlike `.sort(() => Math.random() - 0.5)`
+ * (a common but statistically biased shortcut), every permutation is
+ * equally likely. Used both for the initial question order (game.ts) and to
+ * reshuffle on RESET_GAME, so replaying doesn't repeat the same order. */
+export function shuffle<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 export type WeakestLinkAction =
   | { type: 'PLAYER_JOINED'; userId: string; nickname: string }
   | { type: 'START_GAME'; at: number }
@@ -31,8 +44,8 @@ export type WeakestLinkAction =
   | { type: 'QUESTION_TIME_EXPIRED'; at: number }
   | { type: 'ROUND_TIME_EXPIRED' }
   | { type: 'CAST_VOTE'; voterId: string; targetId: string }
-  | { type: 'START_VOTE_REVEAL' }
-  | { type: 'REVEAL_NEXT_VOTE' }
+  | { type: 'REVEAL_VOTE'; voterId: string }
+  | { type: 'FORCE_REVEAL_REMAINING_VOTES' }
   | { type: 'ADVANCE_AFTER_VOTE'; at: number }
   | { type: 'SUBMIT_FINAL_ANSWER'; userId: string; index: number; at: number }
   | { type: 'FINAL_QUESTION_TIME_EXPIRED'; at: number }
@@ -57,8 +70,7 @@ export function initialState(questions: Question[]): GameState {
     roundEndsAt: null,
     questionEndsAt: null,
     votes: {},
-    voteRevealOrder: [],
-    voteRevealIndex: 0,
+    revealedVoterIds: [],
     lastVoteOff: null,
     finalists: null,
     finalScores: null,
@@ -156,6 +168,27 @@ function tallyVotes(votes: Record<string, string>): Record<string, number> {
   return tally;
 }
 
+/** Tallies votes and picks who's eliminated (tie-break via this round's
+ * weakest performer) — the actual vote-off resolution, independent of *how*
+ * every vote became known (one flip at a time, or all at once via the
+ * host's force-reveal). Shared by REVEAL_VOTE and FORCE_REVEAL_REMAINING_VOTES. */
+function resolveVoteOff(state: GameState): VoteOffResult {
+  const tally = tallyVotes(state.votes);
+  const maxVotes = Math.max(...state.turnOrder.map((id) => tally[id] ?? 0));
+  const candidates = state.turnOrder.filter((id) => (tally[id] ?? 0) === maxVotes);
+  const tieBroken = candidates.length > 1;
+  const eliminatedId = tieBroken
+    ? (extremeId(candidates, state.roundStats, state.playerOrder, 'min') as string)
+    : candidates[0];
+
+  return {
+    eliminatedId,
+    nickname: state.players[eliminatedId].nickname,
+    tally,
+    tieBroken,
+  };
+}
+
 /** Round over: only banked money survives — whatever's still riding on the
  * chain (or ticking on the clock) is lost, same tension as the real show.
  * Shared by hitting the question target and the round clock expiring. */
@@ -168,8 +201,7 @@ function endMoneyRound(state: GameState): GameState {
     currentChain: 0,
     chainStep: -1,
     votes: {},
-    voteRevealOrder: [],
-    voteRevealIndex: 0,
+    revealedVoterIds: [],
     lastVoteOff: null,
     roundEndsAt: null,
     questionEndsAt: null,
@@ -339,40 +371,31 @@ export function gameReducer(state: GameState, action: WeakestLinkAction): GameSt
       const { voterId, targetId } = action;
       if (voterId === targetId) return state;
       if (!state.turnOrder.includes(voterId) || !state.turnOrder.includes(targetId)) return state;
-      return { ...state, votes: { ...state.votes, [voterId]: targetId } };
-    }
-
-    case 'START_VOTE_REVEAL': {
-      if (state.phase !== 'voting') return state;
-      if (Object.keys(state.votes).length < state.turnOrder.length) return state;
-      const voteRevealOrder = Object.keys(state.votes).sort(() => Math.random() - 0.5);
-      return { ...state, phase: 'vote-reveal', voteRevealOrder, voteRevealIndex: 0, lastVoteOff: null };
-    }
-
-    case 'REVEAL_NEXT_VOTE': {
-      if (state.phase !== 'vote-reveal') return state;
-      if (state.voteRevealIndex >= state.voteRevealOrder.length) return state;
-      const voteRevealIndex = state.voteRevealIndex + 1;
-      if (voteRevealIndex < state.voteRevealOrder.length) {
-        return { ...state, voteRevealIndex };
+      const votes = { ...state.votes, [voterId]: targetId };
+      // The last vote closes voting and opens the floor — free-for-all,
+      // anyone can flip their own card whenever they're ready, no host gate.
+      if (Object.keys(votes).length >= state.turnOrder.length) {
+        return { ...state, votes, phase: 'vote-reveal', revealedVoterIds: [] };
       }
+      return { ...state, votes };
+    }
 
-      // Last vote just revealed — resolve the outcome now, from the full tally.
-      const tally = tallyVotes(state.votes);
-      const maxVotes = Math.max(...state.turnOrder.map((id) => tally[id] ?? 0));
-      const candidates = state.turnOrder.filter((id) => (tally[id] ?? 0) === maxVotes);
-      const tieBroken = candidates.length > 1;
-      const eliminatedId = tieBroken
-        ? (extremeId(candidates, state.roundStats, state.playerOrder, 'min') as string)
-        : candidates[0];
+    case 'REVEAL_VOTE': {
+      if (state.phase !== 'vote-reveal') return state;
+      const { voterId } = action;
+      if (!state.turnOrder.includes(voterId) || state.revealedVoterIds.includes(voterId)) return state;
+      const revealedVoterIds = [...state.revealedVoterIds, voterId];
+      if (revealedVoterIds.length < state.turnOrder.length) {
+        return { ...state, revealedVoterIds };
+      }
+      // Last card just flipped — resolve the outcome now, from the full tally.
+      return { ...state, revealedVoterIds, lastVoteOff: resolveVoteOff(state) };
+    }
 
-      const voteOff: VoteOffResult = {
-        eliminatedId,
-        nickname: state.players[eliminatedId].nickname,
-        tally,
-        tieBroken,
-      };
-      return { ...state, voteRevealIndex, lastVoteOff: voteOff };
+    case 'FORCE_REVEAL_REMAINING_VOTES': {
+      // Host escape hatch — someone's walked away or their phone died mid-reveal.
+      if (state.phase !== 'vote-reveal' || state.lastVoteOff) return state;
+      return { ...state, revealedVoterIds: [...state.turnOrder], lastVoteOff: resolveVoteOff(state) };
     }
 
     case 'ADVANCE_AFTER_VOTE': {
@@ -387,8 +410,7 @@ export function gameReducer(state: GameState, action: WeakestLinkAction): GameSt
         ...state,
         players,
         votes: {},
-        voteRevealOrder: [],
-        voteRevealIndex: 0,
+        revealedVoterIds: [],
         lastVoteOff: null,
       };
 
@@ -416,7 +438,9 @@ export function gameReducer(state: GameState, action: WeakestLinkAction): GameSt
     }
 
     case 'RESET_GAME':
-      return initialState(state.questions);
+      // Reshuffle rather than reuse the same order — otherwise playing
+      // again in one sitting would replay the exact same question sequence.
+      return initialState(shuffle(state.questions));
 
     default:
       return state;
