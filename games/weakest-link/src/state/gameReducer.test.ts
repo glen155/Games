@@ -275,7 +275,7 @@ describe('roundStandings', () => {
   })
 })
 
-describe('CAST_VOTE / START_VOTE_REVEAL / REVEAL_NEXT_VOTE / ADVANCE_AFTER_VOTE', () => {
+describe('CAST_VOTE / REVEAL_VOTE / FORCE_REVEAL_REMAINING_VOTES / ADVANCE_AFTER_VOTE', () => {
   it('records a vote, rejecting a self-vote', () => {
     let state = toVoting()
     const rejected = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'alice' })
@@ -284,53 +284,71 @@ describe('CAST_VOTE / START_VOTE_REVEAL / REVEAL_NEXT_VOTE / ADVANCE_AFTER_VOTE'
     expect(state.votes.alice).toBe('bob')
   })
 
-  it('START_VOTE_REVEAL no-ops until everyone has voted', () => {
+  it('stays in voting until everyone has voted, then auto-opens the reveal floor — free-for-all, no host gate', () => {
     let state = toVoting()
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
-    const after = gameReducer(state, { type: 'START_VOTE_REVEAL' })
-    expect(after).toBe(state)
+    expect(state.phase).toBe('voting')
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
+    expect(state.phase).toBe('voting')
+    // The last vote flips it straight into vote-reveal.
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
+    expect(state.phase).toBe('vote-reveal')
+    expect(state.revealedVoterIds).toEqual([])
+    expect(state.lastVoteOff).toBeNull()
   })
 
-  it('reveals votes one at a time, only resolving the outcome once every vote is revealed', () => {
+  it('reveals votes as each voter flips their own card, only resolving once everyone has', () => {
     let state = toVoting()
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
-    state = gameReducer(state, { type: 'START_VOTE_REVEAL' })
-
     expect(state.phase).toBe('vote-reveal')
-    expect(state.voteRevealOrder).toHaveLength(3)
-    expect(state.voteRevealIndex).toBe(0)
-    expect(state.lastVoteOff).toBeNull()
 
-    state = gameReducer(state, { type: 'REVEAL_NEXT_VOTE' })
-    expect(state.voteRevealIndex).toBe(1)
+    state = gameReducer(state, { type: 'REVEAL_VOTE', voterId: 'carol' })
+    expect(state.revealedVoterIds).toEqual(['carol'])
     expect(state.lastVoteOff).toBeNull() // still not fully revealed
 
-    state = gameReducer(state, { type: 'REVEAL_NEXT_VOTE' })
-    expect(state.voteRevealIndex).toBe(2)
+    state = gameReducer(state, { type: 'REVEAL_VOTE', voterId: 'alice' })
+    expect(state.revealedVoterIds).toEqual(['carol', 'alice'])
     expect(state.lastVoteOff).toBeNull()
 
-    state = gameReducer(state, { type: 'REVEAL_NEXT_VOTE' })
-    expect(state.voteRevealIndex).toBe(3)
+    state = gameReducer(state, { type: 'REVEAL_VOTE', voterId: 'bob' })
+    expect(state.revealedVoterIds).toEqual(['carol', 'alice', 'bob'])
     expect(state.lastVoteOff?.eliminatedId).toBe('bob')
     expect(state.lastVoteOff?.tieBroken).toBe(false)
   })
 
-  it('REVEAL_NEXT_VOTE no-ops once every vote has already been revealed', () => {
+  it('REVEAL_VOTE no-ops for someone not in the vote, or someone who already revealed', () => {
     let state = toVoting()
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
-    state = gameReducer(state, { type: 'START_VOTE_REVEAL' })
-    state = apply(
-      state,
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
+    const revealed = gameReducer(state, { type: 'REVEAL_VOTE', voterId: 'alice' })
+    const again = gameReducer(revealed, { type: 'REVEAL_VOTE', voterId: 'alice' })
+    expect(again).toBe(revealed)
+  })
+
+  it('reaches the same outcome no matter what order voters reveal in', () => {
+    function castAllThree() {
+      let state = toVoting()
+      state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
+      state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
+      return gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
+    }
+
+    const revealedInVoteOrder = apply(
+      castAllThree(),
+      { type: 'REVEAL_VOTE', voterId: 'alice' },
+      { type: 'REVEAL_VOTE', voterId: 'bob' },
+      { type: 'REVEAL_VOTE', voterId: 'carol' },
     )
-    const after = gameReducer(state, { type: 'REVEAL_NEXT_VOTE' })
-    expect(after).toBe(state)
+    const revealedReversed = apply(
+      castAllThree(),
+      { type: 'REVEAL_VOTE', voterId: 'carol' },
+      { type: 'REVEAL_VOTE', voterId: 'bob' },
+      { type: 'REVEAL_VOTE', voterId: 'alice' },
+    )
+    expect(revealedInVoteOrder.lastVoteOff).toEqual(revealedReversed.lastVoteOff)
   })
 
   it('breaks a tie using this round\'s weakest performer', () => {
@@ -348,17 +366,37 @@ describe('CAST_VOTE / START_VOTE_REVEAL / REVEAL_NEXT_VOTE / ADVANCE_AFTER_VOTE'
 
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
-    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'alice' })
     // One vote each -> tied three ways -> weakest round performance decides.
-    state = gameReducer(state, { type: 'START_VOTE_REVEAL' })
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'alice' })
     state = apply(
       state,
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
+      { type: 'REVEAL_VOTE', voterId: 'alice' },
+      { type: 'REVEAL_VOTE', voterId: 'bob' },
+      { type: 'REVEAL_VOTE', voterId: 'carol' },
     )
     expect(state.lastVoteOff?.tieBroken).toBe(true)
     expect(state.lastVoteOff?.eliminatedId).toBe('bob')
+  })
+
+  it('FORCE_REVEAL_REMAINING_VOTES resolves the outcome even if some voters never flip their own card', () => {
+    let state = toVoting()
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
+    state = gameReducer(state, { type: 'REVEAL_VOTE', voterId: 'alice' }) // only one revealed so far
+    state = gameReducer(state, { type: 'FORCE_REVEAL_REMAINING_VOTES' })
+    expect(state.revealedVoterIds.sort()).toEqual(['alice', 'bob', 'carol'])
+    expect(state.lastVoteOff?.eliminatedId).toBe('bob')
+  })
+
+  it('FORCE_REVEAL_REMAINING_VOTES no-ops once the outcome is already resolved', () => {
+    let state = toVoting()
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
+    state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
+    state = gameReducer(state, { type: 'FORCE_REVEAL_REMAINING_VOTES' })
+    const after = gameReducer(state, { type: 'FORCE_REVEAL_REMAINING_VOTES' })
+    expect(after).toBe(state)
   })
 
   function fullyRevealedElimination(target: 'bob' | 'carol' = 'bob'): GameState {
@@ -366,13 +404,7 @@ describe('CAST_VOTE / START_VOTE_REVEAL / REVEAL_NEXT_VOTE / ADVANCE_AFTER_VOTE'
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: target })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: target === 'bob' ? 'carol' : 'bob' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: target })
-    state = gameReducer(state, { type: 'START_VOTE_REVEAL' })
-    return apply(
-      state,
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-    )
+    return gameReducer(state, { type: 'FORCE_REVEAL_REMAINING_VOTES' })
   }
 
   it('ADVANCE_AFTER_VOTE no-ops before the reveal is finished', () => {
@@ -380,7 +412,6 @@ describe('CAST_VOTE / START_VOTE_REVEAL / REVEAL_NEXT_VOTE / ADVANCE_AFTER_VOTE'
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'alice', targetId: 'bob' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
-    state = gameReducer(state, { type: 'START_VOTE_REVEAL' })
     const after = gameReducer(state, { type: 'ADVANCE_AFTER_VOTE', at: AT })
     expect(after).toBe(state)
   })
@@ -395,14 +426,7 @@ describe('CAST_VOTE / START_VOTE_REVEAL / REVEAL_NEXT_VOTE / ADVANCE_AFTER_VOTE'
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'bob', targetId: 'carol' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'carol', targetId: 'bob' })
     state = gameReducer(state, { type: 'CAST_VOTE', voterId: 'dave', targetId: 'bob' })
-    state = gameReducer(state, { type: 'START_VOTE_REVEAL' })
-    state = apply(
-      state,
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-      { type: 'REVEAL_NEXT_VOTE' },
-    )
+    state = gameReducer(state, { type: 'FORCE_REVEAL_REMAINING_VOTES' })
     state = gameReducer(state, { type: 'ADVANCE_AFTER_VOTE', at: AT })
 
     expect(state.players.bob.eliminated).toBe(true)

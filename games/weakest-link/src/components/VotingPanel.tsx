@@ -4,7 +4,6 @@ import { StrongestLinkCallout } from './StrongestLinkCallout';
 interface VotingPanelProps {
   state: GameState;
   onLocalVote: (voterId: string, targetId: string) => void;
-  onReveal: () => void;
 }
 
 /**
@@ -12,9 +11,11 @@ interface VotingPanelProps {
  * for — same "no early tells" spirit as Music Timeline's TimelineLockStatus —
  * plus inline vote-casting for any player sharing this screen (a 'local-'
  * id). Remote players vote from their own phone via `sendAction('vote', …)`.
+ * The moment the last vote comes in, the reducer moves straight to
+ * `vote-reveal` on its own — no "reveal" button here, voting flows directly
+ * into everyone flipping their own card.
  */
-export function VotingPanel({ state, onLocalVote, onReveal }: VotingPanelProps) {
-  const everyoneVoted = Object.keys(state.votes).length >= state.turnOrder.length;
+export function VotingPanel({ state, onLocalVote }: VotingPanelProps) {
   const localVoters = state.turnOrder.filter((id) => id.startsWith('local-'));
 
   return (
@@ -58,15 +59,6 @@ export function VotingPanel({ state, onLocalVote, onReveal }: VotingPanelProps) 
           ))}
         </div>
       )}
-
-      <button
-        type="button"
-        className="wl-btn wl-btn--primary wl-voting-reveal"
-        disabled={!everyoneVoted}
-        onClick={onReveal}
-      >
-        {everyoneVoted ? 'Reveal Votes' : 'Waiting for everyone to vote…'}
-      </button>
     </div>
   );
 }

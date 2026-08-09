@@ -79,14 +79,11 @@ export interface GameState {
   questionEndsAt: number | null;
 
   votes: Record<string, string>; // voterId -> targetId
-  /** Shuffled voter order for the one-at-a-time reveal — captured once when
-   * the reveal begins so it stays stable across repeated REVEAL_NEXT_VOTE
-   * calls. */
-  voteRevealOrder: string[];
-  /** How many entries of `voteRevealOrder` have been revealed so far. Once
-   * this reaches `voteRevealOrder.length`, `lastVoteOff` is computed and set. */
-  voteRevealIndex: number;
-  /** Only populated once every vote has been revealed one-by-one. */
+  /** Voters (userIds) who have flipped their own card to reveal who they
+   * voted for so far — free-for-all, in whatever order they actually do it.
+   * Once this covers everyone in `turnOrder`, `lastVoteOff` is computed. */
+  revealedVoterIds: string[];
+  /** Only populated once every voter has revealed their own card. */
   lastVoteOff: VoteOffResult | null;
 
   finalists: [string, string] | null;

@@ -75,6 +75,9 @@ export function HostView({
           dispatch({ type: 'CAST_VOTE', voterId: action.userId, targetId: payload.targetId });
         }
         clearPlayerAction(action.id);
+      } else if (action.type === 'reveal-vote') {
+        dispatch({ type: 'REVEAL_VOTE', voterId: action.userId });
+        clearPlayerAction(action.id);
       }
     }
   }, [playerActions, state.phase, dispatch, clearPlayerAction]);
@@ -128,12 +131,13 @@ export function HostView({
     dispatch({ type: 'CAST_VOTE', voterId, targetId });
   }
 
-  function handleStartVoteReveal() {
-    dispatch({ type: 'START_VOTE_REVEAL' });
+  function handleLocalReveal(voterId: string) {
+    dispatch({ type: 'REVEAL_VOTE', voterId });
+    playTick();
   }
 
-  function handleRevealNextVote() {
-    dispatch({ type: 'REVEAL_NEXT_VOTE' });
+  function handleForceReveal() {
+    dispatch({ type: 'FORCE_REVEAL_REMAINING_VOTES' });
     playTick();
   }
 
@@ -173,7 +177,7 @@ export function HostView({
   if (state.phase === 'voting') {
     return (
       <div className="wl-app">
-        <VotingPanel state={state} onLocalVote={handleCastVote} onReveal={handleStartVoteReveal} />
+        <VotingPanel state={state} onLocalVote={handleCastVote} />
       </div>
     );
   }
@@ -181,7 +185,12 @@ export function HostView({
   if (state.phase === 'vote-reveal') {
     return (
       <div className="wl-app">
-        <VoteRevealPanel state={state} onRevealNext={handleRevealNextVote} onContinue={handleAdvanceAfterVote} />
+        <VoteRevealPanel
+          state={state}
+          onLocalReveal={handleLocalReveal}
+          onForceReveal={handleForceReveal}
+          onContinue={handleAdvanceAfterVote}
+        />
       </div>
     );
   }

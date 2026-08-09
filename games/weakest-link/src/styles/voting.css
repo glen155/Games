@@ -105,12 +105,6 @@
   color: var(--ink);
 }
 
-.wl-voting-reveal {
-  width: 100%;
-  padding: 0.85rem;
-  font-size: 1.05rem;
-}
-
 /* Vote reveal */
 .wl-vote-reveal {
   width: 100%;
@@ -132,6 +126,113 @@
   font-size: 0.85rem;
   opacity: 0.75;
   font-variant-numeric: tabular-nums;
+}
+
+/* Flip cards — free-for-all reveal grid on the host screen, and the single
+ * card a player sees for their own vote on their phone. */
+.wl-flip-card-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--space-3);
+}
+
+.wl-flip-card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.wl-flip-card-owner {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.wl-flip-card {
+  perspective: 800px;
+  width: 100%;
+  max-width: 10rem;
+  aspect-ratio: 3 / 4;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.wl-flip-card:disabled {
+  cursor: default;
+}
+
+.wl-flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.wl-flip-card--revealed .wl-flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.wl-flip-card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  border-radius: var(--radius-lg);
+  backface-visibility: hidden;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.wl-flip-card-front {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--ink);
+}
+
+.wl-flip-card:not(:disabled) .wl-flip-card-front:hover {
+  filter: brightness(1.08);
+}
+
+.wl-flip-card-mark {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.wl-flip-card-hint {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.wl-flip-card-back {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transform: rotateY(180deg);
+}
+
+.wl-flip-card-back-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.wl-flip-card-back-target {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.wl-vote-reveal-force {
+  font-size: 0.8rem;
+  opacity: 0.75;
 }
 
 .wl-vote-reveal-tally {
