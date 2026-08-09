@@ -4,6 +4,12 @@ import { isMultiplayerConfigured } from '../supabase';
 import { normalizeRoomCode } from '../roomCode';
 import { useHostRoom, usePlayerRoom } from '../useRoom';
 import { useLocalGame } from '../useLocalGame';
+import {
+  clearStoredPlayerRoom,
+  getStoredNickname,
+  getStoredPlayerRoom,
+  setStoredNickname,
+} from '../identity';
 import { RoomCode } from './RoomCode';
 import { PlayerList } from './PlayerList';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -19,6 +25,15 @@ function readJoinParam(): string | null {
   return code ? normalizeRoomCode(code) : null;
 }
 
+/** A remembered room + nickname for this game, if a player has one — an
+ * explicit `?join=` link always wins (it's a fresh, deliberate invite). */
+function readAutoRejoin(slug: string): { code: string; nickname: string } | null {
+  const code = getStoredPlayerRoom(slug);
+  const nickname = getStoredNickname();
+  if (!code || !nickname) return null;
+  return { code, nickname };
+}
+
 /**
  * The single entry point a game mounts. Handles the whole "how do I want to
  * play" flow — host from this device, join another device's room, or play
@@ -26,12 +41,18 @@ function readJoinParam(): string | null {
  */
 export function GameShell<State, Action>({ game }: GameShellProps<State, Action>) {
   const joinParam = useMemo(readJoinParam, []);
+  // A player who's already been in one of this game's rooms gets dropped
+  // straight back in — no re-typing a name or room code, same as the host's
+  // own refresh-resume behavior.
+  const autoRejoin =
+    isMultiplayerConfigured && !joinParam ? readAutoRejoin(game.slug) : null;
   const [mode, setMode] = useState<Mode>(() => {
     if (!isMultiplayerConfigured) return 'solo';
     if (joinParam) return 'join-form';
+    if (autoRejoin) return 'player';
     return 'landing';
   });
-  const [joinInfo, setJoinInfo] = useState<{ code: string; nickname: string } | null>(null);
+  const [joinInfo, setJoinInfo] = useState<{ code: string; nickname: string } | null>(autoRejoin);
 
   let content: ReactNode;
   if (mode === 'solo') {
@@ -56,7 +77,14 @@ export function GameShell<State, Action>({ game }: GameShellProps<State, Action>
         game={game}
         code={joinInfo.code}
         nickname={joinInfo.nickname}
-        onExit={() => setMode('landing')}
+        onExit={() => {
+          clearStoredPlayerRoom(game.slug);
+          setMode('landing');
+        }}
+        onRename={(nickname) => {
+          setStoredNickname(nickname);
+          setJoinInfo((prev) => (prev ? { ...prev, nickname } : prev));
+        }}
       />
     );
   } else {
@@ -162,14 +190,24 @@ function PlayerContainer<State, Action>({
   code,
   nickname,
   onExit,
+  onRename,
 }: {
   game: GameDefinition<State, Action>;
   code: string;
   nickname: string;
   onExit: () => void;
+  onRename: (nickname: string) => void;
 }) {
   const room = usePlayerRoom(game, code, nickname);
   const { PlayerView } = game;
+  const [renaming, setRenaming] = useState(false);
+  const [draftName, setDraftName] = useState(nickname);
+
+  function commitRename() {
+    const trimmed = draftName.trim().slice(0, 20);
+    if (trimmed && trimmed !== nickname) onRename(trimmed);
+    setRenaming(false);
+  }
 
   if (room.phase === 'connecting') {
     return <StatusScreen title="Joining the room…" />;
@@ -193,7 +231,38 @@ function PlayerContainer<State, Action>({
   return (
     <div className="shell-player">
       <div className="shell-player-bar">
-        <span className="shell-player-you">You: {nickname}</span>
+        {renaming ? (
+          <form
+            className="shell-player-rename-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              commitRename();
+            }}
+          >
+            <input
+              className="shell-input shell-player-rename-input"
+              value={draftName}
+              maxLength={20}
+              autoFocus
+              onChange={(e) => setDraftName(e.target.value)}
+              onBlur={commitRename}
+            />
+          </form>
+        ) : (
+          <span className="shell-player-you">
+            You: {nickname}
+            <button
+              type="button"
+              className="shell-player-rename-btn"
+              onClick={() => {
+                setDraftName(nickname);
+                setRenaming(true);
+              }}
+            >
+              Edit
+            </button>
+          </span>
+        )}
         <span className="shell-player-count">{room.players.length} in room</span>
         <button type="button" className="shell-exit-btn" onClick={onExit}>
           Exit
@@ -223,7 +292,7 @@ function JoinForm<State, Action>({
   onCancel: () => void;
 }) {
   const [code, setCode] = useState(initialCode);
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(() => getStoredNickname() ?? '');
   const normalized = normalizeRoomCode(code);
   const canJoin = normalized.length === 6 && nickname.trim().length > 0;
 
