@@ -280,6 +280,120 @@
   font-size: 0.85rem;
 }
 
+/* Buzz order panel — ranked "who buzzed" board for buzz-in rounds, shared by
+ * every game so a new buzz-in round gets first/second/etc + timing for free. */
+.buzz-order-panel {
+  position: fixed;
+  top: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: min(22rem, calc(100vw - 2rem));
+  border-radius: var(--radius-lg);
+  background: rgba(17, 18, 24, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  padding: var(--space-3) var(--space-4);
+  animation: buzz-order-panel-pop var(--transition-medium);
+}
+
+.buzz-order-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.buzz-order-panel-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.buzz-order-panel-clear {
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.buzz-order-panel-clear:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.buzz-order-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.buzz-order-panel-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.9rem;
+}
+
+.buzz-order-panel-row--first {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.buzz-order-panel-rank {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.buzz-order-panel-row--first .buzz-order-panel-rank {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.buzz-order-panel-name {
+  flex: 1;
+}
+
+.buzz-order-panel-delta {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.buzz-order-panel-row--first .buzz-order-panel-delta {
+  opacity: 0.85;
+}
+
+@keyframes buzz-order-panel-pop {
+  from {
+    transform: translate(-50%, -10px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
 /* Player device chrome */
 .shell-player-bar {
   display: flex;

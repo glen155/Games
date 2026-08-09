@@ -19,6 +19,7 @@ export { reportIssue, fetchIssueReports, setIssueReportReviewed, type IssueRepor
 export { GameShell } from './components/GameShell';
 export { RoomCode } from './components/RoomCode';
 export { PlayerList } from './components/PlayerList';
+export { BuzzOrderPanel } from './components/BuzzOrderPanel';
 export { QRCode } from './components/QRCode';
 export { ErrorBoundary } from './components/ErrorBoundary';
 export { ReportIssueButton } from './components/ReportIssueButton';
