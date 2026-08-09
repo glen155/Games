@@ -128,8 +128,39 @@
   color: var(--gold);
 }
 
-/* Judge panel */
-.wl-judge {
+/* Round timer — the whole-round clock, shown once per money round. */
+.wl-round-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  font-variant-numeric: tabular-nums;
+}
+
+.wl-round-timer-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+}
+
+.wl-round-timer-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.wl-round-timer--urgent {
+  background: rgba(224, 32, 42, 0.2);
+}
+
+.wl-round-timer--urgent .wl-round-timer-value {
+  color: var(--status-wrong);
+}
+
+/* Question panel — the public prompt + options display, host and player alike. */
+.wl-question {
   width: 100%;
   max-width: 36rem;
   display: flex;
@@ -143,64 +174,116 @@
   text-align: center;
 }
 
-.wl-judge-turn {
+.wl-question-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  position: relative;
+}
+
+.wl-question-turn {
   margin: 0;
   font-size: 0.9rem;
   opacity: 0.8;
 }
 
-.wl-judge-turn-name {
+.wl-question-turn-name {
   color: var(--gold);
   font-weight: 700;
 }
 
-.wl-judge-prompt {
+.wl-question-clock {
+  position: absolute;
+  right: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.wl-question-clock--urgent {
+  background: rgba(224, 32, 42, 0.25);
+  color: var(--status-wrong);
+}
+
+.wl-question-prompt {
   margin: 0;
   font-size: clamp(1.1rem, 4vw, 1.5rem);
   font-weight: 600;
 }
 
-.wl-judge-answer {
-  margin: 0;
-  padding: 0.4rem 0.9rem;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 215, 0, 0.12);
-  color: var(--gold);
-  font-weight: 700;
-}
-
-.wl-judge-bank {
+.wl-question-bank {
   align-self: center;
 }
 
-.wl-judge-buttons {
-  display: flex;
-  gap: var(--space-3);
+.wl-question-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* Options grid — shared by the host's local-player path and PlayerView. */
+.wl-options {
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
 }
 
-.wl-judge-btn {
+.wl-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.wl-option:not(:disabled):hover {
+  border-color: var(--gold);
+}
+
+.wl-option-letter {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.wl-option-text {
   flex: 1;
-  padding: 0.75rem;
-  font-size: 1.05rem;
+  font-weight: 600;
 }
 
-.wl-judge-btn--correct {
+.wl-option--selected {
+  border-color: var(--gold);
+  background: rgba(255, 215, 0, 0.15);
+}
+
+.wl-option--correct {
   border-color: var(--status-correct);
-  color: var(--status-correct);
+  background: rgba(46, 204, 113, 0.2);
 }
 
-.wl-judge-btn--correct:not(:disabled):hover {
-  background: var(--status-correct);
-  color: var(--ink);
-}
-
-.wl-judge-btn--wrong {
+.wl-option--wrong {
   border-color: var(--status-wrong);
-  color: var(--status-wrong);
+  background: rgba(224, 32, 42, 0.2);
 }
 
-.wl-judge-btn--wrong:not(:disabled):hover {
-  background: var(--status-wrong);
-  color: var(--cream);
+@media (max-width: 30rem) {
+  .wl-options {
+    grid-template-columns: 1fr;
+  }
 }

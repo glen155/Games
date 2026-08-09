@@ -1,4 +1,5 @@
 import type { GameState } from '../types';
+import { StrongestLinkCallout } from './StrongestLinkCallout';
 
 interface VotingPanelProps {
   state: GameState;
@@ -20,6 +21,8 @@ export function VotingPanel({ state, onLocalVote, onReveal }: VotingPanelProps) 
     <div className="wl-voting">
       <h2 className="wl-voting-title">Who's the weakest link?</h2>
       <p className="wl-voting-sub">Round pot of {state.roundPot === 0 ? 'nothing this round' : state.roundPot} is safe in the bank.</p>
+
+      <StrongestLinkCallout state={state} />
 
       <ul className="wl-voting-status">
         {state.turnOrder.map((id) => (

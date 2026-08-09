@@ -1,6 +1,10 @@
+import { useEffect, useState } from 'react';
 import type { PlayerViewProps } from '@games/platform';
 import type { GameState } from './types';
 import { currentTurnUserId } from './state/gameReducer';
+import { useCountdown } from './hooks/useCountdown';
+import { QuestionOptions } from './components/QuestionOptions';
+import { StrongestLinkCallout } from './components/StrongestLinkCallout';
 
 function Waiting({ message, sub }: { message: string; sub?: string }) {
   return (
@@ -11,13 +15,28 @@ function Waiting({ message, sub }: { message: string; sub?: string }) {
   );
 }
 
+/** Tracks whichever of "answer" or "bank" this device just sent, for a quick
+ * disabled/"sent" state on both controls at once — reset automatically
+ * whenever a new turn's deadline arrives, since that's the reliable signal
+ * the reducer has moved on. */
+function usePendingTurnAction(questionEndsAt: number | null) {
+  const [pending, setPending] = useState<number | 'bank' | null>(null);
+  useEffect(() => {
+    setPending(null);
+  }, [questionEndsAt]);
+  return [pending, setPending] as const;
+}
+
 /**
- * The player / phone view. The host reads questions aloud and judges answers
- * (free text can't be auto-graded), so this device only ever needs to send
- * two things: `bank` on your turn, and `vote` during a vote-off — everything
- * else is a status display.
+ * The player / phone view. Answers are self-graded — this device sends
+ * `answer` (with the tapped index) on your turn, `bank` on your turn if the
+ * chain is worth locking in, and `vote` during a vote-off. Everything else
+ * is a live status mirror of shared state.
  */
 export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameState>) {
+  const [pending, setPending] = usePendingTurnAction(state?.questionEndsAt ?? null);
+  const secondsLeft = useCountdown(state?.questionEndsAt ?? null);
+
   if (!state || state.phase === 'lobby') {
     return <Waiting message="Waiting for the host to start…" />;
   }
@@ -47,6 +66,7 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
     return (
       <div className="wl-player-view">
         <h1 className="wl-player-title">Who's the weakest link?</h1>
+        <StrongestLinkCallout state={state} />
         <ul className="wl-player-vote-list">
           {state.turnOrder
             .filter((id) => id !== userId)
@@ -69,14 +89,19 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
 
   if (state.phase === 'vote-reveal') {
     const voteOff = state.lastVoteOff;
-    const iWasEliminated = voteOff?.eliminatedId === userId;
+    if (!voteOff) {
+      return <Waiting message="Revealing the votes…" sub="Hang tight." />;
+    }
+    const iWasEliminated = voteOff.eliminatedId === userId;
     return (
       <Waiting
-        message={iWasEliminated ? "You're out." : `${voteOff?.nickname ?? 'A player'} is out.`}
+        message={iWasEliminated ? "You're out." : `${voteOff.nickname} is out.`}
         sub="Waiting for the next round…"
       />
     );
   }
+
+  const question = state.questions[state.questionIndex % state.questions.length];
 
   if (state.phase === 'final') {
     const finalists = state.finalists!;
@@ -109,7 +134,24 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
             </li>
           ))}
         </ul>
-        <p className="wl-player-final-hint">The host will judge your answer out loud.</p>
+        {isMyTurn ? (
+          <>
+            {secondsLeft !== null && <p className="wl-player-clock">{secondsLeft}s</p>}
+            <p className="wl-player-prompt">{question.prompt}</p>
+            <QuestionOptions
+              options={question.options}
+              selectedIndex={typeof pending === 'number' ? pending : null}
+              correctIndex={null}
+              disabled={pending !== null}
+              onSelect={(index) => {
+                setPending(index);
+                sendAction('answer', { index });
+              }}
+            />
+          </>
+        ) : (
+          <p className="wl-player-hint">Waiting for your opponent to answer…</p>
+        )}
       </div>
     );
   }
@@ -130,13 +172,33 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
         <span>Bank: {state.bank}</span>
       </div>
       {isMyTurn ? (
-        state.currentChain > 0 ? (
-          <button type="button" className="wl-btn wl-btn--primary wl-player-bank" onClick={() => sendAction('bank')}>
-            Bank {state.currentChain}
-          </button>
-        ) : (
-          <p className="wl-player-hint">Answer out loud — the host will judge it.</p>
-        )
+        <>
+          {secondsLeft !== null && <p className="wl-player-clock">{secondsLeft}s</p>}
+          <p className="wl-player-prompt">{question.prompt}</p>
+          {state.currentChain > 0 && (
+            <button
+              type="button"
+              className="wl-btn wl-btn--primary wl-player-bank"
+              disabled={pending !== null}
+              onClick={() => {
+                setPending('bank');
+                sendAction('bank');
+              }}
+            >
+              {pending === 'bank' ? 'Banked!' : `Bank ${state.currentChain}`}
+            </button>
+          )}
+          <QuestionOptions
+            options={question.options}
+            selectedIndex={typeof pending === 'number' ? pending : null}
+            correctIndex={null}
+            disabled={pending !== null}
+            onSelect={(index) => {
+              setPending(index);
+              sendAction('answer', { index });
+            }}
+          />
+        </>
       ) : (
         <p className="wl-player-hint">Waiting for your turn…</p>
       )}

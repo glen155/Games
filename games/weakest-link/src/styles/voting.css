@@ -22,6 +22,35 @@
   font-size: 0.9rem;
 }
 
+/* Strongest-link callout — shown before voting, on host and player alike. */
+.wl-strongest-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  font-size: 0.85rem;
+}
+
+.wl-strongest-link-label {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+
+.wl-strongest-link-name {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.wl-strongest-link-stats {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
 .wl-voting-status {
   list-style: none;
   margin: 0;
@@ -96,6 +125,13 @@
 .wl-vote-reveal-title {
   margin: 0;
   color: var(--gold);
+}
+
+.wl-vote-reveal-progress {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
 }
 
 .wl-vote-reveal-tally {

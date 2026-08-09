@@ -82,6 +82,11 @@ export function useGameSounds() {
     [playTones],
   );
 
+  const playTick = useCallback(
+    () => playTones([{ freq: 880, duration: 0.06, shape: 'square' }]),
+    [playTones],
+  );
+
   const playWin = useCallback(
     () =>
       playTones([
@@ -95,5 +100,5 @@ export function useGameSounds() {
 
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
-  return { playCorrect, playWrong, playBank, playEliminate, playWin, muted, toggleMute };
+  return { playCorrect, playWrong, playBank, playTick, playEliminate, playWin, muted, toggleMute };
 }

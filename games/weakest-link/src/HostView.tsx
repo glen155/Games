@@ -8,20 +8,23 @@ import {
   type WeakestLinkAction,
 } from './state/gameReducer';
 import { useGameSounds } from './hooks/useGameSounds';
+import { useRoundClock } from './hooks/useRoundClock';
 import { LobbyPanel } from './components/LobbyPanel';
 import { PlayerRoster } from './components/PlayerRoster';
 import { ChainMeter } from './components/ChainMeter';
-import { JudgePanel } from './components/JudgePanel';
+import { RoundTimer } from './components/RoundTimer';
+import { QuestionPanel } from './components/QuestionPanel';
 import { VotingPanel } from './components/VotingPanel';
 import { VoteRevealPanel } from './components/VoteRevealPanel';
 import { FinalRoundPanel } from './components/FinalRoundPanel';
 import { GameOverScreen } from './components/GameOverScreen';
 
 /**
- * The host / big-screen view. Turns are host-judged (free-text trivia can't
- * be auto-graded, same as Family Feud's AnswerJudgePanel), so every scoring
- * action here is a host button tap, not something driven off playerActions —
- * only `bank` and `vote` come in from phones.
+ * The host / big-screen view. Answers are self-graded on the current
+ * player's own device (or the host's local-player path in pass-and-play) —
+ * the host's job is registering players, running the round/question clocks,
+ * absorbing `bank`/`answer`/`vote` from phones, and pacing the vote-off
+ * reveal and round transitions.
  */
 export function HostView({
   state,
@@ -32,7 +35,9 @@ export function HostView({
   isHosted,
   roomId,
 }: HostViewProps<GameState, WeakestLinkAction>) {
-  const { playCorrect, playWrong, playBank, playEliminate, playWin, muted, toggleMute } = useGameSounds();
+  const { playCorrect, playWrong, playBank, playTick, playEliminate, playWin, muted, toggleMute } =
+    useGameSounds();
+  const { questionRemainingMs, roundRemainingMs } = useRoundClock(state, dispatch);
 
   // Register remotely-joined players while still in the lobby. Late joiners
   // after the game has started are shown as connected but not added mid-game
@@ -46,12 +51,23 @@ export function HostView({
     }
   }, [state.phase, state.players, players, dispatch]);
 
-  // Wire remote players' `sendAction('bank')` / `sendAction('vote', {targetId})`
-  // into the reducer — mirrors Family Feud's HostView watching playerActions.
+  // Wire remote players' `sendAction('bank')` / `sendAction('answer', {index})`
+  // / `sendAction('vote', {targetId})` into the reducer — mirrors Family
+  // Feud's HostView watching playerActions for buzzes.
   useEffect(() => {
     for (const action of playerActions) {
       if (action.type === 'bank') {
-        dispatch({ type: 'BANK', userId: action.userId });
+        dispatch({ type: 'BANK', userId: action.userId, at: Date.now() });
+        clearPlayerAction(action.id);
+      } else if (action.type === 'answer') {
+        const payload = action.payload as { index?: number } | undefined;
+        if (typeof payload?.index === 'number') {
+          if (state.phase === 'money') {
+            dispatch({ type: 'SUBMIT_ANSWER', userId: action.userId, index: payload.index, at: Date.now() });
+          } else if (state.phase === 'final') {
+            dispatch({ type: 'SUBMIT_FINAL_ANSWER', userId: action.userId, index: payload.index, at: Date.now() });
+          }
+        }
         clearPlayerAction(action.id);
       } else if (action.type === 'vote') {
         const payload = action.payload as { targetId?: string } | undefined;
@@ -61,7 +77,7 @@ export function HostView({
         clearPlayerAction(action.id);
       }
     }
-  }, [playerActions, dispatch, clearPlayerAction]);
+  }, [playerActions, state.phase, dispatch, clearPlayerAction]);
 
   // Record the finished game to the cross-night family leaderboard. Hosted
   // mode only — solo play has no room to record against.
@@ -83,41 +99,48 @@ export function HostView({
     prevPhaseRef.current = state.phase;
   }, [isHosted, roomId, state.phase, state.winnerId, state.bank, state.players, state.playerOrder]);
 
-  function handleJudge(correct: boolean) {
-    dispatch({ type: 'JUDGE_ANSWER', correct });
-    if (correct) playCorrect();
-    else playWrong();
-  }
-
-  function handleBank(userId: string) {
-    dispatch({ type: 'BANK', userId });
-    playBank();
-  }
-
-  function handleLocalVote(voterId: string, targetId: string) {
-    dispatch({ type: 'CAST_VOTE', voterId, targetId });
-  }
-
-  function handleRevealVotes() {
-    dispatch({ type: 'REVEAL_VOTES' });
-  }
-
-  function handleAdvanceAfterVote() {
-    dispatch({ type: 'ADVANCE_AFTER_VOTE' });
-    playEliminate();
-  }
-
-  function handleFinalJudge(correct: boolean) {
-    dispatch({ type: 'FINAL_JUDGE', correct });
-    if (correct) playCorrect();
-    else playWrong();
-  }
-
   useEffect(() => {
     if (state.phase === 'game-over') playWin();
     // Only fire once, right when the phase flips — not on every re-render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.phase]);
+
+  function handleBank(userId: string) {
+    dispatch({ type: 'BANK', userId, at: Date.now() });
+    playBank();
+  }
+
+  function handleLocalAnswer(userId: string, index: number) {
+    const correct = index === currentQuestion(state).correctIndex;
+    dispatch({ type: 'SUBMIT_ANSWER', userId, index, at: Date.now() });
+    if (correct) playCorrect();
+    else playWrong();
+  }
+
+  function handleLocalFinalAnswer(userId: string, index: number) {
+    const correct = index === currentQuestion(state).correctIndex;
+    dispatch({ type: 'SUBMIT_FINAL_ANSWER', userId, index, at: Date.now() });
+    if (correct) playCorrect();
+    else playWrong();
+  }
+
+  function handleCastVote(voterId: string, targetId: string) {
+    dispatch({ type: 'CAST_VOTE', voterId, targetId });
+  }
+
+  function handleStartVoteReveal() {
+    dispatch({ type: 'START_VOTE_REVEAL' });
+  }
+
+  function handleRevealNextVote() {
+    dispatch({ type: 'REVEAL_NEXT_VOTE' });
+    playTick();
+  }
+
+  function handleAdvanceAfterVote() {
+    dispatch({ type: 'ADVANCE_AFTER_VOTE', at: Date.now() });
+    playEliminate();
+  }
 
   if (state.phase === 'lobby') {
     return (
@@ -137,7 +160,12 @@ export function HostView({
         <button type="button" className="wl-mute" onClick={toggleMute}>
           {muted ? '🔇' : '🔊'}
         </button>
-        <FinalRoundPanel state={state} question={currentQuestion(state)} onJudge={handleFinalJudge} />
+        <FinalRoundPanel
+          state={state}
+          question={currentQuestion(state)}
+          questionRemainingMs={questionRemainingMs}
+          onLocalAnswer={handleLocalFinalAnswer}
+        />
       </div>
     );
   }
@@ -145,7 +173,7 @@ export function HostView({
   if (state.phase === 'voting') {
     return (
       <div className="wl-app">
-        <VotingPanel state={state} onLocalVote={handleLocalVote} onReveal={handleRevealVotes} />
+        <VotingPanel state={state} onLocalVote={handleCastVote} onReveal={handleStartVoteReveal} />
       </div>
     );
   }
@@ -153,7 +181,7 @@ export function HostView({
   if (state.phase === 'vote-reveal') {
     return (
       <div className="wl-app">
-        <VoteRevealPanel state={state} onContinue={handleAdvanceAfterVote} />
+        <VoteRevealPanel state={state} onRevealNext={handleRevealNextVote} onContinue={handleAdvanceAfterVote} />
       </div>
     );
   }
@@ -170,6 +198,7 @@ export function HostView({
       <p className="wl-round-label">
         Round {state.roundNumber} · Question {state.questionsAskedThisRound + 1} of {ROUND_QUESTION_TARGET}
       </p>
+      <RoundTimer remainingMs={roundRemainingMs} />
       <PlayerRoster state={state} currentTurnId={turnId} />
       <ChainMeter
         chainStep={state.chainStep}
@@ -178,13 +207,13 @@ export function HostView({
         bank={state.bank}
       />
       {turnPlayer && (
-        <JudgePanel
+        <QuestionPanel
           question={currentQuestion(state)}
           currentNickname={turnPlayer.nickname}
-          chain={state.currentChain}
-          showLocalBank={turnPlayer.userId.startsWith('local-')}
-          onJudge={handleJudge}
-          onBank={() => handleBank(turnPlayer.userId)}
+          questionRemainingMs={questionRemainingMs}
+          showLocalControls={turnPlayer.userId.startsWith('local-')}
+          onLocalAnswer={(index) => handleLocalAnswer(turnPlayer.userId, index)}
+          bank={{ chain: state.currentChain, onBank: () => handleBank(turnPlayer.userId) }}
         />
       )}
     </div>
