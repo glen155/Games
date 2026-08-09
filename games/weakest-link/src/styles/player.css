@@ -1,0 +1,96 @@
+.wl-player-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  max-width: 30rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.wl-player-view--waiting {
+  min-height: 60vh;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+
+.wl-player-waiting-message {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.wl-player-waiting-sub {
+  margin: 0.4rem 0 0;
+  opacity: 0.75;
+}
+
+.wl-player-title {
+  margin: 0;
+  font-size: clamp(1.3rem, 6vw, 1.8rem);
+  color: var(--gold);
+}
+
+.wl-player-totals {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.wl-player-hint {
+  margin: 0;
+  opacity: 0.75;
+}
+
+.wl-player-bank {
+  padding: 1.1rem;
+  font-size: 1.2rem;
+}
+
+.wl-player-vote-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wl-player-vote-btn {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1.05rem;
+}
+
+.wl-player-vote-btn--selected {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.wl-player-vote-hint {
+  margin: 0;
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+.wl-player-final-scores {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 1.1rem;
+}
+
+.wl-player-final-scores--mine {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.wl-player-final-hint {
+  opacity: 0.75;
+  font-size: 0.9rem;
+}

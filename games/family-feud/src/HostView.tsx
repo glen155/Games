@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { recordGameResult, type HostViewProps } from '@games/platform';
+import { BuzzOrderPanel, recordGameResult, type HostViewProps } from '@games/platform';
 import type { GameState, TeamId } from './types';
 import { type GameAction, MAX_STRIKES } from './state/gameReducer';
 import { useGameSounds } from './hooks/useGameSounds';
@@ -11,7 +11,6 @@ import { StrikeDisplay } from './components/StrikeDisplay';
 import { Scoreboard } from './components/Scoreboard';
 import { ControlsPanel } from './components/ControlsPanel';
 import { RoundEndModal } from './components/RoundEndModal';
-import { BuzzBanner } from './components/BuzzBanner';
 import { FeudSetupScreen } from './components/FeudSetupScreen';
 
 /**
@@ -35,6 +34,12 @@ export function HostView({
   roomId,
 }: HostViewProps<GameState, GameAction>) {
   const { playReveal, playStrike, playAward, playBuzz, muted, toggleMute } = useGameSounds();
+
+  // Every buzz for the *current* question — cleared together whenever the
+  // host moves on (reveal/strike/steal/round nav), not on a timer, so
+  // everyone who buzzed stays visible (ranked, with timing) until then.
+  const buzzes = playerActions.filter((a) => a.type === 'buzz');
+  const clearBuzzes = () => buzzes.forEach((b) => clearPlayerAction(b.id));
 
   // Sound the buzzer when a player buzzes in from their phone.
   const latestBuzz = playerActions[playerActions.length - 1];
@@ -79,12 +84,14 @@ export function HostView({
     if (state.revealed[index]) return;
     dispatch({ type: 'REVEAL_ANSWER', index });
     playReveal();
+    clearBuzzes();
   }
 
   function handleStrike() {
     if (state.strikes >= MAX_STRIKES || state.awaitingSteal) return;
     dispatch({ type: 'STRIKE' });
     playStrike();
+    clearBuzzes();
   }
 
   function handleResolveSteal(success: boolean) {
@@ -92,6 +99,7 @@ export function HostView({
     dispatch({ type: 'RESOLVE_STEAL', success });
     if (success) playAward();
     else playStrike();
+    clearBuzzes();
   }
 
   function handleAward(team: TeamId) {
@@ -100,14 +108,29 @@ export function HostView({
     playAward();
   }
 
+  function handleResetRound() {
+    dispatch({ type: 'RESET_ROUND' });
+    clearBuzzes();
+  }
+
+  function handleNextRound() {
+    dispatch({ type: 'NEXT_ROUND' });
+    clearBuzzes();
+  }
+
+  function handlePrevRound() {
+    dispatch({ type: 'PREV_ROUND' });
+    clearBuzzes();
+  }
+
   useKeyboardShortcuts({
     onReveal: handleReveal,
     onStrike: handleStrike,
     onAward: () => handleAward(state.activeTeam),
     onSetActiveTeam: (team) => dispatch({ type: 'SET_ACTIVE_TEAM', team }),
-    onResetRound: () => dispatch({ type: 'RESET_ROUND' }),
-    onNextRound: () => dispatch({ type: 'NEXT_ROUND' }),
-    onPrevRound: () => dispatch({ type: 'PREV_ROUND' }),
+    onResetRound: handleResetRound,
+    onNextRound: handleNextRound,
+    onPrevRound: handlePrevRound,
     onToggleMute: toggleMute,
   });
 
@@ -121,17 +144,22 @@ export function HostView({
   }
 
   if (state.isRoundOver) {
-    return <RoundEndModal teams={state.teams} onPlayAgain={() => dispatch({ type: 'RESET_GAME' })} />;
+    return (
+      <RoundEndModal
+        teams={state.teams}
+        onPlayAgain={() => {
+          dispatch({ type: 'RESET_GAME' });
+          clearBuzzes();
+        }}
+      />
+    );
   }
 
   const category = state.rounds[state.currentRoundIndex];
 
   return (
     <div className="app">
-      <BuzzBanner
-        buzzes={playerActions.filter((a) => a.type === 'buzz')}
-        onClear={clearPlayerAction}
-      />
+      <BuzzOrderPanel buzzes={buzzes} onClear={clearBuzzes} />
       <CategoryHeader
         name={category.name}
         roundNumber={state.currentRoundIndex + 1}
@@ -159,9 +187,9 @@ export function HostView({
         awaitingSteal={state.awaitingSteal}
         onStrike={handleStrike}
         onResolveSteal={handleResolveSteal}
-        onResetRound={() => dispatch({ type: 'RESET_ROUND' })}
-        onNextRound={() => dispatch({ type: 'NEXT_ROUND' })}
-        onPrevRound={() => dispatch({ type: 'PREV_ROUND' })}
+        onResetRound={handleResetRound}
+        onNextRound={handleNextRound}
+        onPrevRound={handlePrevRound}
         onToggleMute={toggleMute}
       />
     </div>

@@ -13,6 +13,7 @@
     "dev:leaderboard": "npm run dev --workspace games/leaderboard",
     "dev:music-timeline": "npm run dev --workspace games/music-timeline",
     "dev:soundtrack-showdown": "npm run dev --workspace games/soundtrack-showdown",
+    "dev:weakest-link": "npm run dev --workspace games/weakest-link",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",

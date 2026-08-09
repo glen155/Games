@@ -1,4 +1,4 @@
-/* Player (phone) view + host buzz banner — Family Feud specific. */
+/* Player (phone) view — Family Feud specific. */
 
 .player-view {
   display: flex;
@@ -158,36 +158,4 @@
 .player-buzz--active {
   background: radial-gradient(circle at 50% 30%, #4ade80, #16a34a);
   box-shadow: 0 8px 0 #166534;
-}
-
-/* Host buzz banner */
-.buzz-banner {
-  position: fixed;
-  top: 5.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  padding: 0.6rem 1.4rem;
-  border-radius: 999px;
-  background: #dc2626;
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  animation: buzz-pop 0.25s ease;
-}
-
-.buzz-banner-name {
-  font-weight: 800;
-}
-
-@keyframes buzz-pop {
-  from {
-    transform: translate(-50%, -10px);
-    opacity: 0;
-  }
-  to {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
 }
