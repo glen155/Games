@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PlayerViewProps } from '@games/platform';
 import type { GameState, TeamId } from './types';
+import { captainOfTeam } from './state/gameReducer';
 import { StrikeDisplay } from './components/StrikeDisplay';
 
 /**
@@ -9,9 +10,15 @@ import { StrikeDisplay } from './components/StrikeDisplay';
  * leak into the player's device — plus a big Buzz button to buzz in and team
  * picker to self-assign. This is also the "public board" for anyone watching:
  * a TV/laptop can join the room like any other player to display it.
+ *
+ * Whoever's been on a team the longest is that team's captain (derived, not
+ * stored — see `captainOfTeam`) and gets one extra ability here: renaming
+ * the team from their own phone.
  */
-export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameState>) {
+export function PlayerView({ state, userId, players, sendAction }: PlayerViewProps<GameState>) {
   const [buzzed, setBuzzed] = useState(false);
+  const [renamingTeam, setRenamingTeam] = useState<TeamId | null>(null);
+  const [draftName, setDraftName] = useState('');
 
   if (!state) {
     return (
@@ -35,6 +42,7 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
   const category = state.rounds[state.currentRoundIndex];
   const myTeam = state.teamAssignments[userId];
   const stealingTeam: TeamId = state.activeTeam === 0 ? 1 : 0;
+  const isCaptain = myTeam !== undefined && captainOfTeam(myTeam, players, state.teamAssignments) === userId;
 
   function handleBuzz() {
     sendAction('buzz');
@@ -44,6 +52,17 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
 
   function handleJoinTeam(team: TeamId) {
     sendAction('join-team', { team });
+  }
+
+  function startRename(team: TeamId, currentName: string) {
+    setDraftName(currentName);
+    setRenamingTeam(team);
+  }
+
+  function commitRename() {
+    const trimmed = draftName.trim();
+    if (trimmed) sendAction('rename-team', { name: trimmed });
+    setRenamingTeam(null);
   }
 
   return (
@@ -82,17 +101,52 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
       </ul>
 
       <div className="player-scores">
-        {state.teams.map((team, index) => (
-          <div
-            key={team.name}
-            className={`player-score${myTeam === index ? ' player-score--mine' : ''}`}
-            onClick={() => handleJoinTeam(index as TeamId)}
-          >
-            <span className="player-score-name">{team.name}</span>
-            <span className="player-score-value">{team.score}</span>
-            <span className="player-score-join-hint">{myTeam === index ? 'Your team' : 'Tap to join'}</span>
-          </div>
-        ))}
+        {state.teams.map((team, index) => {
+          const teamId = index as TeamId;
+          const mine = myTeam === teamId;
+          return (
+            <div
+              key={team.name}
+              className={`player-score${mine ? ' player-score--mine' : ''}`}
+              onClick={() => handleJoinTeam(teamId)}
+            >
+              <span className="player-score-name">{team.name}</span>
+              <span className="player-score-value">{team.score}</span>
+              <span className="player-score-join-hint">{mine ? 'Your team' : 'Tap to join'}</span>
+              {mine && isCaptain && (
+                <div className="player-score-captain" onClick={(e) => e.stopPropagation()}>
+                  <span className="player-score-captain-badge">★ You're the captain</span>
+                  {renamingTeam === teamId ? (
+                    <form
+                      className="player-score-rename-form"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        commitRename();
+                      }}
+                    >
+                      <input
+                        className="player-score-rename-input"
+                        value={draftName}
+                        autoFocus
+                        maxLength={24}
+                        onChange={(e) => setDraftName(e.target.value)}
+                        onBlur={commitRename}
+                      />
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      className="player-score-rename-button"
+                      onClick={() => startRename(teamId, team.name)}
+                    >
+                      Rename team
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <button

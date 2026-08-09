@@ -1,3 +1,4 @@
+import type { PlayerPresence } from '@games/platform';
 import type { Category, GameState, TeamId } from '../types';
 
 export const ANSWERS_PER_ROUND = 8;
@@ -56,6 +57,22 @@ function freshRoundFields(state: GameState, roundIndex: number): GameState {
 
 function otherTeam(team: TeamId): TeamId {
   return team === 0 ? 1 : 0;
+}
+
+/**
+ * A team's captain is derived, not stored: whichever currently-connected
+ * player has been on this team the longest. `players` comes pre-sorted
+ * ascending by join time (see `readPlayers` in packages/platform/src/useRoom.ts),
+ * so the first match is the earliest joiner still assigned to this team —
+ * meaning captaincy automatically follows if that player switches teams or
+ * disconnects, with no reassignment bookkeeping to get wrong.
+ */
+export function captainOfTeam(
+  team: TeamId,
+  players: PlayerPresence[],
+  teamAssignments: Record<string, TeamId>,
+): string | null {
+  return players.find((p) => teamAssignments[p.userId] === team)?.userId ?? null;
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {

@@ -114,9 +114,23 @@
 }
 
 .scoreboard-roster-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: none;
+  font: inherit;
   font-size: 0.7rem;
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
   background: rgba(255, 215, 0, 0.15);
   color: var(--cream);
+  cursor: pointer;
+}
+
+.scoreboard-roster-chip:hover {
+  background: rgba(255, 215, 0, 0.3);
+}
+
+.scoreboard-captain-badge {
+  color: var(--gold);
 }
