@@ -17,6 +17,12 @@ describe('nicknameIcon', () => {
     expect(nicknameIcon('Cowboy')).toBe('🤠')
   })
 
+  it('matches scissor aliases case-insensitively, singular or plural', () => {
+    expect(nicknameIcon('Scissor')).toBe('✂️')
+    expect(nicknameIcon('Scissors')).toBe('✂️')
+    expect(nicknameIcon('SCISSORS')).toBe('✂️')
+  })
+
   it('returns null for unrelated names', () => {
     expect(nicknameIcon('Sam')).toBeNull()
     expect(nicknameIcon('Star Wars fan')).toBeNull()

@@ -8,6 +8,7 @@
 
 const STAR_ALIASES = new Set(['kom', 'kdawg', 'starfish']);
 const COWBOY_ALIASES = new Set(['rc', 'cowgirl', 'cowboy']);
+const SCISSOR_ALIASES = new Set(['scissor', 'scissors']);
 
 function normalize(nickname: string): string {
   return nickname.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -19,6 +20,7 @@ export function nicknameIcon(nickname: string): string | null {
   const key = normalize(nickname);
   if (STAR_ALIASES.has(key)) return '⭐';
   if (COWBOY_ALIASES.has(key)) return '🤠';
+  if (SCISSOR_ALIASES.has(key)) return '✂️';
   return null;
 }
 
