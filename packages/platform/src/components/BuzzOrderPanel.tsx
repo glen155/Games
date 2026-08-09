@@ -1,4 +1,5 @@
 import type { PlayerAction } from '../types';
+import { nicknameWithIcon } from '../nicknameIcon';
 
 interface BuzzOrderPanelProps {
   /** Player-originated buzz actions for the *current* question — the game
@@ -44,7 +45,7 @@ export function BuzzOrderPanel({ buzzes, onClear, title = 'Buzzed in' }: BuzzOrd
             className={`buzz-order-panel-row${index === 0 ? ' buzz-order-panel-row--first' : ''}`}
           >
             <span className="buzz-order-panel-rank">{index + 1}</span>
-            <span className="buzz-order-panel-name">{buzz.nickname}</span>
+            <span className="buzz-order-panel-name">{nicknameWithIcon(buzz.nickname)}</span>
             <span className="buzz-order-panel-delta">
               {index === 0 ? 'First!' : formatDelta(buzz.at - firstAt)}
             </span>

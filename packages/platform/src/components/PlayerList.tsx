@@ -1,4 +1,5 @@
 import type { PlayerPresence } from '../types';
+import { nicknameWithIcon } from '../nicknameIcon';
 
 interface PlayerListProps {
   players: PlayerPresence[];
@@ -18,7 +19,7 @@ export function PlayerList({ players, title = 'Players' }: PlayerListProps) {
         <ul className="player-list-items">
           {players.map((p) => (
             <li key={p.userId} className="player-list-item">
-              {p.nickname}
+              {nicknameWithIcon(p.nickname)}
             </li>
           ))}
         </ul>

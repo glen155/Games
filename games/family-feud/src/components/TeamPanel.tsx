@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { nicknameWithIcon } from '@games/platform';
 import type { Team, TeamId } from '../types';
 
 interface RosterEntry {
@@ -90,7 +91,7 @@ export function TeamPanel({
                 {player.userId === captainUserId && (
                   <span className="scoreboard-captain-badge" title="Team captain">★</span>
                 )}
-                {player.nickname}
+                {nicknameWithIcon(player.nickname)}
               </button>
             </li>
           ))}

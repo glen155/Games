@@ -1,3 +1,4 @@
+import { nicknameWithIcon } from '@games/platform';
 import type { GameState } from '../types';
 
 interface PlayerRosterProps {
@@ -21,7 +22,7 @@ export function PlayerRoster({ state, currentTurnId }: PlayerRosterProps) {
               id === currentTurnId ? ' wl-roster-row--current' : ''
             }`}
           >
-            <span className="wl-roster-name">{player.nickname}</span>
+            <span className="wl-roster-name">{nicknameWithIcon(player.nickname)}</span>
             {stats && !player.eliminated && (
               <span className="wl-roster-stats">
                 <span className="wl-roster-stat wl-roster-stat--correct">✓ {stats.correct}</span>

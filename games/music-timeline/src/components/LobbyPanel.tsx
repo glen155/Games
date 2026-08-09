@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { nicknameWithIcon } from '@games/platform';
 import type { GameState } from '../types';
 import type { MusicTimelineAction } from '../state/gameReducer';
 
@@ -33,7 +34,7 @@ export function LobbyPanel({ state, dispatch }: LobbyPanelProps) {
         <ul className="mt-lobby-list">
           {state.playerOrder.map((id) => (
             <li key={id} className="mt-lobby-item">
-              {state.players[id].nickname}
+              {nicknameWithIcon(state.players[id].nickname)}
               {id.startsWith('local-') && <span className="mt-lobby-tag">this screen</span>}
             </li>
           ))}

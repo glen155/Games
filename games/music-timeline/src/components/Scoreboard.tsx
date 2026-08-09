@@ -1,3 +1,4 @@
+import { nicknameWithIcon } from '@games/platform';
 import type { GameState } from '../types';
 import { TimelineStrip } from './TimelineStrip';
 
@@ -22,7 +23,7 @@ export function Scoreboard({ state }: ScoreboardProps) {
           return (
             <li key={id} className="mt-scoreboard-row">
               <div className="mt-scoreboard-name">
-                {player.nickname}{' '}
+                {nicknameWithIcon(player.nickname)}{' '}
                 <span className="mt-scoreboard-count">
                   {player.timeline.length}/{state.targetCards}
                 </span>

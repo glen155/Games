@@ -1,4 +1,4 @@
-import type { PlayerPresence } from '@games/platform';
+import { nicknameWithIcon, type PlayerPresence } from '@games/platform';
 
 interface LeaderboardProps {
   jackpotAmount: number;
@@ -40,7 +40,7 @@ export function Leaderboard({
               return (
                 <li key={p.userId} className={`leaderboard-item${stillIn ? ' leaderboard-item--champion' : ''}`}>
                   <span className="leaderboard-name">
-                    {p.nickname}
+                    {nicknameWithIcon(p.nickname)}
                     {stillIn && <span className="leaderboard-badge">Never missed!</span>}
                   </span>
                   <span className="leaderboard-score">{playerCorrectCounts[p.userId] ?? 0} correct</span>
@@ -51,8 +51,8 @@ export function Leaderboard({
         )}
         {champions.length > 0 && (
           <p className="leaderboard-champions">
-            Bragging rights: {champions.map((p) => p.nickname).join(', ')} answered every question
-            right!
+            Bragging rights: {champions.map((p) => nicknameWithIcon(p.nickname)).join(', ')} answered
+            every question right!
           </p>
         )}
         <button type="button" className="modal-play-again" onClick={onPlayAgain}>

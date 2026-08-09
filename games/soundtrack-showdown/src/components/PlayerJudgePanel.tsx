@@ -1,4 +1,4 @@
-import type { PlayerPresence } from '@games/platform';
+import { nicknameWithIcon, type PlayerPresence } from '@games/platform';
 import type { PlayerClueResult } from '../types';
 
 interface PlayerJudgePanelProps {
@@ -29,7 +29,7 @@ export function PlayerJudgePanel({ players, verdicts, onMark }: PlayerJudgePanel
             const verdict = verdicts[p.userId];
             return (
               <li key={p.userId} className="judge-panel-player-row">
-                <span className="judge-panel-player-name">{p.nickname}</span>
+                <span className="judge-panel-player-name">{nicknameWithIcon(p.nickname)}</span>
                 <div className="judge-panel-player-buttons">
                   <button
                     type="button"

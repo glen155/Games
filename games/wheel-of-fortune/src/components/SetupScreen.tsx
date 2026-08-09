@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { PlayerPresence } from '@games/platform';
+import { nicknameWithIcon, type PlayerPresence } from '@games/platform';
 import type { Team, TeamId } from '../types';
 
 interface SetupScreenProps {
@@ -63,7 +63,7 @@ export function SetupScreen({
           <ul className="wof-setup-roster">
             {roster0.length === 0 && <li className="wof-setup-empty">No one yet</li>}
             {roster0.map((p) => (
-              <li key={p.userId}>{p.nickname}</li>
+              <li key={p.userId}>{nicknameWithIcon(p.nickname)}</li>
             ))}
           </ul>
         </div>
@@ -72,7 +72,7 @@ export function SetupScreen({
           <ul className="wof-setup-roster">
             {roster1.length === 0 && <li className="wof-setup-empty">No one yet</li>}
             {roster1.map((p) => (
-              <li key={p.userId}>{p.nickname}</li>
+              <li key={p.userId}>{nicknameWithIcon(p.nickname)}</li>
             ))}
           </ul>
         </div>
@@ -80,7 +80,7 @@ export function SetupScreen({
 
       {unassigned.length > 0 && (
         <p className="wof-setup-waiting">
-          Waiting to pick a team: {unassigned.map((p) => p.nickname).join(', ')}
+          Waiting to pick a team: {unassigned.map((p) => nicknameWithIcon(p.nickname)).join(', ')}
         </p>
       )}
 

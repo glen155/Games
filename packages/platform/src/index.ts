@@ -18,6 +18,7 @@ export {
   setStoredPlayerRoom,
   clearStoredPlayerRoom,
 } from './identity';
+export { nicknameIcon, nicknameWithIcon } from './nicknameIcon';
 export { useLocalGame } from './useLocalGame';
 export { callEdgeFunction } from './edgeFunctions';
 export { recordGameResult, fetchRecentResults, type GameResult } from './leaderboard';

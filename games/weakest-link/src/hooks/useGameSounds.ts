@@ -98,7 +98,34 @@ export function useGameSounds() {
     [playTones],
   );
 
+  // The show's catchphrase, spoken rather than synthesized as a tone — the
+  // only sound in this app that needs to say something specific (the
+  // eliminated player's name), which a beep can't. Uses the browser's own
+  // text-to-speech rather than a real audio clip: this repo has no license
+  // to embed the actual broadcast line, and speechSynthesis needs no asset
+  // to source or host. Feature-detected so it's a no-op — not a crash —
+  // anywhere the Speech API isn't available (older browsers, test runners).
+  const playGoodbye = useCallback((nickname: string) => {
+    if (mutedRef.current) return;
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel(); // don't stack utterances across rounds
+    const utterance = new SpeechSynthesisUtterance(`You are the weakest link. Goodbye, ${nickname}.`);
+    utterance.rate = 0.9;
+    utterance.pitch = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }, []);
+
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
-  return { playCorrect, playWrong, playBank, playTick, playEliminate, playWin, muted, toggleMute };
+  return {
+    playCorrect,
+    playWrong,
+    playBank,
+    playTick,
+    playEliminate,
+    playWin,
+    playGoodbye,
+    muted,
+    toggleMute,
+  };
 }

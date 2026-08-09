@@ -1,4 +1,4 @@
-import type { PlayerPresence } from '@games/platform';
+import { nicknameWithIcon, type PlayerPresence } from '@games/platform';
 
 interface LeaderboardProps {
   players: PlayerPresence[];
@@ -35,7 +35,7 @@ export function Leaderboard({ players, playerCorrectCounts, totalClues, onPlayAg
               return (
                 <li key={p.userId} className={`leaderboard-item${isWinner ? ' leaderboard-item--champion' : ''}`}>
                   <span className="leaderboard-name">
-                    {p.nickname}
+                    {nicknameWithIcon(p.nickname)}
                     {isWinner && <span className="leaderboard-badge">Winner</span>}
                   </span>
                   <span className="leaderboard-score">
