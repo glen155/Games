@@ -35,8 +35,17 @@ export function HostView({
   isHosted,
   roomId,
 }: HostViewProps<GameState, WeakestLinkAction>) {
-  const { playCorrect, playWrong, playBank, playTick, playEliminate, playWin, muted, toggleMute } =
-    useGameSounds();
+  const {
+    playCorrect,
+    playWrong,
+    playBank,
+    playTick,
+    playEliminate,
+    playWin,
+    playGoodbye,
+    muted,
+    toggleMute,
+  } = useGameSounds();
   const { questionRemainingMs, roundRemainingMs } = useRoundClock(state, dispatch);
 
   // Register remotely-joined players while still in the lobby. Late joiners
@@ -107,6 +116,17 @@ export function HostView({
     // Only fire once, right when the phase flips — not on every re-render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.phase]);
+
+  // Speak the goodbye line the moment someone's voted off — synced to when
+  // VoteRevealPanel first shows the "You are the weakest link... goodbye"
+  // text, not delayed until the host clicks Continue (that's what triggers
+  // the separate playEliminate() tone, in handleAdvanceAfterVote below).
+  const lastGoodbyeIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    const id = state.lastVoteOff?.eliminatedId ?? null;
+    if (id && id !== lastGoodbyeIdRef.current) playGoodbye(state.lastVoteOff!.nickname);
+    lastGoodbyeIdRef.current = id;
+  }, [state.lastVoteOff, playGoodbye]);
 
   function handleBank(userId: string) {
     dispatch({ type: 'BANK', userId, at: Date.now() });

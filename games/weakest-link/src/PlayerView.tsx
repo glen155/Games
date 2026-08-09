@@ -1,15 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { PlayerViewProps } from '@games/platform';
 import type { GameState } from './types';
 import { currentTurnUserId } from './state/gameReducer';
 import { useCountdown } from './hooks/useCountdown';
+import { useGameSounds } from './hooks/useGameSounds';
 import { QuestionOptions } from './components/QuestionOptions';
 import { StrongestLinkCallout } from './components/StrongestLinkCallout';
 import { FlipVoteCard } from './components/FlipVoteCard';
 
-function Waiting({ message, sub }: { message: string; sub?: string }) {
+function Waiting({
+  message,
+  sub,
+  muted,
+  onToggleMute,
+}: {
+  message: string;
+  sub?: string;
+  /** Only shown when set — the "you're out" / "watching the rest of the
+   * game" screens are the only moments this device makes any sound. */
+  muted?: boolean;
+  onToggleMute?: () => void;
+}) {
   return (
     <div className="wl-player-view wl-player-view--waiting">
+      {onToggleMute && (
+        <button type="button" className="wl-player-mute" onClick={onToggleMute}>
+          {muted ? '🔇' : '🔊'}
+        </button>
+      )}
       <p className="wl-player-waiting-message">{message}</p>
       {sub && <p className="wl-player-waiting-sub">{sub}</p>}
     </div>
@@ -37,6 +55,21 @@ function usePendingTurnAction(questionEndsAt: number | null) {
 export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameState>) {
   const [pending, setPending] = usePendingTurnAction(state?.questionEndsAt ?? null);
   const secondsLeft = useCountdown(state?.questionEndsAt ?? null);
+  const { playGoodbye, muted, toggleMute } = useGameSounds();
+
+  // Speak the goodbye line on this device the instant *this* player is the
+  // one voted off — timed with the "You're out." message below. Every hook
+  // has to run unconditionally on every render (the early returns below
+  // can't come before this), so the phase/eliminated check lives inside the
+  // effect body instead of gating the hook call itself.
+  const voteOff = state?.phase === 'vote-reveal' ? state.lastVoteOff : null;
+  const lastGoodbyeIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (voteOff && voteOff.eliminatedId === userId && voteOff.eliminatedId !== lastGoodbyeIdRef.current) {
+      playGoodbye(voteOff.nickname);
+      lastGoodbyeIdRef.current = voteOff.eliminatedId;
+    }
+  }, [voteOff, userId, playGoodbye]);
 
   if (!state || state.phase === 'lobby') {
     return <Waiting message="Waiting for the host to start…" />;
@@ -59,7 +92,14 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
   }
 
   if (me.eliminated) {
-    return <Waiting message="You're the weakest link — goodbye." sub="Watching the rest of the game." />;
+    return (
+      <Waiting
+        message="You're the weakest link — goodbye."
+        sub="Watching the rest of the game."
+        muted={muted}
+        onToggleMute={toggleMute}
+      />
+    );
   }
 
   if (state.phase === 'voting') {
@@ -89,13 +129,14 @@ export function PlayerView({ state, userId, sendAction }: PlayerViewProps<GameSt
   }
 
   if (state.phase === 'vote-reveal') {
-    const voteOff = state.lastVoteOff;
     if (voteOff) {
       const iWasEliminated = voteOff.eliminatedId === userId;
       return (
         <Waiting
           message={iWasEliminated ? "You're out." : `${voteOff.nickname} is out.`}
           sub="Waiting for the next round…"
+          muted={muted}
+          onToggleMute={toggleMute}
         />
       );
     }
